@@ -112,6 +112,20 @@
   height: 1em;
   margin-left: 0.5rem;
 }
+.bgImg {
+  background-image: url('/images/homeBg.png');
+  background-size: cover;
+  background-position: top;
+  background-repeat: no-repeat;
+}
+.footer {
+  background-image: url('/images/Footer.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 1920px;
+  height: 231px;
+}
 
 @media (max-width: 600px) {
   .grid {
