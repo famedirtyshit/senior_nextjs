@@ -1,4 +1,4 @@
-export default function Home(prop) {
+export default function BaseButton(prop) {
 
     const checkFill = () => {
         if(prop.fill == true){
