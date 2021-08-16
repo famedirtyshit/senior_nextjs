@@ -7,6 +7,7 @@ import HomeStyle from '@styles/Home.module.css'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add';
 import React, { useState } from 'react';
+import Link from 'next/link';
   
 export default function Home() {
     const [buttonColor,setButtonColor] = useState('1');
@@ -29,7 +30,11 @@ export default function Home() {
                 <section className="about 2xl:ml-64 2xl:w-4/12">
                     <h1 className="2xl:text-5xl 2xl:font-black">About <span className="text-mainOrange">CatUs</span></h1>
                     <p className="mt-2">Nulla ea enim irure  Non dolore laborum cupidatat incididunt. Nostrud excepteur do aliqua proident mollit dolore consectetur anim consectetur elit eiusmod qui dolore dolore. Laboris fugiat ad irure dolor.</p>
-                    <BaseButton style={'color: white'} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Get Started'} customClass={'2xl:mt-4'}></BaseButton>
+                    <Link href='/feed'>
+                        <a>
+                            <BaseButton style={'color: white'} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Get Started'} customClass={'2xl:mt-4'}></BaseButton>
+                        </a>
+                    </Link>
                 </section>
                 <section className="cat-img 2xl:absolute 2xl:-top-10 2xl:right-28">
                     <Image src={IMAGES.catModalHomePage} alt='cat' width="878" height="346"/>
@@ -65,7 +70,7 @@ export default function Home() {
                             
                             {/* <Image src={buttonColor==='1'? IMAGES.orangeButton1:IMAGES.greenButton1} alt="bgDownBt" width="60" height="60" onClick={()=>setButtonColor('1')}/>     
                             <Image src={buttonColor==='2'? IMAGES.orangeButton2:IMAGES.greenButton2} alt="bgDownBt" width="60" height="60" onClick={()=>setButtonColor('2')}/>      */}
-                            <Image src={IMAGES.Howto} alt="Howto"Howto width="1060" height="586" />
+                            <Image src={IMAGES.Howto} alt="Howto"  width="1060" height="586" />
                           
                             {/* <div className="2xl:rounded-full" style={{backgroundColor:'#F0930D',width:"60px",height:"60px"}} onClick={()=>setButtonColor('1')} /> */}
                               {/* <div className="2xl:shadow-lg 2xl:rounded-3xl 2xl:ml-40"  style={{backgroundColor:'#368665',width:"829px",height:"586"}} /> */}
