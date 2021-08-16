@@ -7,7 +7,8 @@ import Slider from '@material-ui/core/Slider';
 import BaseCheckbox from '@components/BaseCheckBox';
 import BasePostItem from '@components/BasePostItem';
 import Pagination from '@material-ui/lab/Pagination';
-import cn from 'classnames'
+import cn from 'classnames';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 export default function Home() {
@@ -63,7 +64,11 @@ export default function Home() {
             </Head>
             <div className={"head-sec"}>
                 <header className="2xl:flex 2xl:flex-wrap 2xl:justify-between 2xl:mx-64 pt-3">
-                    <h1 className="2xl:text-5xl 2xl:font-black text-white">Catus</h1>
+                    <Link href='/'>
+                        <a>
+                            <h1 className="2xl:text-5xl 2xl:font-black text-white">Catus</h1>
+                        </a>
+                    </Link>
                 </header>
                 <section className="w-9/12 bg-mainCream mx-auto rounded-2xl shadow-lg 2xl:mt-20">
                     <div className="2xl:flex 2xl:flex-wrap 2xl:py-16">
