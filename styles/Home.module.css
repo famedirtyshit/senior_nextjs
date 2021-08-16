@@ -114,7 +114,7 @@
 }
 .bgImg {
   background-image: url('/images/homeBg.png');
-  background-size: cover;
+  background-size: contain;
   background-position: top;
   background-repeat: no-repeat;
 }

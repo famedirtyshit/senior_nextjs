@@ -58,8 +58,10 @@ export default function Home() {
                         </div>
                     </section>
                     <section className="howToUse 2xl:text-center" style={{marginTop:"35rem"}}>
-                        <p className="2xl:text-4xl 2xl:font-medium" >1. Typesetting industrys Lorem Ipsum has been the industry's </p>
-                        <section className="2xl:flex 2xl:flex-wrap 2xl:mt-32 2xl:justify-center ">
+                         <p className="2xl:text-4xl 2xl:font-bold" >CatUs ใช้งานง่ายแค่ 4 ขั้นตอน</p>
+                         <p className="2xl:text-4xl 2xl:font-normal 2xl:mt-7" >1. Typesetting industrys <br/> Lorem Ipsum has been the industry&apos;s </p>
+                       
+                        <section className="2xl:flex 2xl:flex-wrap 2xl:mt-11 2xl:justify-center ">
                             
                             {/* <Image src={buttonColor==='1'? IMAGES.orangeButton1:IMAGES.greenButton1} alt="bgDownBt" width="60" height="60" onClick={()=>setButtonColor('1')}/>     
                             <Image src={buttonColor==='2'? IMAGES.orangeButton2:IMAGES.greenButton2} alt="bgDownBt" width="60" height="60" onClick={()=>setButtonColor('2')}/>      */}
