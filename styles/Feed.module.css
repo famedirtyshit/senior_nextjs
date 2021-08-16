@@ -1,0 +1,6 @@
+.bgImg {
+    background-image: url('/images/greenYellowBg.png');
+    background-size: contain;
+    background-position: 100% -5%;
+    background-repeat: no-repeat;
+}
