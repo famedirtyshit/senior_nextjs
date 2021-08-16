@@ -22,6 +22,11 @@ module.exports = {
       '2xl': '1920px',
       // => @media (min-width: 1920px) { ... }
     },
+    theme: {
+      fontFamily: { 
+       'body': ['"prompt"'],
+      }
+    },
     extend: {
       colors: {
         mainGreen: '#356053',
