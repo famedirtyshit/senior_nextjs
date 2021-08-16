@@ -30,7 +30,16 @@ module.exports = {
     extend: {
       colors: {
         mainGreen: '#356053',
-        mainOrange: '#F0930D'
+        mainOrange: '#F0930D',
+        mainCream: '#FFFCF3',
+        textGray: '#939393',
+        darkCream: '#DBC09C'
+      },
+      textColor: {
+        mainGreen: '#356053'
+      },
+      borderColor: {
+        mainGreen: '#356053'
       }
     }
   }

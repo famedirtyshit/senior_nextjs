@@ -13,8 +13,7 @@ const IMAGES = {
     Howto:'/images/Howto.png',
     buttonDown:'/images/buttonDown.png',
     buttonUp:'/images/buttonUp.png',
-    
-    
-
+    user: '/images/user.png',
+    defaultImg: '/images/defaultImg.png'
 };
 export default IMAGES;
