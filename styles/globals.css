@@ -18,3 +18,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.pac-container {
+  z-index: 1300;
+}
