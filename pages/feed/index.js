@@ -181,7 +181,7 @@ export default function Feed() {
         let placeInfoWindow = new google.maps.InfoWindow();
         service.findPlaceFromQuery(request, function (results, status) {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
-                createMarker(results[0].geometry.location, results[0].name,map);
+                createMarker(results[0].geometry.location, results[0].name, map);
                 map.setCenter(results[0].geometry.location);
             } else {
                 console.log('search failed')
@@ -246,7 +246,6 @@ export default function Feed() {
     const handleNotHaveCollarChange = (event) => {
         setNotHaveCollar(event.target.checked);
     };
-
     return (
         <div className={"2xl:container mx-auto " + FeedStyle.bgImg}>
             <Head>
@@ -254,7 +253,7 @@ export default function Feed() {
                 <meta name="description" content="CatUs Service" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Script async defer src="https://maps.googleapis.com/maps/api/js?v=3.44&key=AIzaSyDGIZy8sSPeRyDyRfl5LsflSM7h-V0QlIM&libraries=places&region=TH&language=th" onLoad={() => { setGoogleStatus(true) }} />
+            <Script async defer src={`https://maps.googleapis.com/maps/api/js?v=3.44&key=${process.env.GMAPKEY}&libraries=places&region=TH&language=th`} onLoad={() => { setGoogleStatus(true) }} />
             <div className={"head-sec"}>
                 <header className="2xl:flex 2xl:flex-wrap 2xl:justify-between 2xl:mx-64 pt-3">
                     <Link href='/'>
