@@ -6,22 +6,214 @@ import Image from 'next/dist/client/image';
 import Slider from '@material-ui/core/Slider';
 import BaseCheckbox from '@components/BaseCheckBox';
 import BasePostItem from '@components/BasePostItem';
+import BaseModalMap from '@components/BaseModalMap';
 import Pagination from '@material-ui/lab/Pagination';
 import cn from 'classnames';
 import Link from 'next/link';
+import Script from 'next/script';
 import { useState, useEffect } from 'react';
 
-export default function Home() {
-
+export default function Feed() {
+    const [mapObj, setMapObj] = useState(null);
+    const [googleStatus, setGoogleStatus] = useState(false);
+    const [modalMap, setModalMap] = useState(false);
+    const [mapPreview, setMapPreview] = useState(false);
     const [postType, setPostType] = useState('all');
+    const [defaultPos, setDefaultPos] = useState({ lat: 13.6511752, lng: 100.4944552 });
+    const [location, setLocation] = useState(null);
+    const [locationConfirmStatus, setLocationConfirmStatus] = useState(false);
+    const [locationConfirm, setLocationConfirm] = useState(null);
     const [male, setMale] = useState(true);
     const [female, setFemale] = useState(true);
     const [haveCollar, setHaveCollar] = useState(true);
     const [notHaveCollar, setNotHaveCollar] = useState(true);
 
     useEffect(() => {
+        try {
+            if (googleStatus === true && modalMap === true) {
+                let checkExist = setInterval(function () {
+                    if (document.getElementById('map')) {
+                        clearInterval(checkExist);
+                        initMap();
+                    }
+                }, 100);
+            }
+        } catch (e) {
+            console.warn(e)
+        }
+    }, [googleStatus, modalMap])
 
-    })
+    useEffect(() => {
+        if (locationConfirmStatus === true && locationConfirm != null) {
+            setMapPreview(true);
+            let checkExist = setInterval(function () {
+                if (document.getElementById('map-preview')) {
+                    clearInterval(checkExist);
+                    initPreviewMap();
+                }
+            }, 100);
+        } else {
+            setMapPreview(false);
+        }
+    }, [locationConfirmStatus, locationConfirm])
+
+    let map, infoWindow, marker;
+
+    const createMarker = async (latLng, name, map, isOldPosition) => {
+        if (marker != null) {
+            console.log('delete marker')
+            marker.setMap(null);
+            marker = null;
+        }
+        let markerObj = await new google.maps.Marker({
+            position: latLng,
+            map,
+            title: name ? name : 'markerTitle',
+        });
+        marker = markerObj;
+        if (!isOldPosition) {
+            setLocation(latLng.toJSON())
+        }
+    }
+
+    const confirmStatusLocation = () => {
+        setLocationConfirmStatus(true);
+        setLocationConfirm(location);
+        setModalMap(false);
+    }
+
+    const cancelLocation = () => {
+        setLocationConfirmStatus(false);
+        setModalMap(false);
+        setLocation(null);
+        setLocationConfirm(null);
+    }
+
+    const initMap = () => {
+        let position;
+        let markerPosition = null;
+        if (locationConfirm != null && locationConfirmStatus === true) {
+            position = locationConfirm;
+            markerPosition = locationConfirm;
+        } else {
+            position = defaultPos;
+        }
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: position,
+            zoom: 18,
+            disableDefaultUI: true,
+            zoomControl: true,
+            mapTypeControl: false,
+            scaleControl: true,
+            streetViewControl: false,
+            rotateControl: false,
+            fullscreenControl: true
+        });
+        if (markerPosition != null) {
+            createMarker(markerPosition, null, map, true);
+        }
+        infoWindow = new google.maps.InfoWindow();
+        const locationButton = document.createElement("button");
+        locationButton.textContent = "Pan to Current Location";
+        locationButton.classList.add("custom-map-control-button");
+        locationButton.classList.add("text-sm");
+        locationButton.classList.add("text-white");
+        locationButton.classList.add("px-6");
+        locationButton.classList.add("py-2");
+        locationButton.classList.add("mt-1");
+        locationButton.classList.add("bg-mainGreen");
+        locationButton.classList.add("rounded-3xl");
+        locationButton.classList.add("bg-opacity-80");
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+        map.addListener("click", (event) => {
+            createMarker(event.latLng, null, map);
+        });
+        locationButton.addEventListener("click", () => {
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+                        infoWindow.setPosition(pos);
+                        infoWindow.setContent("Location found.");
+                        infoWindow.open(map);
+                        map.setCenter(pos);
+                    },
+                    () => {
+                        handleLocationError(true, infoWindow, map.getCenter(), false, map);
+                    }
+                );
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter(), false, map);
+            }
+        });
+        setMapObj(map);
+    }
+
+    const initPreviewMap = () => {
+        map = new google.maps.Map(document.getElementById("map-preview"), {
+            center: locationConfirm,
+            zoom: 17,
+            disableDefaultUI: true,
+            draggable: false,
+            zoomControl: false,
+            mapTypeControl: false,
+            scaleControl: false,
+            streetViewControl: false,
+            rotateControl: false,
+            fullscreenControl: false,
+            scrollwheel: false,
+            disableDoubleClickZoom: true
+        });
+        createMarker(locationConfirm, null, map, true);
+    }
+
+    const searchPlace = (query, map) => {
+        let request = {
+            query: query,
+            fields: ['name', 'geometry'],
+        };
+        let service = new google.maps.places.PlacesService(map);
+        let placeInfoWindow = new google.maps.InfoWindow();
+        service.findPlaceFromQuery(request, function (results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                createMarker(results[0].geometry.location, results[0].name, map);
+                map.setCenter(results[0].geometry.location);
+            } else {
+                console.log('search failed')
+                handleLocationError(true, placeInfoWindow, map.getCenter(), true, map);
+            }
+        });
+    }
+
+    const handleLocationError = (browserHasGeolocation, infoWindow, pos, queryError, map) => {
+        infoWindow.setPosition(pos);
+        if (queryError) {
+            infoWindow.setContent("can't find your search location.");
+        } else {
+            infoWindow.setContent(
+                browserHasGeolocation
+                    ? "Error: The Geolocation service failed."
+                    : "Error: Your browser doesn't support geolocation."
+            );
+        }
+        infoWindow.open(map);
+    }
+
+    const openMapModal = () => {
+        setModalMap(true);
+    }
+
+    const closeMapModal = () => {
+        setModalMap(false);
+        if (!locationConfirmStatus) {
+            setLocation(null);
+        }
+    }
 
     const setAllType = () => {
         setPostType('all');
@@ -54,7 +246,6 @@ export default function Home() {
     const handleNotHaveCollarChange = (event) => {
         setNotHaveCollar(event.target.checked);
     };
-
     return (
         <div className={"2xl:container mx-auto " + FeedStyle.bgImg}>
             <Head>
@@ -62,6 +253,7 @@ export default function Home() {
                 <meta name="description" content="CatUs Service" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+            <Script async defer src={`https://maps.googleapis.com/maps/api/js?v=3.44&key=${process.env.GMAPKEY}&libraries=places&region=TH&language=th`} onLoad={() => { setGoogleStatus(true) }} />
             <div className={"head-sec"}>
                 <header className="2xl:flex 2xl:flex-wrap 2xl:justify-between 2xl:mx-64 pt-3">
                     <Link href='/'>
@@ -105,9 +297,17 @@ export default function Home() {
                         <p className="text-xl font-medium">ITEM (90)</p>
                         <p className="text-white 2xl:px-6 py-2 bg-darkCream rounded-3xl shadow-lg cursor-pointer 2xl:mt-10 text-center">ค้นหาด้วยข้อมูล Post ของฉัน</p>
                         <p className="text-xl font-medium 2xl:mt-11">Change Location</p>
-                        <div className="map 2xl:mt-7 h-60 relative shadow-lg" style={{ backgroundColor: '#E8E8E8' }}>
-                            <p className="absolute text-white 2xl:px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer 2xl:mt-7 2xl:top-1/3 2xl:left-16">ระบุตำแหน่งด้วยตนเอง</p>
-                        </div>
+                        {
+                            mapPreview === true ?
+                                <div id="map-preview" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '355px', height: '255px' }}>
+                                </div>
+                                :
+                                <div id="map-preview-default" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '355px', height: '255px' }}>
+                                    <Image src={IMAGES.map} alt='default-map' width="355" height="255" className="2xl:absolute cursor-pointer 2xl:top-1/3 2xl:left-16 " />
+                                    <p className={"2xl:absolute text-white 2xl:px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + FeedStyle.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
+                                </div>
+                        }
+                        <BaseModalMap handleClose={closeMapModal} modalMap={modalMap} searchPlace={searchPlace} map={mapObj} location={location} confirmStatusLocation={confirmStatusLocation} cancelLocation={cancelLocation} />
                         <p className="text-xl font-medium 2xl:mt-6">Radius</p>
                         <Slider
                             defaultValue={1}
@@ -135,6 +335,9 @@ export default function Home() {
                             <br />
                             <BaseCheckbox checkValue={notHaveCollar} setValue={handleNotHaveCollarChange} label='not have collar' />
                             <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5" >Not have</p>
+                        </div>
+                        <div className="2xl:flex flex-wrap">
+                            <BaseButton fill={true} fillColor={'mainOrange'} textColor={'white'} round={true} roundSize={'lg'} value={'Search'} customClass={'2xl:mt-6'}></BaseButton>
                         </div>
                     </div>
                     <div className="2xl:col-span-3">

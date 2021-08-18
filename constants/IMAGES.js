@@ -14,6 +14,7 @@ const IMAGES = {
     buttonDown:'/images/buttonDown.png',
     buttonUp:'/images/buttonUp.png',
     user: '/images/user.png',
-    defaultImg: '/images/defaultImg.png'
+    defaultImg: '/images/defaultImg.png',
+    map: '/images/map.png',
 };
 export default IMAGES;
