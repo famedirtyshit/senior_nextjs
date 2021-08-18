@@ -30,7 +30,9 @@ module.exports = {
     extend: {
       colors: {
         mainGreen: '#356053',
-        mainOrange: '#F0930D'
+        mainBgGreen: '#378566',
+        mainOrange: '#F0930D',
+        mainYellow:'#F4C444',
       }
     }
   }

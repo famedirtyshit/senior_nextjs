@@ -7,13 +7,14 @@ import HomeStyle from '@styles/Home.module.css'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add';
 import React, { useState } from 'react';
-import Link from 'next/link';
+// import Link from 'next/link';
+import { Link ,animateScroll as scroll } from "react-scroll";
   
 export default function Home() {
     const [buttonColor,setButtonColor] = useState('1');
 
     return (
-        <div className={" mx-auto " + HomeStyle.bgImg}>
+        <div className={" mx-auto " + HomeStyle.bgImg }>
             <Head>
                 <title>CatUs</title>
                 <meta name="description" content="CatUs Service" />
@@ -23,7 +24,15 @@ export default function Home() {
                 <h1 className="2xl:text-5xl 2xl:font-black">Catus</h1>
                 <div className="account-action">
                     <BaseButton value={'Login'}></BaseButton>
-                    <BaseButton style={'color: white'} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Sign Up'} customClass={'2xl:ml-4'}></BaseButton>
+                    <BaseButton 
+                        style={'color: white'} 
+                        fill={true} fillColor={'mainGreen'} 
+                        textColor={'white'} 
+                        round={true} 
+                        roundSize={'lg'} 
+                        value={'Sign Up'} 
+                        customClass={'2xl:ml-4'}>
+                    </BaseButton>
                 </div>
             </header>
             <main className="2xl:mt-72 2xl:relative">
@@ -40,51 +49,131 @@ export default function Home() {
                     <Image src={IMAGES.catModalHomePage} alt='cat' width="878" height="346"/>
                 </section>
                 <section className="down-botton 2xl:flex 2xl:flex-wrap 2xl:justify-end 2xl:mt-40">    
-                    <div className="2xl:mr-28"> 
-                        <Image src={IMAGES.buttonDown} alt="bgDownBt" width="89" height="89"/>   
+                    <div className="2xl:mr-28" > 
+                        <Link 
+                            activeClass="active"
+                            to="section1"
+                            // spy={true}
+                            smooth={true}
+                            offset={-300}
+                            duration={700}
+                        >
+                            <Image src={IMAGES.scrollDown} alt="scrollDown" width="31" height="154" point/>   
+                        </Link>
                     </div>
                </section>
+               <section 
+               className="about-catUs-conatainer 2xl:w-3/4 2xl:mt-56 2xl:mt-40 2xl:mr-60 2xl:mx-auto" 
+               title="section1"
+               id="section1" > 
+                    <h1 className="2xl:text-5xl 2xl:font-black 2xl:text-white 2xl:text-center">Statement of the problems</h1>
+                    <div className="text 2xl:mt-10">
+                        <p className="text-white 2xl:text-2xl">
+                        <span className="2xl:mr-10" />จุดเริ่มต้นมากจากคณะผู้จัดทำโครงงานได้สนใจที่จะทำแพลตฟอร์มเว็บไซต์ที่จะเป็นศูนย์กลาง ในการตามหาหรือพบเจอแมวหาย เพื่อช่วยเหลือและช่วยอำนวยความสะดวกให้กับกลุ่มผู้ที่ต้องการตามหา
+                        แมวหาย มากยิ่งขึ้น เพราะ ในปัจจุบันยังไม่มีแพลตฟอร์มที่ช่วยในการตามหาแมวหาย </p>
+                        <p className="2xl:text-white 2xl:text-2xl"><span className="2xl:mr-10" />ดังนั้นผู้ใช้งานส่วนใหญ่มักจะตามหาแมวหายโดยการประกาศหรือโพสตามหา ตามแพลตฟอร์มโซเชียลมีเดีย ชื่อดังต่างๆ ซึ่งปัญหาที่พบคือเป็นการประกาศตามหาแบบไม่มีการแยกประเภทและข้อมูลของการโพสที่ชัดเจน
+                        เช่น โพสเจอแมว,โพสหาแมวที่หายไป หรือบอกรายละเอียดของแมวที่หายไม่ครบ กำหนดพื้นที่ไม่ชัดเจน และบางกรณีมีการโพสซ้ำ จนเกิดความสับสน ทำให้ไม่สามารถค้นหาครอบคลุมโพสทั้งหมดได้ และ ขั้นตอนการตามหายังมีความยุ่งยากเนื่องจาก ไม่ใช่แพลตฟอร์มที่ออกแบบมาให้ใช้งานตามหาแมวโดยเฉพาะ
+                        </p>
+                    </div>
+                </section>
                <section className="why-catUs-container 2xl:mt-96 2xl:mr-60 2xl:ml-52"> 
-                    <p className="2xl:text-white 2xl:text-4xl 2xl:font-black 2xl:text-center 2xl:mt-32" style={{textShadow:"-2px 4px #6B7280"}}>ทำไมต้องใช้ CatUs</p>  
+                    <p className="2xl:text-black 2xl:text-4xl 2xl:font-black 2xl:text-center 2xl:mt-32" /**style={{textShadow:"-2px 4px #6B7280"}}**/>ทำไมต้องใช้ CatUs</p>  
                     <section className="2xl:flex 2xl:flex-wrap 2xl:justify-center 2xl:mt-32 ">
                         <div className="2xl:shadow-2xl 2xl:rounded-3xl" style={{backgroundColor:'#FFFFFF',width:"673px",height:"534px"}}>
                         </div>
-                        <div className="2xl:ml-16">
-                            <p className="2xl:text-white 2xl:text-4xl 2xl:font-black " style={{textShadow:"-2px 4px #6B7280"}}>What is Lorem Ipsum</p>
-                            <p className="2xl:text-white 2xl:text-2xl 2xl:font-medium 2xl:mt-6" style={{textShadow:"-2px 4px #6B7280"}}>Lorem Ipsum is simply dummy <br />text of the printing and  <br />typesetting industry. </p>
+                        <div className="2xl:ml-16" style={{width:"559px"}}>
+                            <p className="2xl:text-black 2xl:text-4xl 2xl:font-black " >เพราะช่วยเพิ่มโอกาสสำเร็จในการตามหาแมวหายให้กับผู้ใช้งาน</p>
+                            <p className="2xl:text-black 2xl:text-2xl 2xl:font-medium 2xl:mt-6" >ผู้ใช้สามารถตามหาแมวที่หายไปได้ง่ายและสะดวกมากขึ้น จากการที่ระบบมีการฟิลเตอร์ข้อมูล
+                        สถานที่ในการค้นหา และข้อมูลที่แยกประเภท ได้สำหรับการค้นหา</p>
                         </div>
                     </section>
                     <section className="2xl:flex 2xl:flex-wrap 2xl:mt-48 2xl:justify-center">      
-                        <div className="2xl:mr-16">
-                        <p className="2xl:text-white 2xl:text-4xl 2xl:font-black " style={{textShadow:"-2px 4px #6B7280"}}>What is Lorem Ipsum</p>
+                        <div className="2xl:mr-16" style={{width:"559px"}}>
+                        <p className="2xl:text-white 2xl:text-4xl 2xl:font-black " style={{textShadow:"-2px 4px #6B7280"}}>เพื่อลดจำนวนแมวจรจัด <br />และปัญหาที่เกิดจากแมวจรจัด</p>
                             <p className="2xl:text-white 2xl:text-2xl 2xl:font-medium 2xl:mt-6" style={{textShadow:"-2px 4px #6B7280"}}>Lorem Ipsum is simply dummy <br />text of the printing and  <br />typesetting industry. </p>
                         </div>
                         <div className="2xl:shadow-2xl 2xl:rounded-3xl" style={{backgroundColor:'#FFFFFF',width:"673px",height:"534px"}}>
                         </div>
                     </section>
-                    <section className="howToUse 2xl:text-center" style={{marginTop:"35rem"}}>
-                         <p className="2xl:text-4xl 2xl:font-bold" >CatUs ใช้งานง่ายแค่ 4 ขั้นตอน</p>
-                         <p className="2xl:text-4xl 2xl:font-normal 2xl:mt-7" >1. Typesetting industrys <br/> Lorem Ipsum has been the industry&apos;s </p>
-                       
-                        <section className="2xl:flex 2xl:flex-wrap 2xl:mt-11 2xl:justify-center ">
-                            
-                            {/* <Image src={buttonColor==='1'? IMAGES.orangeButton1:IMAGES.greenButton1} alt="bgDownBt" width="60" height="60" onClick={()=>setButtonColor('1')}/>     
-                            <Image src={buttonColor==='2'? IMAGES.orangeButton2:IMAGES.greenButton2} alt="bgDownBt" width="60" height="60" onClick={()=>setButtonColor('2')}/>      */}
-                            <Image src={IMAGES.Howto} alt="Howto"  width="1060" height="586" />
-                          
-                            {/* <div className="2xl:rounded-full" style={{backgroundColor:'#F0930D',width:"60px",height:"60px"}} onClick={()=>setButtonColor('1')} /> */}
-                              {/* <div className="2xl:shadow-lg 2xl:rounded-3xl 2xl:ml-40"  style={{backgroundColor:'#368665',width:"829px",height:"586"}} /> */}
-                        </section>
                     </section>
-                    <div className="2xl:absolute " style={{marginLeft:"1495px",marginTop:"-200px"}}> 
-                        <Image src={IMAGES.buttonUp} alt="bgDownBt" width="89" height="89"/>   
-                    </div>
-               </section>  
+                    <section className="howToUse 2xl:mt-96" >
+                        <p className="2xl:text-5xl 2xl:font-extrabold 2xl:text-center" >CatUs ใช้งานง่ายแค่ 4 ขั้นตอน</p>
+                         <div className="2xl:grid 2xl:grid-cols-2 gap-7 2xl:mt-52 ">
+                            <div className=" 2xl:mt-24 2xl:relative">
+                                <div className="2xl:absolute 2xl:left-96 2xl:top-20">
+                                    <Image src={IMAGES.onefor4step} alt="onefor4step"  width="110" height="253" />
+                                </div>
+                                <div className="2xl:absolute 2xl:left-80 2xl:top-72">
+                                    <p className="2xl:text-4xl 2xl:font-bold 2xl:text-left">Typesetting</p>
+                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left" >Lorem Ipsum has been the industry's<br /> psum has been the industry's</p>
+                                </div>
+                            </div>    
+                            <div className="" >
+                                 <Image src={IMAGES.deviceRightfor4step} alt="deviceRightfor4step"  width="1064" height="752"  />
+                            </div>
+                         </div>
+                         <div className="2xl:grid 2xl:grid-cols-2 gap-7 2xl:mt-52 ">
+                            <div className="" >
+                                 <Image src={IMAGES.deviceLeftfor4step} alt="deviceLeftfor4step"  width="1064" height="752"  />
+                            </div>
+                            <div className=" 2xl:mt-24 2xl:relative">
+                                <div className="2xl:absolute 2xl:left-96 2xl:top-28">
+                                    <Image src={IMAGES.twofor4step} alt="twofor4step"  width="140" height="203" />
+                                </div>
+                                <div className="2xl:absolute 2xl:left-80 2xl:top-64">
+                                    <p className="2xl:text-4xl 2xl:font-bold 2xl:text-left">Typesetting</p>
+                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left" >Lorem Ipsum has been the industry's<br /> psum has been the industry's</p>
+                                </div>
+                            </div>    
+                         </div>  
+                         <div className="2xl:grid 2xl:grid-cols-2 gap-7 2xl:mt-52 ">
+                            <div className=" 2xl:mt-24 2xl:relative">
+                                <div className="2xl:absolute 2xl:left-96 2xl:top-28">
+                                    <Image src={IMAGES.threefor4step} alt="threefor4step"  width="140" height="203" />
+                                </div>
+                                <div className="2xl:absolute 2xl:left-80 2xl:top-64">
+                                    <p className="2xl:text-4xl 2xl:font-bold 2xl:text-left">Typesetting</p>
+                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left" >Lorem Ipsum has been the industry's<br /> psum has been the industry's</p>
+                                </div>
+                            </div>    
+                            <div className="" >
+                                 <Image src={IMAGES.deviceRightfor4step} alt="deviceRightfor4step"  width="1064" height="752"  />
+                            </div>
+                         </div>                 
+                         <div className="2xl:grid 2xl:grid-cols-2 gap-7 2xl:mt-52 ">
+                            <div className="" >
+                                 <Image src={IMAGES.deviceLeftfor4step} alt="deviceLeftfor4step"  width="1064" height="752"  />
+                            </div>
+                            <div className=" 2xl:mt-24 2xl:relative">
+                                <div className="2xl:absolute 2xl:left-96 2xl:top-24">
+                                    <Image src={IMAGES.fourfor4step} alt="fourfor4step"  width="140" height="203" />
+                                </div>
+                                <div className="2xl:absolute 2xl:left-80 2xl:top-64">
+                                    <p className="2xl:text-4xl 2xl:font-bold 2xl:text-left">Typesetting</p>
+                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left" >Lorem Ipsum has been the industry's<br /> psum has been the industry's</p>
+                                </div>
+                            </div>    
+                         </div>    
+               </section>
+               
             </main>  
-            <footer className="2xl:mt-24">
-            <div style={{backgroundColor:'#F4C444',width:"1920px",height:"331px"}}>
-
-            </div>
+            <footer className="2xl:mt-32">
+                <section className="footer-orange 2xl:flex 2xl:flex-col 2xl:justify-center 2xl:items-center 2xl:bg-mainYellow" style={{width:"100%",height:"259px"}}>
+                    <p className="2xl:text-white 2xl:text-4xl 2xl:font-bold " >Ready to get started looking for your cat?</p> 
+                    <BaseButton 
+                        style={'color: white'} 
+                        fill={true} 
+                        fillColor={'mainOrange'} 
+                        textColor={'white'} 
+                        round={true} 
+                        roundSize={'lg'} 
+                        value={'Get Started'} 
+                        customClass={'2xl:ml-4 2xl:w-52 2xl:h-12 2xl:mt-12'}>                    
+                    </BaseButton>
+                </section>
+                <section className="footer-orange 2xl:flex 2xl:flex-col 2xl:justify-center 2xl:items-center 2xl:bg-mainBgGreen" style={{width:"100%",height:"259px"}}>
+                
+                </section>
             </footer>
         </div>
 
