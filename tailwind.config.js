@@ -40,6 +40,9 @@ module.exports = {
       },
       borderColor: {
         mainGreen: '#356053'
+      },
+      flexGrow: {
+        '0.5': 0.5
       }
     }
   }
