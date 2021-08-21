@@ -4,10 +4,3 @@
     background-position: 100% -5%;
     background-repeat: no-repeat;
 }
-
-.centerAbsolute {
-    transform: translate(-50%,-50%);
-    top: 50%;
-    left: 50%;
-    width: fit-content;
-}

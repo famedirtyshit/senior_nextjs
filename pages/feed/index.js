@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import FeedStyle from '@styles/Feed.module.css';
+import UtilStyle from '@styles/Util.module.css';
 import BaseButton from '@components/BaseButton'
 import IMAGES from '@constants/IMAGES';
 import Image from 'next/dist/client/image';
@@ -7,18 +8,22 @@ import Slider from '@material-ui/core/Slider';
 import BaseCheckbox from '@components/BaseCheckBox';
 import BasePostItem from '@components/BasePostItem';
 import BaseModalMap from '@components/BaseModalMap';
+import BasePostModal from '@components/BasePostModal';
 import Pagination from '@material-ui/lab/Pagination';
 import cn from 'classnames';
 import Link from 'next/link';
 import Script from 'next/script';
-import { useState, useEffect } from 'react';
+import postUtil from '@utils/postUtil';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Feed() {
     const [mapObj, setMapObj] = useState(null);
     const [googleStatus, setGoogleStatus] = useState(false);
     const [modalMap, setModalMap] = useState(false);
     const [mapPreview, setMapPreview] = useState(false);
-    const [postType, setPostType] = useState('all');
+    const marker = useRef(null);
+    const markerPreview = useRef(null);
+    const [searchType, setSearchType] = useState('all');
     const [defaultPos, setDefaultPos] = useState({ lat: 13.6511752, lng: 100.4944552 });
     const [location, setLocation] = useState(null);
     const [locationConfirmStatus, setLocationConfirmStatus] = useState(false);
@@ -27,6 +32,7 @@ export default function Feed() {
     const [female, setFemale] = useState(true);
     const [haveCollar, setHaveCollar] = useState(true);
     const [notHaveCollar, setNotHaveCollar] = useState(true);
+    const [postType, setPostType] = useState(null);
 
     useEffect(() => {
         try {
@@ -57,20 +63,20 @@ export default function Feed() {
         }
     }, [locationConfirmStatus, locationConfirm])
 
-    let map, infoWindow, marker;
+    let map, infoWindow;
 
-    const createMarker = async (latLng, name, map, isOldPosition) => {
-        if (marker != null) {
-            console.log('delete marker')
-            marker.setMap(null);
-            marker = null;
+    const createMarker = async (latLng, name, map, isOldPosition, isPreview) => {
+        let oldMarkerTarget = isPreview ? markerPreview : marker;
+        if (oldMarkerTarget.current != null) {
+            oldMarkerTarget.current.setMap(null);
+            oldMarkerTarget.current = null;
         }
         let markerObj = await new google.maps.Marker({
             position: latLng,
             map,
             title: name ? name : 'markerTitle',
         });
-        marker = markerObj;
+        oldMarkerTarget.current = markerObj;
         if (!isOldPosition) {
             setLocation(latLng.toJSON())
         }
@@ -169,7 +175,7 @@ export default function Feed() {
             scrollwheel: false,
             disableDoubleClickZoom: true
         });
-        createMarker(locationConfirm, null, map, true);
+        createMarker(locationConfirm, null, map, true,true);
     }
 
     const searchPlace = (query, map) => {
@@ -215,16 +221,36 @@ export default function Feed() {
         }
     }
 
-    const setAllType = () => {
-        setPostType('all');
+    const setSearchAllType = () => {
+        setSearchType('all');
     }
 
-    const setFoundType = () => {
-        setPostType('found');
+    const setSearchFoundType = () => {
+        setSearchType('found');
     }
 
-    const setLostType = () => {
-        setPostType('lost');
+    const setSearchLostType = () => {
+        setSearchType('lost');
+    }
+
+    const togglePostType = () => {
+        setPostType(null);
+    }
+
+    const setPostFoundType = () => {
+        if (postType != 'found') {
+            setPostType('found');
+        } else {
+            togglePostType();
+        }
+    }
+
+    const setPostLostType = () => {
+        if (postType != 'lost') {
+            setPostType('lost');
+        } else {
+            togglePostType();
+        }
     }
 
     const getRadiusValue = (value) => {
@@ -278,19 +304,32 @@ export default function Feed() {
                             <BaseButton fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Login'} customClass={'2xl:mt-4 2xl:px-32'}></BaseButton>
                         </div>
                     </div>
+                    <div className="2xl:grid 2xl:grid-cols-2 bg-white rounded-2xl 2xl:relative">
+                        <p onClick={setPostFoundType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium " + cn({
+                            'bg-mainGreen text-white rounded-bl-2xl': postType === "found",
+                            'text-mainGreen': postType !== "found",
+                        })
+                        }>Post Found</p>
+                        <p onClick={setPostLostType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium " + cn({
+                            'bg-mainGreen text-white rounded-br-2xl': postType === "lost",
+                            'text-mainGreen': postType !== "lost",
+                        })
+                        }>Post Lost</p>
+                        <BasePostModal />
+                    </div>
                 </section>
                 <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-3 2xl:mx-56 text-center">
                     <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
-                        'text-mainGreen border-b-4 border-mainGreen': postType === 'all',
-                    })} onClick={setAllType}>All</p>
+                        'text-mainGreen border-b-4 border-mainGreen': searchType === 'all',
+                    })} onClick={setSearchAllType}>All</p>
                     <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
-                        'text-mainGreen border-b-4 border-mainGreen': postType === 'found',
-                    })} onClick={setFoundType}>Found</p>
+                        'text-mainGreen border-b-4 border-mainGreen': searchType === 'found',
+                    })} onClick={setSearchFoundType}>Found</p>
                     <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
-                        'text-mainGreen border-b-4 border-mainGreen': postType === 'lost',
-                    })} onClick={setLostType}>Lost</p>
+                        'text-mainGreen border-b-4 border-mainGreen': searchType === 'lost',
+                    })} onClick={setSearchLostType}>Lost</p>
                 </section>
-            </div>
+            </div >
             <main>
                 <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-4 2xl:mx-56">
                     <div>
@@ -304,7 +343,7 @@ export default function Feed() {
                                 :
                                 <div id="map-preview-default" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '355px', height: '255px' }}>
                                     <Image src={IMAGES.map} alt='default-map' width="355" height="255" className="2xl:absolute cursor-pointer 2xl:top-1/3 2xl:left-16 " />
-                                    <p className={"2xl:absolute text-white 2xl:px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + FeedStyle.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
+                                    <p className={"2xl:absolute text-white 2xl:px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + UtilStyle.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
                                 </div>
                         }
                         <BaseModalMap handleClose={closeMapModal} modalMap={modalMap} searchPlace={searchPlace} map={mapObj} location={location} confirmStatusLocation={confirmStatusLocation} cancelLocation={cancelLocation} />
@@ -336,7 +375,7 @@ export default function Feed() {
                             <BaseCheckbox checkValue={notHaveCollar} setValue={handleNotHaveCollarChange} label='not have collar' />
                             <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5" >Not have</p>
                         </div>
-                        <div className="2xl:flex flex-wrap">
+                        <div onClick={postUtil.search} className="2xl:flex flex-wrap">
                             <BaseButton fill={true} fillColor={'mainOrange'} textColor={'white'} round={true} roundSize={'lg'} value={'Search'} customClass={'2xl:mt-6'}></BaseButton>
                         </div>
                     </div>
