@@ -1,6 +1,6 @@
 import Checkbox from '@material-ui/core/Checkbox';
 
-export default function BaseButton(prop) {
+export default function BaseCheckBox(prop) {
     return (
         <Checkbox
             checked={prop.checkValue}
