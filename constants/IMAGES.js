@@ -16,5 +16,6 @@ const IMAGES = {
     user: '/images/user.png',
     defaultImg: '/images/defaultImg.png',
     map: '/images/map.png',
+    imageLogo: '/images/imageLogo.png'
 };
 export default IMAGES;
