@@ -1,0 +1,12 @@
+.modal {
+    width: 105%!important;
+    transform: translate(-50%,0)!important;
+    top: 65px!important;
+    left: 50%!important;
+    z-index: 1200!important;
+}
+
+
+.postTitleColor {
+    color: #626262;
+}
