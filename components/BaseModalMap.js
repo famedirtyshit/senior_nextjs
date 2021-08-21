@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles, createTheme, ThemeProvider } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -60,17 +60,18 @@ const inputTextStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function TransitionsModal(prop) {
+export default function BaseModalMap(prop) {
     const [placeQuery, setPlaceQuery] = useState('');
 
     useEffect(() => {
+        setPlaceQuery('');
         let checkExist = setInterval(function () {
             if (document.getElementById('placeQuery')) {
                 clearInterval(checkExist);
                 initAutoComplete();
             }
         }, 100);
-    })
+    }, [prop.modalMap])
 
     const modalClass = modalStyles();
     const inputClass = inputTextStyles();
@@ -135,7 +136,7 @@ export default function TransitionsModal(prop) {
                                     <Button onClick={prop.cancelLocation} variant="contained" color="secondary" className={"2xl:max-h-9 " + buttonClass.style}>Cancel</Button>
                                 </div>
                             </div>
-                            <div id="map" className={"w-auto mt-2 border border-gray-300 border-solid " + mapClass.height}></div>
+                            <div id={prop.type == 'post' ? "map-post" : "map"} className={"w-auto mt-2 border border-gray-300 border-solid " + mapClass.height}></div>
                         </div>
                     </ThemeProvider>
                 </Fade>
