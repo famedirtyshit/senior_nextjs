@@ -1,12 +1,29 @@
 /* eslint-disable @next/next/no-img-element */
-import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import Image from 'next/dist/client/image';
+import { makeStyles, createTheme, ThemeProvider } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import Script from 'next/script';
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+
+const theme = createTheme({
+    palette: {
+        primary: {
+            light: '#757ce8',
+            main: '#356053',
+            dark: '#3f50b5',
+            contrastText: '#fff',
+        },
+        secondary: {
+            light: '#ff7961',
+            main: '#db4132',
+            dark: '#ba000d',
+            contrastText: '#fff',
+        },
+    },
+});
 
 const modalStyles = makeStyles((theme) => ({
     modal: {
@@ -21,6 +38,12 @@ const modalStyles = makeStyles((theme) => ({
         padding: theme.spacing(2, 4, 3),
         width: '80%',
         height: '80%',
+    },
+}));
+
+const buttonStyles = makeStyles((theme) => ({
+    position: {
+        marginTop: '4rem'
     },
 }));
 
@@ -39,6 +62,7 @@ export default function BaseCropModal(prop) {
     }, [cropperStatus, prop.imageRawFile])
 
     const modalClasses = modalStyles();
+    const buttonClasses = buttonStyles();
 
     const initCropper = async () => {
         initImage();
@@ -72,6 +96,31 @@ export default function BaseCropModal(prop) {
         }
     }
 
+    const resetCropper = () => {
+        let image = document.getElementById('image-crop');
+        let myCrop = image.cropper;
+        myCrop.reset();
+    }
+
+    const cropImage = () => {
+        let image = document.getElementById('image-crop');
+        let myCrop = image.cropper;
+        myCrop.getCroppedCanvas({
+            width: 160,
+            height: 90,
+            minWidth: 256,
+            minHeight: 256,
+            maxWidth: 4096,
+            maxHeight: 4096,
+            fillColor: '#fff',
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'high',
+          }).toBlob((blob) => {
+              console.log(blob);
+              alert(blob)
+          })
+    }
+
     return (
         <div>
             <Head>
@@ -93,14 +142,23 @@ export default function BaseCropModal(prop) {
                 }}
             >
                 <Fade in={prop.cropModalStatus}>
-                    <div className={modalClasses.paper}>
-                        <div className="block 2xl:h-5/6 ">
-                            {/* <Image id="image-crop" alt="img-for-crop" height="100" width="100" layout="fixed" src="/images/map.png" style={{ display: 'block', maxWidth: '100%' }} /> */}
-                            <img id="image-crop" alt="img-for-crop" style={{ display: 'block', maxWidth: '100%' }} />
+                    <ThemeProvider theme={theme}>
+                        <div className={modalClasses.paper}>
+                            <div className="block 2xl:h-5/6 ">
+                                {/* <Image id="image-crop" alt="img-for-crop" height="100" width="100" layout="fixed" src="/images/map.png" style={{ display: 'block', maxWidth: '100%' }} /> */}
+                                <img id="image-crop" alt="img-for-crop" style={{ display: 'block', maxWidth: '100%' }} />
+                            </div>
+                            <div className="2xl:flex flex-wrap 2xl:h-1/6 2xl:items-center 2xl:justify-between">
+                                <div className="2xl:flex-grow-0.9" >
+                                    <Button onClick={resetCropper} variant="contained" color="default" className={"2xl:max-h-14"}>Reset</Button>
+                                </div>
+                                <Button onClick={cropImage} variant="contained" color="primary" className={"2xl:max-h-14"}>Crop</Button>
+                                <Button onClick={prop.closeCropModal} variant="contained" color="secondary" className={"2xl:max-h-14 2xl:ml-8"}>Cancel</Button>
+                            </div>
                         </div>
-                    </div>
+                    </ThemeProvider>
                 </Fade>
             </Modal>
-        </div>
+        </div >
     )
 }
