@@ -270,7 +270,7 @@ export default function BasePostModal(prop) {
             <div className="2xl:grid 2xl:grid-cols-3">
                 <div className="2xl:mt-8 2xl:mb-6 2xl:ml-12">
                     <p className={"text-2xl font-medium " + BasePostModalStyles.postTitleColor}>Google Map *</p>
-                    {
+                    {/* {
                         mapPreview === true ?
                             <div id="map-preview-post" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '100%', height: '400px' }}>
                             </div>
@@ -280,7 +280,7 @@ export default function BasePostModal(prop) {
                                 <p className={"2xl:absolute text-white 2xl:px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + UtilStyles.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
                             </div>
                     }
-                    <BaseModalMap handleClose={closeMapModal} modalMap={modalMap} searchPlace={searchPlace} map={mapObj} location={location} confirmStatusLocation={confirmStatusLocation} cancelLocation={cancelLocation} type={'post'} />
+                    <BaseModalMap handleClose={closeMapModal} modalMap={modalMap} searchPlace={searchPlace} map={mapObj} location={location} confirmStatusLocation={confirmStatusLocation} cancelLocation={cancelLocation} type={'post'} /> */}
                 </div>
                 <div className="2xl:mt-16 2xl:mb-6 2xl:mx-auto 2xl:w-4/6">
                     {/* <form className={formClasses.root} autoComplete="off"> */}
