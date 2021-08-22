@@ -35,6 +35,7 @@ export default function BaseImageUpload() {
     const checkImageLength = (img) => {
         if (img.length > 5) {
             alert('maximum image upload is 5 image');
+            document.getElementById('file-upload').value = null;
             return false;
         }
         return true;
@@ -43,6 +44,7 @@ export default function BaseImageUpload() {
     const closeCropModal = () => {
         setImageRawFile([]);
         setCropModalStatus(false);
+        document.getElementById('file-upload').value = null;
     }
 
     return (
