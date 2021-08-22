@@ -175,7 +175,7 @@ export default function Feed() {
             scrollwheel: false,
             disableDoubleClickZoom: true
         });
-        createMarker(locationConfirm, null, map, true,true);
+        createMarker(locationConfirm, null, map, true, true);
     }
 
     const searchPlace = (query, map) => {
@@ -315,7 +315,7 @@ export default function Feed() {
                             'text-mainGreen': postType !== "lost",
                         })
                         }>Post Lost</p>
-                        <BasePostModal />
+                        {postType != null ? <BasePostModal cancelFunction={togglePostType} type={postType}/> : null}
                     </div>
                 </section>
                 <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-3 2xl:mx-56 text-center">
