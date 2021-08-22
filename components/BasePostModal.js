@@ -217,7 +217,7 @@ export default function BasePostModal(prop) {
             scrollwheel: false,
             disableDoubleClickZoom: true
         });
-        console.log('create preview marker')
+        // console.log('create preview marker')
         createMarker(locationConfirm, null, map, true, true);
     }
 
@@ -233,7 +233,7 @@ export default function BasePostModal(prop) {
                 createMarker(results[0].geometry.location, results[0].name, map);
                 map.setCenter(results[0].geometry.location);
             } else {
-                console.log('search failed')
+                // console.log('search failed')
                 handleLocationError(true, placeInfoWindow, map.getCenter(), true, map);
             }
         });
@@ -281,7 +281,7 @@ export default function BasePostModal(prop) {
     }
 
     return (
-        <div className={"2xl:absolute bg-white shadow-lg rounded-lg " + BasePostModalStyles.modal}>
+        <div className={"2xl:absolute bg-white shadow-lg rounded-lg border border-gray-300 border-solid " + BasePostModalStyles.modal}>
             <div className="2xl:grid 2xl:grid-cols-3">
                 <div className="2xl:mt-8 2xl:mb-6 2xl:ml-12">
                     <p className={"text-2xl font-medium " + BasePostModalStyles.postTitleColor}>Google Map *</p>
@@ -374,7 +374,7 @@ export default function BasePostModal(prop) {
                 {/* </form> */}
                 <div className="2xl:mt-8 2xl:mb-6 2xl:mr-12">
                     <p className={"text-2xl font-medium " + BasePostModalStyles.postTitleColor}>Cat photo</p>
-                    <BaseImageUpload setImage={setImage} />
+                    <BaseImageUpload image={image} setImage={setImage} />
                 </div>
             </div>
             <div className="2xl:flex flex-wrap 2xl:justify-end">
