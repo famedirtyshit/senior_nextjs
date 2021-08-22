@@ -64,7 +64,6 @@ export default function BaseCropModal(prop) {
             prop.closeCropModal();
         }
         else if (croppedImage.length > 0) {
-            console.log(croppedImage);
             initCropper(croppedImage.length + 1);
         }
     }, [croppedImage])
@@ -77,13 +76,13 @@ export default function BaseCropModal(prop) {
             let image = document.getElementById('image-crop');
             let myCrop = image.cropper;
             if (myCrop) {
-                console.log('destroy')
+                // console.log('destroy')
                 await myCrop.destroy();
             }
             const cropper = new Cropper(image, {
                 aspectRatio: 3 / 4,
                 ready() {
-                    console.log('ready')
+                    // console.log('ready')
                 }
             })
         }
@@ -115,12 +114,12 @@ export default function BaseCropModal(prop) {
         let image = document.getElementById('image-crop');
         let myCrop = image.cropper;
         myCrop.getCroppedCanvas({
-            width: 160,
-            height: 90,
-            minWidth: 256,
-            minHeight: 256,
-            maxWidth: 4096,
-            maxHeight: 4096,
+            // width: 160,
+            // height: 90,
+            // minWidth: 256,
+            // minHeight: 256,
+            // maxWidth: 4096,
+            // maxHeight: 4096,
             fillColor: '#fff',
             imageSmoothingEnabled: true,
             imageSmoothingQuality: 'high',

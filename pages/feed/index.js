@@ -305,12 +305,12 @@ export default function Feed() {
                         </div>
                     </div>
                     <div className="2xl:grid 2xl:grid-cols-2 bg-white rounded-2xl 2xl:relative">
-                        <p onClick={setPostFoundType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium " + cn({
+                        <p onClick={setPostFoundType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium cursor-pointer " + cn({
                             'bg-mainGreen text-white rounded-bl-2xl': postType === "found",
                             'text-mainGreen': postType !== "found",
                         })
                         }>Post Found</p>
-                        <p onClick={setPostLostType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium " + cn({
+                        <p onClick={setPostLostType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium cursor-pointer " + cn({
                             'bg-mainGreen text-white rounded-br-2xl': postType === "lost",
                             'text-mainGreen': postType !== "lost",
                         })
