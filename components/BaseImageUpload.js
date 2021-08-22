@@ -5,9 +5,10 @@ import IMAGES from '@constants/IMAGES';
 import UtilStyles from "@styles/Util.module.css";
 import { useState, useEffect } from "react";
 
-export default function BaseImageUpload() {
+export default function BaseImageUpload(prop) {
     const [imageRawFile, setImageRawFile] = useState([]);
     const [cropModalStatus, setCropModalStatus] = useState(false);
+    const [imageCropFile, setImageCropFile] = useState([]);
 
     useEffect(() => {
         if (imageRawFile.length > 0) {
@@ -42,7 +43,6 @@ export default function BaseImageUpload() {
     }
 
     const closeCropModal = () => {
-        setImageRawFile([]);
         setCropModalStatus(false);
         document.getElementById('file-upload').value = null;
     }
@@ -58,7 +58,7 @@ export default function BaseImageUpload() {
             <div onClick={chooseImage}>
                 <BaseButton fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Upload an Image'} customClass={'2xl:mt-6 2xl:w-full bg-opacity-75'}></BaseButton>
             </div>
-            <BaseCropModal cropModalStatus={cropModalStatus} closeCropModal={closeCropModal} imageRawFile={imageRawFile} />
+            <BaseCropModal setImage={prop.setImage} cropModalStatus={cropModalStatus} closeCropModal={closeCropModal} imageRawFile={imageRawFile} />
         </div>
     )
 }

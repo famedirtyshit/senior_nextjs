@@ -49,6 +49,7 @@ export default function BasePostModal(prop) {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [sexSelected, setSexSelected] = useState('unknow');
     const [collarSelected, setCollarSelected] = useState('notHave');
+    const [image,setImage] = useState([]);
 
     useEffect(() => {
         try {
@@ -78,6 +79,16 @@ export default function BasePostModal(prop) {
             setMapPreview(false);
         }
     }, [locationConfirmStatus, locationConfirm])
+
+    useEffect(() => {
+        // console.log('image set : ');
+        // console.log(image);
+        // console.log('---------------');
+    },[image])
+
+    useEffect(() => {
+        setImage([]);
+    },[prop.type])
 
     // useEffect(() => {
     //     let dateField = document.getElementById('dateField');
@@ -265,12 +276,16 @@ export default function BasePostModal(prop) {
         setSelectedDate(date);
     };
 
+    const closePostModal = () => {
+        prop.cancelFunction();
+    }
+
     return (
         <div className={"2xl:absolute bg-white shadow-lg rounded-lg " + BasePostModalStyles.modal}>
             <div className="2xl:grid 2xl:grid-cols-3">
                 <div className="2xl:mt-8 2xl:mb-6 2xl:ml-12">
                     <p className={"text-2xl font-medium " + BasePostModalStyles.postTitleColor}>Google Map *</p>
-                    {/* {
+                    {
                         mapPreview === true ?
                             <div id="map-preview-post" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '100%', height: '400px' }}>
                             </div>
@@ -280,7 +295,7 @@ export default function BasePostModal(prop) {
                                 <p className={"2xl:absolute text-white 2xl:px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + UtilStyles.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
                             </div>
                     }
-                    <BaseModalMap handleClose={closeMapModal} modalMap={modalMap} searchPlace={searchPlace} map={mapObj} location={location} confirmStatusLocation={confirmStatusLocation} cancelLocation={cancelLocation} type={'post'} /> */}
+                    <BaseModalMap handleClose={closeMapModal} modalMap={modalMap} searchPlace={searchPlace} map={mapObj} location={location} confirmStatusLocation={confirmStatusLocation} cancelLocation={cancelLocation} type={'post'} />
                 </div>
                 <div className="2xl:mt-16 2xl:mb-6 2xl:mx-auto 2xl:w-4/6">
                     {/* <form className={formClasses.root} autoComplete="off"> */}
@@ -359,11 +374,11 @@ export default function BasePostModal(prop) {
                 {/* </form> */}
                 <div className="2xl:mt-8 2xl:mb-6 2xl:mr-12">
                     <p className={"text-2xl font-medium " + BasePostModalStyles.postTitleColor}>Cat photo</p>
-                    <BaseImageUpload />
+                    <BaseImageUpload setImage={setImage} />
                 </div>
             </div>
             <div className="2xl:flex flex-wrap 2xl:justify-end">
-            <BaseButton value={'Cancel'} customClass={'2xl:my-6 2xl:mr-8'}></BaseButton>
+            <BaseButton onClickFunction={closePostModal} value={'Cancel'} customClass={'2xl:my-6 2xl:mr-8'}></BaseButton>
             <BaseButton fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Submit'} customClass={'2xl:my-6 2xl:mr-28'}></BaseButton>
             </div>
         </div>

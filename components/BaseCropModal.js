@@ -41,49 +41,58 @@ const modalStyles = makeStyles((theme) => ({
     },
 }));
 
-const buttonStyles = makeStyles((theme) => ({
-    position: {
-        marginTop: '4rem'
-    },
-}));
 
 export default function BaseCropModal(prop) {
     const [cropperStatus, setCropperStatus] = useState(false);
+    const [croppedImage, setCroppedImage] = useState([]);
 
     useEffect(() => {
+        setCroppedImage([]);
         if (cropperStatus == true) {
             let checkExist = setInterval(function () {
                 if (document.getElementById('image-crop')) {
                     clearInterval(checkExist);
-                    initCropper();
+                    initCropper(1);
                 }
             }, 100);
         }
     }, [cropperStatus, prop.imageRawFile])
 
-    const modalClasses = modalStyles();
-    const buttonClasses = buttonStyles();
-
-    const initCropper = async () => {
-        initImage();
-        let image = document.getElementById('image-crop');
-        let myCrop = image.cropper;
-        if (myCrop) {
-            console.log('destroy')
-            await myCrop.destroy();
+    useEffect(() => {
+        if (croppedImage.length === prop.imageRawFile.length) {
+            emitCroppedImage();
+            prop.closeCropModal();
         }
-        const cropper = new Cropper(image, {
-            aspectRatio: 3 / 4,
-            ready() {
-                console.log('ready')
+        else if (croppedImage.length > 0) {
+            console.log(croppedImage);
+            initCropper(croppedImage.length + 1);
+        }
+    }, [croppedImage])
+
+    const modalClasses = modalStyles();
+
+    const initCropper = async (imagePosition) => {
+        if (imagePosition <= prop.imageRawFile.length) {
+            initImage(imagePosition - 1);
+            let image = document.getElementById('image-crop');
+            let myCrop = image.cropper;
+            if (myCrop) {
+                console.log('destroy')
+                await myCrop.destroy();
             }
-        })
+            const cropper = new Cropper(image, {
+                aspectRatio: 3 / 4,
+                ready() {
+                    console.log('ready')
+                }
+            })
+        }
     }
 
-    const initImage = () => {
-        if (prop.imageRawFile[0]) {
+    const initImage = (imageIndex) => {
+        if (prop.imageRawFile[imageIndex]) {
             let image = document.getElementById('image-crop');
-            let imgSrc = URL.createObjectURL(prop.imageRawFile[0]);
+            let imgSrc = URL.createObjectURL(prop.imageRawFile[imageIndex]);
             image.src = imgSrc;
         }
     }
@@ -115,10 +124,13 @@ export default function BaseCropModal(prop) {
             fillColor: '#fff',
             imageSmoothingEnabled: true,
             imageSmoothingQuality: 'high',
-          }).toBlob((blob) => {
-              console.log(blob);
-              alert(blob)
-          })
+        }).toBlob((blob) => {
+            setCroppedImage([...croppedImage, blob]);
+        })
+    }
+
+    const emitCroppedImage = () => {
+        prop.setImage(croppedImage);
     }
 
     return (
@@ -152,7 +164,8 @@ export default function BaseCropModal(prop) {
                                 <div className="2xl:flex-grow-0.9" >
                                     <Button onClick={resetCropper} variant="contained" color="default" className={"2xl:max-h-14"}>Reset</Button>
                                 </div>
-                                <Button onClick={cropImage} variant="contained" color="primary" className={"2xl:max-h-14"}>Crop</Button>
+                                <p>{croppedImage.length + 1} of {prop.imageRawFile.length}</p>
+                                <Button onClick={cropImage} variant="contained" color="primary" className={"2xl:max-h-14"}>{croppedImage.length + 1 === prop.imageRawFile.length ? 'Finish' : 'Crop'}</Button>
                                 <Button onClick={prop.closeCropModal} variant="contained" color="secondary" className={"2xl:max-h-14 2xl:ml-8"}>Cancel</Button>
                             </div>
                         </div>

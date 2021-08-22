@@ -35,6 +35,6 @@ export default function BaseButton(prop) {
     }
 
     return (
-        <button className={"2xl:text-2xl 2xl:font-normal" + checkFill() + checkRound() + checkTextColor() + checkCustom()}>{prop.value}</button>
+        <button onClick={prop.onClickFunction} className={"2xl:text-2xl 2xl:font-normal" + checkFill() + checkRound() + checkTextColor() + checkCustom()}>{prop.value}</button>
     )
 }
