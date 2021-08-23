@@ -192,8 +192,8 @@ export default function Home() {
                         textColor={'white'} 
                         round={true} 
                         roundSize={'lg'} 
-                        value={'Get Started'} 
-                        customClass={'2xl:ml-4 2xl:w-52 2xl:h-12 2xl:mt-12'}>                    
+                        value={'Looking for your cat'} 
+                        customClass={'2xl:ml-4 2xl:w-64 2xl:h-14 2xl:mt-12'}>                    
                     </BaseButton>
                 </section>
                 <section className="footer-orange 2xl:flex 2xl:flex-col 2xl:justify-center 2xl:items-center 2xl:bg-mainBgGreen" style={{width:"100%",height:"259px"}}>
