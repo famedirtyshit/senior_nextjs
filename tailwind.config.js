@@ -33,7 +33,8 @@ module.exports = {
         mainOrange: '#F0930D',
         mainCream: '#FFFCF3',
         textGray: '#939393',
-        darkCream: '#DBC09C'
+        darkCream: '#DBC09C',
+        postTitle: '#626262',
       },
       textColor: {
         mainGreen: '#356053'
