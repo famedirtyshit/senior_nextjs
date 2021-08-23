@@ -66,7 +66,7 @@ export default function BaseImageUpload(prop) {
 
     return (
         <div>
-            <div className="2xl:w-full 2xl:mx-auto 2xl:mt-3 rounded-lg h-96 bg-textGray relative">
+            <div className="2xl:w-5/6 2xl:mx-auto 2xl:mt-3 rounded-lg h-80 bg-textGray relative">
                 {
                     imageCropFile.length > 0 ?
                         <Carousel navButtonsAlwaysVisible={true} className="block h-full">

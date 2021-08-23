@@ -16,6 +16,8 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import cn from 'classnames';
+import postUtil from '@utils/postUtil';
+import BasePostResModal from "@components/BasePostResModal";
 
 // const formStyles = makeStyles((theme) => ({
 //     root: {
@@ -50,9 +52,12 @@ export default function BasePostModal(prop) {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [sexSelected, setSexSelected] = useState('unknow');
     const [collarSelected, setCollarSelected] = useState('notHave');
-    const [image,setImage] = useState([]);
+    const [image, setImage] = useState([]);
 
     const [validateMsg, setValidateMsg] = useState({});
+
+    const [postResStatus,setPostResStatus] = useState(false);
+    const [postRes,setPostRes] = useState(null);
 
     useEffect(() => {
         try {
@@ -87,11 +92,11 @@ export default function BasePostModal(prop) {
         // console.log('image set : ');
         // console.log(image);
         // console.log('---------------');
-    },[image])
+    }, [image])
 
     useEffect(() => {
         setImage([]);
-    },[prop.type])
+    }, [prop.type])
 
     // useEffect(() => {
     //     let dateField = document.getElementById('dateField');
@@ -283,45 +288,81 @@ export default function BasePostModal(prop) {
         prop.cancelFunction();
     }
 
-    const submitPost = () => {
-       let valid = validateSubmit();
+    const closePostResModal = () => {
+        setPostResStatus(false);
+        setPostRes(null);
+    }
+
+    const submitPost = async () => {
+        let valid = validateSubmit();
+        let desc = document.getElementById('post-desc-field').value;
+        if (!valid.status) {
+            return;
+        } else {
+            setValidateMsg({ type: 'pass', msg: '' })
+            console.log('submit');
+            let sexToBoolean;
+            let collarToBoolean;
+            if (sexSelected == 'male') {
+                sexToBoolean = true;
+            } else if (sexSelected == 'female') {
+                sexToBoolean = false;
+            } else {
+                sexToBoolean = null;
+            }
+            if (collarSelected == 'have') {
+                collarToBoolean = true;
+            } else if (collarSelected == 'notHave') {
+                collarToBoolean = false;
+            } else {
+                collarToBoolean = null;
+            }
+            setPostResStatus(true);
+            let result = await postUtil.post(locationConfirm.lat, locationConfirm.lng, selectedDate, sexToBoolean, collarToBoolean, desc, image, prop.type);
+            setPostRes(result);
+        }
     }
 
     const checkIsFuture = () => {
         let current = new Date();
-        if(current < selectedDate){
+        if (current < selectedDate) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     const validateSubmit = () => {
-        let valid = {status:true};
-        if(locationConfirm == null){
+        let valid = { status: true };
+        if (locationConfirm == null) {
             valid.status = false;
-            setValidateMsg({type:'location',msg:'please select the location.'})
+            setValidateMsg({ type: 'location', msg: 'please select the location.' })
+            return valid;
         }
-        if(selectedDate == null){
+        if (selectedDate == null) {
             valid.status = false;
-            setValidateMsg({type:'date',msg:'please select the date.'})
+            setValidateMsg({ type: 'date', msg: 'please select the date.' })
             document.getElementById('date-picker-dialog').focus();
-        }else if(document.getElementById('date-picker-dialog-helper-text') != null) {
+            return valid;
+        } else if (document.getElementById('date-picker-dialog-helper-text') != null) {
             valid.status = false;
-            setValidateMsg({type:'date',msg:'please input correct date format.'})
+            setValidateMsg({ type: 'date', msg: 'please input correct date format.' })
             document.getElementById('date-picker-dialog').focus();
-        }else if(checkIsFuture()){
+            return valid;
+        } else if (checkIsFuture()) {
             valid.status = false;
-            setValidateMsg({type:'date',msg:'your selected date has not yet arrived, please input correct date.'})
+            setValidateMsg({ type: 'date', msg: 'your selected date has not yet arrived, please input correct date.' })
             document.getElementById('date-picker-dialog').focus();
+            return valid;
         }
+        return valid;
     }
 
     return (
         <div className={"2xl:absolute bg-white shadow-lg rounded-lg border border-gray-300 border-solid " + BasePostModalStyles.modal}>
             <div className="2xl:grid 2xl:grid-cols-3">
                 <div className="2xl:mt-8 2xl:mb-6 2xl:ml-12">
-                    <p className={"text-2xl font-medium " + cn({'text-red-500': validateMsg.type === "location",'text-postTitle': validateMsg.type !== "location"})}>Google Map *</p>
+                    <p className={"text-2xl font-medium " + cn({ 'text-red-500': validateMsg.type === "location", 'text-postTitle': validateMsg.type !== "location" })}>Google Map *</p>
                     {
                         mapPreview === true ?
                             <div id="map-preview-post" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '100%', height: '400px' }}>
@@ -416,10 +457,11 @@ export default function BasePostModal(prop) {
                 </div>
             </div>
             <div className="2xl:flex flex-wrap 2xl:justify-end">
-            <p className={'2xl:my-auto 2xl:mr-16 text-red-500'}>{validateMsg.msg != "" ? validateMsg.msg : ''}</p>
-            <BaseButton onClickFunction={closePostModal} value={'Cancel'} customClass={'2xl:my-6 2xl:mr-8'}></BaseButton>
-            <BaseButton onClickFunction={submitPost} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Submit'} customClass={'2xl:my-6 2xl:mr-28'}></BaseButton>
+                <p className={'2xl:my-auto 2xl:mr-16 text-red-500'}>{validateMsg.msg != "" ? validateMsg.msg : ''}</p>
+                <BaseButton onClickFunction={closePostModal} value={'Cancel'} customClass={'2xl:my-6 2xl:mr-8'}></BaseButton>
+                <BaseButton onClickFunction={submitPost} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Submit'} customClass={'2xl:my-6 2xl:mr-28'}></BaseButton>
             </div>
+            <BasePostResModal closePostResModal={closePostResModal} postResStatus={postResStatus} postRes={postRes}/>
         </div>
     )
 }
