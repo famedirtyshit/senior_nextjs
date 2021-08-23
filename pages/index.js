@@ -39,11 +39,36 @@ export default function Home() {
                 <section className="about 2xl:ml-64 2xl:w-4/12">
                     <h1 className="2xl:text-5xl 2xl:font-black">About <span className="text-mainOrange">CatUs</span></h1>
                     <p className="mt-2">Nulla ea enim irure  Non dolore laborum cupidatat incididunt. Nostrud excepteur do aliqua proident mollit dolore consectetur anim consectetur elit eiusmod qui dolore dolore. Laboris fugiat ad irure dolor.</p>
-                    <Link href='/feed'>
-                        <a>
-                            <BaseButton style={'color: white'} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Get Started'} customClass={'2xl:mt-4'}></BaseButton>
-                        </a>
-                    </Link>
+                    <div className="2xl:flex 2xl:flex-wrap 2xl:gap-5"> 
+                        <Link href='/feed'>
+                            <a>
+                                <BaseButton 
+                                    style={'color: white'} 
+                                    fill={true} 
+                                    fillColor={'mainBgGreen'} 
+                                    textColor={'white'} 
+                                    round={true} 
+                                    roundSize={'lg'} 
+                                    value={'Get Started'} 
+                                    customClass={'2xl:mt-4'}>
+                                </BaseButton>
+                            </a>
+                        </Link>
+                        <Link href=''>
+                            <a>
+                                <BaseButton 
+                                    style={'color: white'} 
+                                    fill={true} 
+                                    fillColor={'#FFFCF3'} 
+                                    textColor={'mainOrange'} 
+                                    round={true} 
+                                    roundSize={'lg'} 
+                                    value={'Looking for your cat'} 
+                                    customClass={'2xl:mt-4 2xl:border-2 2xl:border-yellow-400'}>    
+                                </BaseButton>
+                            </a>
+                        </Link>
+                    </div>
                 </section>
                 <section className="cat-img 2xl:absolute 2xl:-top-10 2xl:right-28">
                     <Image src={IMAGES.catModalHomePage} alt='cat' width="878" height="346"/>
@@ -103,9 +128,9 @@ export default function Home() {
                                 <div className="2xl:absolute 2xl:left-96 2xl:top-20">
                                     <Image src={IMAGES.onefor4step} alt="onefor4step"  width="110" height="253" />
                                 </div>
-                                <div className="2xl:absolute 2xl:left-80 2xl:top-72">
-                                    <p className="2xl:text-4xl 2xl:font-bold 2xl:text-left">Typesetting</p>
-                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left" >Lorem Ipsum has been the industry's<br /> psum has been the industry's</p>
+                                <div className="2xl:absolute 2xl:ml-48 2xl:top-72 2xl:w-3/5">
+                                    <p className="2xl:text-4xl 2xl:font-bold 2xl:ml-40 ">Search Post</p>
+                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left " >คุณสามารถกรอกข้อมูลสถานที่ที่คุณพบน้องแมวหรือ สถานที่ที่น้องหลุดไปได้เลยผ่าน Google map และ สามารถเพิ่มขอบเขต การค้นหาได้มากสุด 5 กิโลเมตร</p>
                                 </div>
                             </div>    
                             <div className="" >
@@ -120,9 +145,9 @@ export default function Home() {
                                 <div className="2xl:absolute 2xl:left-96 2xl:top-28">
                                     <Image src={IMAGES.twofor4step} alt="twofor4step"  width="140" height="203" />
                                 </div>
-                                <div className="2xl:absolute 2xl:left-80 2xl:top-64">
-                                    <p className="2xl:text-4xl 2xl:font-bold 2xl:text-left">Typesetting</p>
-                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left" >Lorem Ipsum has been the industry's<br /> psum has been the industry's</p>
+                                <div className="2xl:absolute 2xl:ml-48 2xl:top-72 2xl:w-3/5">
+                                    <p className="2xl:text-4xl 2xl:font-bold 2xl:ml-40 ">Function Post</p>
+                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left " >คุณสามารถโพสประกาศตามหาแมวหรือโพสพบเจอแมวได้ โดยอย่าลืมระบุข้อมูลที่จำเป็น ต่อการค้นหาตามที่คุณทราบ ด้วยนะ</p>
                                 </div>
                             </div>    
                          </div>  
@@ -131,9 +156,9 @@ export default function Home() {
                                 <div className="2xl:absolute 2xl:left-96 2xl:top-28">
                                     <Image src={IMAGES.threefor4step} alt="threefor4step"  width="140" height="203" />
                                 </div>
-                                <div className="2xl:absolute 2xl:left-80 2xl:top-64">
-                                    <p className="2xl:text-4xl 2xl:font-bold 2xl:text-left">Typesetting</p>
-                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left" >Lorem Ipsum has been the industry's<br /> psum has been the industry's</p>
+                                <div className="2xl:absolute 2xl:ml-48 2xl:top-72 2xl:w-3/5">
+                                    <p className="2xl:text-4xl 2xl:font-bold 2xl:ml-40 ">My Account</p>
+                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left " >คุณสามารถแก้ไขโปรไฟล์หรืออัพเดตข้อมูลส่วนตัวได้หากมีการเปลี่ยนแปลง และยัง สามารถเรียกดูโพสของตนเองได้เพื่อ แก้ไขข้อมูล และ หากเมื่อพบน้องแมวแล้ว อย่าลืมกลับมาลบโพส ให้เราหน่อยน้าา</p>
                                 </div>
                             </div>    
                             <div className="" >
@@ -148,9 +173,9 @@ export default function Home() {
                                 <div className="2xl:absolute 2xl:left-96 2xl:top-24">
                                     <Image src={IMAGES.fourfor4step} alt="fourfor4step"  width="140" height="203" />
                                 </div>
-                                <div className="2xl:absolute 2xl:left-80 2xl:top-64">
-                                    <p className="2xl:text-4xl 2xl:font-bold 2xl:text-left">Typesetting</p>
-                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left" >Lorem Ipsum has been the industry's<br /> psum has been the industry's</p>
+                                <div className="2xl:absolute 2xl:ml-48 2xl:top-72 2xl:w-3/5">
+                                    <p className="2xl:text-4xl 2xl:font-bold 2xl:ml-20 ">Finally, you succeeded</p>
+                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left " >ดีใจด้วยน้าาา....ในที่สุดคุณก็หาเจอ เมื่อคุณเจอน้อง แมวที่คุณตามหาแล้วคุณสามารถกดเข้าไปเพื่อดู ข้อมูลเพิ่มเติมและข้อมูลติดต่อผู้โพสได้เลย</p>
                                 </div>
                             </div>    
                          </div>    
