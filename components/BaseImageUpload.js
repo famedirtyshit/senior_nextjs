@@ -69,7 +69,7 @@ export default function BaseImageUpload(prop) {
             <div className="2xl:w-4/6 2xl:mx-auto 2xl:mt-3 rounded-lg h-96 bg-textGray relative">
                 {
                     imageCropFile.length > 0 ?
-                        <Carousel className="block h-full">
+                        <Carousel navButtonsAlwaysVisible={true} className="block h-full">
                             {
                                 imageCropFile.map((item, i) => <Image key={i} src={item} alt={'previewImg-' + i} layout="fill"  />)
                             }
