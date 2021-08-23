@@ -63,7 +63,7 @@ export default function BaseCropModal(prop) {
             emitCroppedImage();
             prop.closeCropModal();
         }
-        else if (croppedImage.length > 0) {
+        else if (document.getElementById('image-crop')) {
             initCropper(croppedImage.length + 1);
         }
     }, [croppedImage])
@@ -128,6 +128,14 @@ export default function BaseCropModal(prop) {
         })
     }
 
+    const backCrop = () => {
+        let backArray  = [];
+        for(let i = 0; i < croppedImage.length - 1; i++){
+            backArray.push(croppedImage[i]);
+        }
+        setCroppedImage(backArray);
+    }
+
     const emitCroppedImage = () => {
         prop.setImage(croppedImage);
     }
@@ -164,6 +172,7 @@ export default function BaseCropModal(prop) {
                                     <Button onClick={resetCropper} variant="contained" color="default" className={"2xl:max-h-14"}>Reset</Button>
                                 </div>
                                 <p>{croppedImage.length + 1} of {prop.imageRawFile.length}</p>
+                                <Button onClick={backCrop} variant="contained" color="primary" className={"2xl:max-h-14"} disabled={croppedImage.length > 0 && prop.imageRawFile.length > 1 ? false : true} >Back</Button>
                                 <Button onClick={cropImage} variant="contained" color="primary" className={"2xl:max-h-14"}>{croppedImage.length + 1 === prop.imageRawFile.length ? 'Finish' : 'Crop'}</Button>
                                 <Button onClick={prop.closeCropModal} variant="contained" color="secondary" className={"2xl:max-h-14 2xl:ml-8"}>Cancel</Button>
                             </div>
