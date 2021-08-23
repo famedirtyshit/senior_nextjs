@@ -80,7 +80,7 @@ export default function BaseCropModal(prop) {
                 await myCrop.destroy();
             }
             const cropper = new Cropper(image, {
-                aspectRatio: 3 / 4,
+                aspectRatio: 1 / 1,
                 ready() {
                     // console.log('ready')
                 }

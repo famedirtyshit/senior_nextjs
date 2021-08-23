@@ -15,6 +15,7 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
+import cn from 'classnames';
 
 // const formStyles = makeStyles((theme) => ({
 //     root: {
@@ -50,6 +51,8 @@ export default function BasePostModal(prop) {
     const [sexSelected, setSexSelected] = useState('unknow');
     const [collarSelected, setCollarSelected] = useState('notHave');
     const [image,setImage] = useState([]);
+
+    const [validateMsg, setValidateMsg] = useState({});
 
     useEffect(() => {
         try {
@@ -280,11 +283,45 @@ export default function BasePostModal(prop) {
         prop.cancelFunction();
     }
 
+    const submitPost = () => {
+       let valid = validateSubmit();
+    }
+
+    const checkIsFuture = () => {
+        let current = new Date();
+        if(current < selectedDate){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    const validateSubmit = () => {
+        let valid = {status:true};
+        if(locationConfirm == null){
+            valid.status = false;
+            setValidateMsg({type:'location',msg:'please select the location.'})
+        }
+        if(selectedDate == null){
+            valid.status = false;
+            setValidateMsg({type:'date',msg:'please select the date.'})
+            document.getElementById('date-picker-dialog').focus();
+        }else if(document.getElementById('date-picker-dialog-helper-text') != null) {
+            valid.status = false;
+            setValidateMsg({type:'date',msg:'please input correct date format.'})
+            document.getElementById('date-picker-dialog').focus();
+        }else if(checkIsFuture()){
+            valid.status = false;
+            setValidateMsg({type:'date',msg:'your selected date has not yet arrived, please input correct date.'})
+            document.getElementById('date-picker-dialog').focus();
+        }
+    }
+
     return (
         <div className={"2xl:absolute bg-white shadow-lg rounded-lg border border-gray-300 border-solid " + BasePostModalStyles.modal}>
             <div className="2xl:grid 2xl:grid-cols-3">
                 <div className="2xl:mt-8 2xl:mb-6 2xl:ml-12">
-                    <p className={"text-2xl font-medium " + BasePostModalStyles.postTitleColor}>Google Map *</p>
+                    <p className={"text-2xl font-medium " + cn({'text-red-500': validateMsg.type === "location",'text-postTitle': validateMsg.type !== "location"})}>Google Map *</p>
                     {
                         mapPreview === true ?
                             <div id="map-preview-post" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '100%', height: '400px' }}>
@@ -313,6 +350,7 @@ export default function BasePostModal(prop) {
                             }}
                             required
                             className="w-full"
+                            error={validateMsg.type === "date" ? true : false}
                         />
                     </MuiPickersUtilsProvider>
                     <div className="sex-section 2xl:flex flex-wrap items-center text-textGray font-medium 2xl:my-2">
@@ -378,8 +416,9 @@ export default function BasePostModal(prop) {
                 </div>
             </div>
             <div className="2xl:flex flex-wrap 2xl:justify-end">
+            <p className={'2xl:my-auto 2xl:mr-16 text-red-500'}>{validateMsg.msg != "" ? validateMsg.msg : ''}</p>
             <BaseButton onClickFunction={closePostModal} value={'Cancel'} customClass={'2xl:my-6 2xl:mr-8'}></BaseButton>
-            <BaseButton fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Submit'} customClass={'2xl:my-6 2xl:mr-28'}></BaseButton>
+            <BaseButton onClickFunction={submitPost} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Submit'} customClass={'2xl:my-6 2xl:mr-28'}></BaseButton>
             </div>
         </div>
     )
