@@ -1,13 +1,15 @@
 import axios from 'axios';
 
 const allPostUtil = {
-    search: async (lat,lng,sex,collar,radius,type) => {
+    search: async (lat, lng, sex, collar, radius, type) => {
         try {
             let endpoint = '';
             if (type == 'lost') {
                 endpoint = 'searchLostCat'
-            } else {
+            } else if (type == 'found') {
                 endpoint = 'searchFoundCat'
+            } else {
+                endpoint = 'searchAll'
             }
             let male = sex.male;
             let female = sex.female;
