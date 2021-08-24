@@ -311,7 +311,7 @@ export default function BasePostModal(prop) {
             } else if (sexSelected == 'female') {
                 sexToBoolean = false;
             } else {
-                sexToBoolean = null;
+                sexToBoolean = 'unknow';
             }
             if (collarSelected == 'have') {
                 collarToBoolean = true;
