@@ -315,7 +315,7 @@ export default function Feed() {
                             'text-mainGreen': postType !== "lost",
                         })
                         }>Post Lost</p>
-                        {postType != null ? <BasePostModal cancelFunction={togglePostType} type={postType}/> : null}
+                        {postType != null ? <BasePostModal cancelFunction={togglePostType} type={postType} closeBasePostModal={togglePostType} /> : null}
                     </div>
                 </section>
                 <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-3 2xl:mx-56 text-center">
