@@ -1,15 +1,20 @@
 import axios from 'axios';
 
 const allPostUtil = {
-    search: async () => {
+    search: async (lat,lng,sex,collar,radius,type) => {
         try {
-            // if(sexInput==undefined){
-            //     sexInput = null;
-            // }
-            // if(collarInput==undefined){
-            //     collarInput = null;
-            // }
-            let res = await axios.get(process.env.API_KEY + `/searchLostCat/get/d01/null/null`)
+            let endpoint = '';
+            if (type == 'lost') {
+                endpoint = 'searchLostCat'
+            } else {
+                endpoint = 'searchFoundCat'
+            }
+            let male = sex.male;
+            let female = sex.female;
+            let unknow = sex.unknow;
+            let haveCollar = collar.haveCollar;
+            let notHaveCollar = collar.notHaveCollar;
+            let res = await axios.get(process.env.API_KEY + `/${endpoint}/get/${lat}/${lng}/${radius}/${male}/${female}/${unknow}/${haveCollar}/${notHaveCollar}`)
             return res;
         } catch (e) {
             return e.response;

@@ -56,8 +56,8 @@ export default function BasePostModal(prop) {
 
     const [validateMsg, setValidateMsg] = useState({});
 
-    const [postResStatus,setPostResStatus] = useState(false);
-    const [postRes,setPostRes] = useState(null);
+    const [postResStatus, setPostResStatus] = useState(false);
+    const [postRes, setPostRes] = useState(null);
 
     useEffect(() => {
         try {
@@ -289,8 +289,11 @@ export default function BasePostModal(prop) {
     }
 
     const closePostResModal = () => {
-        setPostResStatus(false);
-        setPostRes(null);
+        if (postRes != null) {
+            setPostResStatus(false);
+            setPostRes(null);
+            prop.closeBasePostModal();
+        }
     }
 
     const submitPost = async () => {
@@ -308,7 +311,7 @@ export default function BasePostModal(prop) {
             } else if (sexSelected == 'female') {
                 sexToBoolean = false;
             } else {
-                sexToBoolean = null;
+                sexToBoolean = 'unknow';
             }
             if (collarSelected == 'have') {
                 collarToBoolean = true;
@@ -461,7 +464,7 @@ export default function BasePostModal(prop) {
                 <BaseButton onClickFunction={closePostModal} value={'Cancel'} customClass={'2xl:my-6 2xl:mr-8'}></BaseButton>
                 <BaseButton onClickFunction={submitPost} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Submit'} customClass={'2xl:my-6 2xl:mr-28'}></BaseButton>
             </div>
-            <BasePostResModal closePostResModal={closePostResModal} postResStatus={postResStatus} postRes={postRes}/>
+            <BasePostResModal closePostResModal={closePostResModal} postResStatus={postResStatus} postRes={postRes} />
         </div>
     )
 }

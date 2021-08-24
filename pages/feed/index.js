@@ -30,9 +30,12 @@ export default function Feed() {
     const [locationConfirm, setLocationConfirm] = useState(null);
     const [male, setMale] = useState(true);
     const [female, setFemale] = useState(true);
+    const [unknow,setUnknow] = useState(true);
     const [haveCollar, setHaveCollar] = useState(true);
     const [notHaveCollar, setNotHaveCollar] = useState(true);
+    const [radius,setRadius] = useState(1);
     const [postType, setPostType] = useState(null);
+    const [validateMsg, setValidateMsg] = useState({});
 
     useEffect(() => {
         try {
@@ -254,6 +257,7 @@ export default function Feed() {
     }
 
     const getRadiusValue = (value) => {
+        setRadius(value);
         return value;
     }
 
@@ -265,6 +269,10 @@ export default function Feed() {
         setFemale(event.target.checked);
     };
 
+    const handleUnknowChange = (event) => {
+        setUnknow(event.target.checked);
+    }
+
     const handleHaveCollarChange = (event) => {
         setHaveCollar(event.target.checked);
     };
@@ -272,6 +280,28 @@ export default function Feed() {
     const handleNotHaveCollarChange = (event) => {
         setNotHaveCollar(event.target.checked);
     };
+
+    const submitSearch = async () => {
+        let valid = validateSearch();
+        if(!valid){
+            return;
+        }else{
+            setValidateMsg({ type: 'pass', msg: '' })
+            let sexInput = {male:male,female:female,unknow:unknow};
+            let collarInput = {haveCollar:haveCollar,notHaveCollar:notHaveCollar};
+            let res = await postUtil.search(locationConfirm.lat,locationConfirm.lng,sexInput,collarInput,radius,searchType)
+            console.log(res.data)
+        }
+    }
+
+    const validateSearch = () => {
+        if(locationConfirm == null){
+            setValidateMsg({ type: 'location', msg: 'please select location.' })
+            return false;
+        }
+        return true;
+    }
+
     return (
         <div className={"2xl:container mx-auto " + FeedStyle.bgImg}>
             <Head>
@@ -315,7 +345,7 @@ export default function Feed() {
                             'text-mainGreen': postType !== "lost",
                         })
                         }>Post Lost</p>
-                        {postType != null ? <BasePostModal cancelFunction={togglePostType} type={postType}/> : null}
+                        {postType != null ? <BasePostModal cancelFunction={togglePostType} type={postType} closeBasePostModal={togglePostType} /> : null}
                     </div>
                 </section>
                 <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-3 2xl:mx-56 text-center">
@@ -335,7 +365,7 @@ export default function Feed() {
                     <div>
                         <p className="text-xl font-medium">ITEM (90)</p>
                         <p className="text-white 2xl:px-6 py-2 bg-darkCream rounded-3xl shadow-lg cursor-pointer 2xl:mt-10 text-center">ค้นหาด้วยข้อมูล Post ของฉัน</p>
-                        <p className="text-xl font-medium 2xl:mt-11">Change Location</p>
+                        <p className={"text-xl font-medium 2xl:mt-11 " + cn({'text-red-500': validateMsg.type === 'location'}) }>Change Location</p>
                         {
                             mapPreview === true ?
                                 <div id="map-preview" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '355px', height: '255px' }}>
@@ -366,6 +396,9 @@ export default function Feed() {
                             <br />
                             <BaseCheckbox checkValue={female} setValue={handleFemaleChange} label='female' />
                             <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5" >Female</p>
+                            <br />
+                            <BaseCheckbox checkValue={unknow} setValue={handleUnknowChange} label='unknow' />
+                            <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5" >Unknow</p>
                         </div>
                         <p className="text-xl font-medium 2xl:mt-3">Pet collar</p>
                         <div className="collar-checkbox 2xl:ml-8">
@@ -375,9 +408,10 @@ export default function Feed() {
                             <BaseCheckbox checkValue={notHaveCollar} setValue={handleNotHaveCollarChange} label='not have collar' />
                             <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5" >Not have</p>
                         </div>
-                        <div onClick={postUtil.search} className="2xl:flex flex-wrap">
-                            <BaseButton fill={true} fillColor={'mainOrange'} textColor={'white'} round={true} roundSize={'lg'} value={'Search'} customClass={'2xl:mt-6'}></BaseButton>
+                        <div className="2xl:flex flex-wrap">
+                            <BaseButton onClickFunction={submitSearch} fill={true} fillColor={'mainOrange'} textColor={'white'} round={true} roundSize={'lg'} value={'Search'} customClass={'2xl:mt-6'}></BaseButton>
                         </div>
+                        <p className="2xl:mt-6 text-red-500 text-xl">{validateMsg.msg}</p>
                     </div>
                     <div className="2xl:col-span-3">
                         <div className="2xl:flex flex-wrap">
