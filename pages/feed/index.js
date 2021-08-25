@@ -30,12 +30,13 @@ export default function Feed() {
     const [locationConfirm, setLocationConfirm] = useState(null);
     const [male, setMale] = useState(true);
     const [female, setFemale] = useState(true);
-    const [unknow,setUnknow] = useState(true);
+    const [unknow, setUnknow] = useState(true);
     const [haveCollar, setHaveCollar] = useState(true);
     const [notHaveCollar, setNotHaveCollar] = useState(true);
-    const [radius,setRadius] = useState(1);
+    const [radius, setRadius] = useState(1);
     const [postType, setPostType] = useState(null);
     const [validateMsg, setValidateMsg] = useState({});
+    const [searchData, setSearchData] = useState(null);
 
     useEffect(() => {
         try {
@@ -65,6 +66,17 @@ export default function Feed() {
             setMapPreview(false);
         }
     }, [locationConfirmStatus, locationConfirm])
+
+    useEffect(() => {
+        if (searchData != null) {
+            console.log(searchData.data);
+        }
+    }, [searchData])
+
+    useEffect(() => {
+        // setSearchData(null);
+        console.log('test fetch')
+    },[searchType])
 
     let map, infoWindow;
 
@@ -283,19 +295,19 @@ export default function Feed() {
 
     const submitSearch = async () => {
         let valid = validateSearch();
-        if(!valid){
+        if (!valid) {
             return;
-        }else{
+        } else {
             setValidateMsg({ type: 'pass', msg: '' })
-            let sexInput = {male:male,female:female,unknow:unknow};
-            let collarInput = {haveCollar:haveCollar,notHaveCollar:notHaveCollar};
-            let res = await postUtil.search(locationConfirm.lat,locationConfirm.lng,sexInput,collarInput,radius,searchType)
-            console.log(res.data)
+            let sexInput = { male: male, female: female, unknow: unknow };
+            let collarInput = { haveCollar: haveCollar, notHaveCollar: notHaveCollar };
+            let res = await postUtil.search(locationConfirm.lat, locationConfirm.lng, sexInput, collarInput, radius, searchType)
+            setSearchData(res);
         }
     }
 
     const validateSearch = () => {
-        if(locationConfirm == null){
+        if (locationConfirm == null) {
             setValidateMsg({ type: 'location', msg: 'please select location.' })
             return false;
         }
@@ -363,9 +375,9 @@ export default function Feed() {
             <main>
                 <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-4 2xl:mx-56">
                     <div>
-                        <p className="text-xl font-medium">ITEM (90)</p>
+                        <p className="text-xl font-medium">ITEM ({searchData != null ? searchData.data.searchResult.length : 0})</p>
                         <p className="text-white 2xl:px-6 py-2 bg-darkCream rounded-3xl shadow-lg cursor-pointer 2xl:mt-10 text-center">ค้นหาด้วยข้อมูล Post ของฉัน</p>
-                        <p className={"text-xl font-medium 2xl:mt-11 " + cn({'text-red-500': validateMsg.type === 'location'}) }>Change Location</p>
+                        <p className={"text-xl font-medium 2xl:mt-11 " + cn({ 'text-red-500': validateMsg.type === 'location' })}>Change Location</p>
                         {
                             mapPreview === true ?
                                 <div id="map-preview" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '355px', height: '255px' }}>
@@ -418,21 +430,23 @@ export default function Feed() {
                             <p className="text-xl font-normal text-white bg-mainGreen cursor-pointer 2xl:py-1 2xl:px-6 2xl:ml-auto">latest</p>
                         </div>
                         <div className="2xl:grid 2xl:grid-cols-3 2xl:gap-4 2xl:ml-9 2xl:mt-8">
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
+                            {searchData != null ?
+                                searchData.data.searchResult.length > 0
+                                    ?
+                                    searchData.data.searchResult.map((item, index) => {
+                                        return (<BasePostItem key={index} data={item} />)
+                                    })
+                                    :
+                                    <p className="text-2xl font-bold">nothing found here.</p>
+                                :
+                                <p className="text-2xl font-bold">search to see post.</p>
+                            }
                         </div>
                     </div>
                     <div className="2xl:col-span-4 2xl:mt-16 2xl:mb-8">
                         <div className="2xl:flex flex-wrap">
                             <div className="2xl:ml-auto">
-                                <Pagination count={10} />
+                                {searchData != null ? <Pagination count={Math.ceil(searchData.data.searchResult.length / 9)} /> : null}
                             </div>
                         </div>
                     </div>

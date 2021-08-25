@@ -44,7 +44,7 @@ const allPostUtil = {
                 formData.append('description', descriptionInput)
             }
             for (let i = 0; i < blob.length; i++) {
-                formData.append(`fileUp_ ${i + 1}`, blob[i]);
+                formData.append(`fileUp_ ${i + 1}.png`, blob[i]);
             }
             // formData.append('blob',blob)
             let res = await axios({
