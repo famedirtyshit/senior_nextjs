@@ -1,17 +1,14 @@
 import Head from 'next/head'
 import BaseButton from '@components/BaseButton'
 import IMAGES from '@constants/IMAGES'
-import ICON from '@constants/ICON'
 import Image from 'next/dist/client/image'
 import HomeStyle from '@styles/Home.module.css'
-import Fab from '@material-ui/core/Fab'
-import AddIcon from '@material-ui/icons/Add';
 import React, { useState } from 'react';
 // import Link from 'next/link';
 import { Link ,animateScroll as scroll } from "react-scroll";
   
 export default function Home() {
-    const [buttonColor,setButtonColor] = useState('1');
+   
 
     return (
         <div className={" mx-auto " + HomeStyle.bgImg }>
