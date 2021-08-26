@@ -102,12 +102,22 @@ export default function Feed() {
     }, [searchData])
 
     useEffect(() => {
-        setSearchStatus(true);
         if (locationConfirm == null && sortType == 'radius') {
             setSortType('latest');
+        } else {
+            if (page != 1) {
+                setPage(1);
+            } else if (page == 1) {
+                setSearchStatus(true);
+                submitSearch();
+            }
         }
+    }, [male, female, unknow, haveCollar, notHaveCollar, radius, locationConfirm, searchType, sortType])
+
+    useEffect(() => {
+        setSearchStatus(true);
         submitSearch();
-    }, [male, female, unknow, haveCollar, notHaveCollar, radius, locationConfirm, searchType, page, sortType])
+    }, [page])
 
     const closeDisplayModal = () => {
         setDisplayStatus(false);
@@ -161,7 +171,7 @@ export default function Feed() {
         }
         map = new google.maps.Map(document.getElementById("map"), {
             center: position,
-            zoom: 20,
+            zoom: 18,
             disableDefaultUI: true,
             zoomControl: true,
             mapTypeControl: false,
@@ -519,7 +529,7 @@ export default function Feed() {
                         <div className="2xl:col-span-4 2xl:mt-16 2xl:mb-8">
                             <div className="2xl:flex flex-wrap">
                                 <div className="2xl:ml-auto">
-                                    {searchData != null && searchData != undefined && searchData.data.result == true ? <Pagination onChange={(e, page) => setPage(page)} page={page} count={searchData.data.count == 0 ? 1 : Math.ceil(searchData.data.count / 12)} disabled={searchStatus == true ? true : false} /> : null}
+                                    {searchData != null && searchData != undefined && searchData.data.result == true ? <Pagination onChange={(e, page) => { setPage(page) }} page={page} count={searchData.data.count == 0 ? 1 : Math.ceil(searchData.data.count / 12)} disabled={searchStatus == true ? true : false} /> : null}
                                 </div>
                             </div>
                         </div>
