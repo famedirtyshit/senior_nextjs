@@ -1,6 +1,6 @@
 import BaseButton from "@components/BaseButton";
 import BaseCropModal from "@components/BaseCropModal";
-import Image from 'next/dist/client/image'
+import Image from 'next/image'
 import IMAGES from '@constants/IMAGES';
 import UtilStyles from "@styles/Util.module.css";
 import { useState, useEffect } from "react";
