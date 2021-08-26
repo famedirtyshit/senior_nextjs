@@ -4,8 +4,8 @@ import IMAGES from '@constants/IMAGES'
 import Image from 'next/dist/client/image'
 import HomeStyle from '@styles/Home.module.css'
 import React, { useState } from 'react';
-// import Link from 'next/link';
-import { Link ,animateScroll as scroll } from "react-scroll";
+import Link from 'next/link';
+// import { Link ,animateScroll as scroll } from "react-scroll";
   
 export default function Home() {
    
@@ -72,16 +72,7 @@ export default function Home() {
                 </section>
                 <section className="down-botton 2xl:flex 2xl:flex-wrap 2xl:justify-end 2xl:mt-40">    
                     <div className="2xl:mr-28" > 
-                        <Link 
-                            activeClass="active"
-                            to="section1"
-                            // spy={true}
-                            smooth={true}
-                            offset={-300}
-                            duration={700}
-                        >
                             <Image src={IMAGES.scrollDown} alt="scrollDown" width="31" height="154" point/>   
-                        </Link>
                     </div>
                </section>
                <section 
@@ -103,16 +94,16 @@ export default function Home() {
                     <section className="2xl:flex 2xl:flex-wrap 2xl:justify-center 2xl:mt-32 ">
                         <div className="2xl:shadow-2xl 2xl:rounded-3xl" style={{backgroundColor:'#FFFFFF',width:"673px",height:"534px"}}>
                         </div>
-                        <div className="2xl:ml-16" style={{width:"559px"}}>
-                            <p className="2xl:text-black 2xl:text-4xl 2xl:font-black " >เพราะช่วยเพิ่มโอกาสสำเร็จในการตามหาแมวหายให้กับผู้ใช้งาน</p>
+                        <div className="2xl:ml-16 2xl:mt-9" style={{width:"559px"}}>
+                            <p className="2xl:text-black 2xl:text-4xl 2xl:font-black 2xl:text-center" >เพราะช่วยเพิ่มโอกาสสำเร็จในการตามหาแมวหายให้กับผู้ใช้งาน</p>
                             <p className="2xl:text-black 2xl:text-2xl 2xl:font-medium 2xl:mt-6" >ผู้ใช้สามารถตามหาแมวที่หายไปได้ง่ายและสะดวกมากขึ้น จากการที่ระบบมีการฟิลเตอร์ข้อมูล
-                        สถานที่ในการค้นหา และข้อมูลที่แยกประเภท ได้สำหรับการค้นหา</p>
+                                สถานที่ในการค้นหา และข้อมูลที่แยกประเภท ได้สำหรับการค้นหา</p>
                         </div>
                     </section>
                     <section className="2xl:flex 2xl:flex-wrap 2xl:mt-48 2xl:justify-center">      
-                        <div className="2xl:mr-16" style={{width:"559px"}}>
-                        <p className="2xl:text-white 2xl:text-4xl 2xl:font-black " style={{textShadow:"-2px 4px #6B7280"}}>เพื่อลดจำนวนแมวจรจัด <br />และปัญหาที่เกิดจากแมวจรจัด</p>
-                            <p className="2xl:text-white 2xl:text-2xl 2xl:font-medium 2xl:mt-6" style={{textShadow:"-2px 4px #6B7280"}}>Lorem Ipsum is simply dummy <br />text of the printing and  <br />typesetting industry. </p>
+                        <div className="2xl:mr-16 2xl:mt-9" style={{width:"559px"}}>
+                        <p className="2xl:text-white 2xl:text-4xl 2xl:font-black 2xl:text-center" style={{textShadow:"-2px 4px #6B7280"}}>เพื่อลดจำนวนแมวจรจัดและ <br />ปัญหาที่เกิดจากแมวจรจัด</p>
+                            <p className="2xl:text-white 2xl:text-2xl 2xl:font-medium 2xl:mt-6" style={{textShadow:"-2px 4px #6B7280"}}>ปัจจุบันมีอัตราการสูญหายของแมวเป็นจำนวน มากทำให้เมื่อมีจำนวนแมวหายมากขึ้นยิ่งทำให้ อาจเกิดปัญหาแมวจรจัดตามมาซึ่งอาจทำให้เกิดผลกระทบอื่น ๆ ตามมาด้วยเช่นกัน ดังนั้นการใช้งาน CatUs ซึ่งเป็นแพลตฟอร์ม ที่เกิดขึ่นมาเพื่อตามหาแมว หรือ ช่วยแมวกลับคืนสู่เจ้าของโดยเฉพาะ จะสามารถช่วยเพิ่มอัตราการกลับคืนสู่เจ้าของ ของแมวทำให้ลดปัญหาแมวจรจัดและ ปัญหาที่เกิดจากแมวจรจัดได้  </p>
                         </div>
                         <div className="2xl:shadow-2xl 2xl:rounded-3xl" style={{backgroundColor:'#FFFFFF',width:"673px",height:"534px"}}>
                         </div>
@@ -144,7 +135,7 @@ export default function Home() {
                                 </div>
                                 <div className="2xl:absolute 2xl:ml-48 2xl:top-72 2xl:w-3/5">
                                     <p className="2xl:text-4xl 2xl:font-bold 2xl:ml-40 ">Function Post</p>
-                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left " >คุณสามารถโพสประกาศตามหาแมวหรือโพสพบเจอแมวได้ โดยอย่าลืมระบุข้อมูลที่จำเป็น ต่อการค้นหาตามที่คุณทราบ ด้วยนะ</p>
+                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left " >คุณสามารถโพสต์ประกาศตามหาแมวหรือโพสต์พบเจอแมวได้ โดยอย่าลืมระบุข้อมูลที่จำเป็น ต่อการค้นหาตามที่คุณทราบ ด้วยนะ</p>
                                 </div>
                             </div>    
                          </div>  
@@ -155,7 +146,7 @@ export default function Home() {
                                 </div>
                                 <div className="2xl:absolute 2xl:ml-48 2xl:top-72 2xl:w-3/5">
                                     <p className="2xl:text-4xl 2xl:font-bold 2xl:ml-40 ">My Account</p>
-                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left " >คุณสามารถแก้ไขโปรไฟล์หรืออัพเดตข้อมูลส่วนตัวได้หากมีการเปลี่ยนแปลง และยัง สามารถเรียกดูโพสของตนเองได้เพื่อ แก้ไขข้อมูล และ หากเมื่อพบน้องแมวแล้ว อย่าลืมกลับมาลบโพส ให้เราหน่อยน้าา</p>
+                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left " >คุณสามารถแก้ไขโปรไฟล์หรืออัพเดตข้อมูลส่วนตัวได้หากมีการเปลี่ยนแปลง และยัง สามารถเรียกดูโพสต์ของตนเองได้เพื่อ แก้ไขข้อมูล และ หากเมื่อพบน้องแมวแล้ว อย่าลืมกลับมาลบโพส ให้เราหน่อยน้าา</p>
                                 </div>
                             </div>    
                             <div className="" >
@@ -172,7 +163,7 @@ export default function Home() {
                                 </div>
                                 <div className="2xl:absolute 2xl:ml-48 2xl:top-72 2xl:w-3/5">
                                     <p className="2xl:text-4xl 2xl:font-bold 2xl:ml-20 ">Finally, you succeeded</p>
-                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left " >ดีใจด้วยน้าาา....ในที่สุดคุณก็หาเจอ เมื่อคุณเจอน้อง แมวที่คุณตามหาแล้วคุณสามารถกดเข้าไปเพื่อดู ข้อมูลเพิ่มเติมและข้อมูลติดต่อผู้โพสได้เลย</p>
+                                    <p className="2xl:text-2xl 2xl:mt-6 2xl:text-left " >ดีใจด้วยน้าาา....ในที่สุดคุณก็หาเจอ เมื่อคุณเจอน้อง แมวที่คุณตามหาแล้วคุณสามารถกดเข้าไปเพื่อดู ข้อมูลเพิ่มเติมและข้อมูลติดต่อผู้โพสต์ได้เลย</p>
                                 </div>
                             </div>    
                          </div>    
