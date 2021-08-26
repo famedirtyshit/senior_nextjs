@@ -52,7 +52,7 @@ export default function BasePostDisplay(prop) {
         }
     }, [prop.modalStatus])
 
-    const checkProp = prop.post != null && prop.post != undefined && prop.target != null && prop.target != undefined;
+    const checkProp = prop.post != null && prop.post != undefined && prop.target != null && prop.target != undefined && prop.post.data.searchResult[prop.target] != null && prop.post.data.searchResult[prop.target] != undefined;
 
     const convertDateFormat = (dateData) => {
         let dateConvert = new Date(dateData);
