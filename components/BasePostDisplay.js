@@ -39,7 +39,7 @@ export default function BasePostDisplay(prop) {
         setImageSet([]);
         if (prop.modalStatus == true) {
             let checkExist = setInterval(function () {
-                if (document.getElementById('map-preview')) {
+                if (document.getElementById('map-preview-display')) {
                     clearInterval(checkExist);
                     initPreviewMap();
                 }
@@ -72,7 +72,8 @@ export default function BasePostDisplay(prop) {
     let map;
 
     const initPreviewMap = () => {
-        map = new google.maps.Map(document.getElementById("map-preview"), {
+        console.log('initmap')
+        map = new google.maps.Map(document.getElementById("map-preview-display"), {
             center: { lat: prop.post.data.searchResult[prop.target].location.coordinates[1], lng: prop.post.data.searchResult[prop.target].location.coordinates[0] },
             zoom: 15,
             disableDefaultUI: true,
@@ -175,7 +176,7 @@ export default function BasePostDisplay(prop) {
                                             }}
                                         />
                                     </div>
-                                    <div id="map-preview" onClick={openDestination} className={"cursor-pointer mt-4 shadow-lg border border-gray-300 border-solid justify-self-center " + mapClasses.mapContainer} />
+                                    <div id="map-preview-display" onClick={openDestination} className={"cursor-pointer mt-4 shadow-lg border border-gray-300 border-solid justify-self-center " + mapClasses.mapContainer} />
                                 </div>
                                 <div className="2xl:col-span-3">
                                     <div className="bg-gray-100 pt-6 px-4 rounded-2xl 2xl:h-full">
