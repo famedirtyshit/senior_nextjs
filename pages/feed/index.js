@@ -4,7 +4,6 @@ import UtilStyle from '@styles/Util.module.css';
 import BaseButton from '@components/BaseButton'
 import IMAGES from '@constants/IMAGES';
 import Image from 'next/dist/client/image';
-import Slider from '@material-ui/core/Slider';
 import BaseCheckbox from '@components/BaseCheckBox';
 import BasePostItem from '@components/BasePostItem';
 import BaseModalMap from '@components/BaseModalMap';
@@ -14,7 +13,30 @@ import cn from 'classnames';
 import Link from 'next/link';
 import Script from 'next/script';
 import postUtil from '@utils/postUtil';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import BasePostDisplay from '@components/BasePostDisplay';
 import { useState, useEffect, useRef } from 'react';
+
+const theme = createTheme({
+    palette: {
+        primary: {
+            light: '#356053',
+            main: '#356053',
+            dark: '#356053',
+            contrastText: '#fff',
+        },
+        secondary: {
+            light: '#ff7961',
+            main: '#db4132',
+            dark: '#ba000d',
+            contrastText: '#fff',
+        },
+    },
+});
 
 export default function Feed() {
     const [mapObj, setMapObj] = useState(null);
@@ -30,12 +52,19 @@ export default function Feed() {
     const [locationConfirm, setLocationConfirm] = useState(null);
     const [male, setMale] = useState(true);
     const [female, setFemale] = useState(true);
-    const [unknow,setUnknow] = useState(true);
+    const [unknow, setUnknow] = useState(true);
     const [haveCollar, setHaveCollar] = useState(true);
     const [notHaveCollar, setNotHaveCollar] = useState(true);
-    const [radius,setRadius] = useState(1);
+    const [radius, setRadius] = useState(1);
     const [postType, setPostType] = useState(null);
-    const [validateMsg, setValidateMsg] = useState({});
+    const [searchStatus, setSearchStatus] = useState(false);
+    const [searchData, setSearchData] = useState(null);
+    const [page, setPage] = useState(1);
+    const [sortType, setSortType] = useState('latest');
+    const [sortMenu, setSortMenu] = useState(null);
+
+    const [displayStatus, setDisplayStatus] = useState(false);
+    const [displayTarget, setDisplayTarget] = useState(null);
 
     useEffect(() => {
         try {
@@ -64,7 +93,40 @@ export default function Feed() {
         } else {
             setMapPreview(false);
         }
-    }, [locationConfirmStatus, locationConfirm])
+    }, [locationConfirmStatus, locationConfirm, radius])
+
+    useEffect(() => {
+        if (searchData != null) {
+            // console.log(searchData.data);
+        }
+    }, [searchData])
+
+    useEffect(() => {
+        if (locationConfirm == null && sortType == 'radius') {
+            setSortType('latest');
+        } else {
+            if (page != 1) {
+                setPage(1);
+            } else if (page == 1) {
+                setSearchStatus(true);
+                submitSearch();
+            }
+        }
+    }, [male, female, unknow, haveCollar, notHaveCollar, radius, locationConfirm, searchType, sortType])
+
+    useEffect(() => {
+        setSearchStatus(true);
+        submitSearch();
+    }, [page])
+
+    const closeDisplayModal = () => {
+        setDisplayStatus(false);
+    }
+
+    const openDisplayModal = (position) => {
+        setDisplayStatus(true);
+        setDisplayTarget(position);
+    }
 
     let map, infoWindow;
 
@@ -166,7 +228,7 @@ export default function Feed() {
     const initPreviewMap = () => {
         map = new google.maps.Map(document.getElementById("map-preview"), {
             center: locationConfirm,
-            zoom: 17,
+            zoom: 15,
             disableDefaultUI: true,
             draggable: false,
             zoomControl: false,
@@ -176,9 +238,21 @@ export default function Feed() {
             rotateControl: false,
             fullscreenControl: false,
             scrollwheel: false,
-            disableDoubleClickZoom: true
+            disableDoubleClickZoom: true,
+            clickableIcons: false
         });
         createMarker(locationConfirm, null, map, true, true);
+        const circle = new google.maps.Circle({
+            strokeColor: "#356053",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#356053",
+            fillOpacity: 0.35,
+            map,
+            center: marker.current.position,
+            radius: radius * 1000,
+        });
+        map.fitBounds(circle.getBounds(), 0);
     }
 
     const searchPlace = (query, map) => {
@@ -256,9 +330,18 @@ export default function Feed() {
         }
     }
 
-    const getRadiusValue = (value) => {
-        setRadius(value);
-        return value;
+    const handleOpenSortMenu = (event) => {
+        setSortMenu(event.currentTarget);
+    };
+
+    const handleCloseSortMenu = () => {
+        setSortMenu(null);
+    };
+
+    const handleSetSort = (e) => {
+        handleCloseSortMenu();
+        let value = e.target.textContent;
+        setSortType(value);
     }
 
     const handleMaleChange = (event) => {
@@ -282,21 +365,25 @@ export default function Feed() {
     };
 
     const submitSearch = async () => {
+        // console.log('search')
         let valid = validateSearch();
-        if(!valid){
-            return;
-        }else{
-            setValidateMsg({ type: 'pass', msg: '' })
-            let sexInput = {male:male,female:female,unknow:unknow};
-            let collarInput = {haveCollar:haveCollar,notHaveCollar:notHaveCollar};
-            let res = await postUtil.search(locationConfirm.lat,locationConfirm.lng,sexInput,collarInput,radius,searchType)
-            console.log(res.data)
+        if (!valid) {
+            let sexInput = { male: male, female: female, unknow: unknow };
+            let collarInput = { haveCollar: haveCollar, notHaveCollar: notHaveCollar };
+            let res = await postUtil.searchNoMap(sexInput, collarInput, searchType, page)
+            setSearchData(res);
+            setSearchStatus(false);
+        } else {
+            let sexInput = { male: male, female: female, unknow: unknow };
+            let collarInput = { haveCollar: haveCollar, notHaveCollar: notHaveCollar };
+            let res = await postUtil.search(locationConfirm.lat, locationConfirm.lng, sexInput, collarInput, radius, searchType, page, sortType)
+            setSearchData(res);
+            setSearchStatus(false);
         }
     }
 
     const validateSearch = () => {
-        if(locationConfirm == null){
-            setValidateMsg({ type: 'location', msg: 'please select location.' })
+        if (locationConfirm == null) {
             return false;
         }
         return true;
@@ -310,136 +397,148 @@ export default function Feed() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Script async defer src={`https://maps.googleapis.com/maps/api/js?v=3.44&key=${process.env.GMAPKEY}&libraries=places&region=TH&language=th`} onLoad={() => { setGoogleStatus(true) }} />
-            <div className={"head-sec"}>
-                <header className="2xl:flex 2xl:flex-wrap 2xl:justify-between 2xl:mx-64 pt-3">
-                    <Link href='/'>
-                        <a>
-                            <h1 className="2xl:text-5xl 2xl:font-black text-white">Catus</h1>
-                        </a>
-                    </Link>
-                </header>
-                <section className="w-9/12 bg-mainCream mx-auto rounded-2xl shadow-lg 2xl:mt-20">
-                    <div className="2xl:flex 2xl:flex-wrap 2xl:py-16">
-                        <div className="2xl:ml-16">
-                            <Image src={IMAGES.user} alt='default-user' width="112" height="112" />
-                        </div>
-                        <div className="2xl:ml-12 text-xl font-normal">
-                            <p>Name: Guest</p>
-                            <p>Facebook: -</p>
-                            <p>Instragram: -</p>
-                            <p>Tel: -</p>
-                        </div>
-                        <div className="2xl:ml-64 2xl:text-center 2xl:pl-12">
-                            <p className="text-xl font-normal text-textGray">Please login</p>
-                            <BaseButton fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Login'} customClass={'2xl:mt-4 2xl:px-32'}></BaseButton>
-                        </div>
-                    </div>
-                    <div className="2xl:grid 2xl:grid-cols-2 bg-white rounded-2xl 2xl:relative">
-                        <p onClick={setPostFoundType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium cursor-pointer " + cn({
-                            'bg-mainGreen text-white rounded-bl-2xl': postType === "found",
-                            'text-mainGreen': postType !== "found",
-                        })
-                        }>Post Found</p>
-                        <p onClick={setPostLostType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium cursor-pointer " + cn({
-                            'bg-mainGreen text-white rounded-br-2xl': postType === "lost",
-                            'text-mainGreen': postType !== "lost",
-                        })
-                        }>Post Lost</p>
-                        {postType != null ? <BasePostModal cancelFunction={togglePostType} type={postType} closeBasePostModal={togglePostType} /> : null}
-                    </div>
-                </section>
-                <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-3 2xl:mx-56 text-center">
-                    <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
-                        'text-mainGreen border-b-4 border-mainGreen': searchType === 'all',
-                    })} onClick={setSearchAllType}>All</p>
-                    <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
-                        'text-mainGreen border-b-4 border-mainGreen': searchType === 'found',
-                    })} onClick={setSearchFoundType}>Found</p>
-                    <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
-                        'text-mainGreen border-b-4 border-mainGreen': searchType === 'lost',
-                    })} onClick={setSearchLostType}>Lost</p>
-                </section>
-            </div >
-            <main>
-                <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-4 2xl:mx-56">
-                    <div>
-                        <p className="text-xl font-medium">ITEM (90)</p>
-                        <p className="text-white 2xl:px-6 py-2 bg-darkCream rounded-3xl shadow-lg cursor-pointer 2xl:mt-10 text-center">ค้นหาด้วยข้อมูล Post ของฉัน</p>
-                        <p className={"text-xl font-medium 2xl:mt-11 " + cn({'text-red-500': validateMsg.type === 'location'}) }>Change Location</p>
-                        {
-                            mapPreview === true ?
-                                <div id="map-preview" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '355px', height: '255px' }}>
-                                </div>
-                                :
-                                <div id="map-preview-default" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '355px', height: '255px' }}>
-                                    <Image src={IMAGES.map} alt='default-map' width="355" height="255" className="2xl:absolute cursor-pointer 2xl:top-1/3 2xl:left-16 " />
-                                    <p className={"2xl:absolute text-white 2xl:px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + UtilStyle.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
-                                </div>
-                        }
-                        <BaseModalMap handleClose={closeMapModal} modalMap={modalMap} searchPlace={searchPlace} map={mapObj} location={location} confirmStatusLocation={confirmStatusLocation} cancelLocation={cancelLocation} />
-                        <p className="text-xl font-medium 2xl:mt-6">Radius</p>
-                        <Slider
-                            defaultValue={1}
-                            getAriaValueText={getRadiusValue}
-                            aria-labelledby="discrete-slider"
-                            valueLabelDisplay="auto"
-                            step={1}
-                            marks={[{ value: 1, label: '1KM' }, { value: 2 }, { value: 3 }, { value: 4 }, { value: 5, label: '5KM' }]}
-                            min={1}
-                            max={5}
-                            color="primary"
-                        />
-                        <p className="text-xl font-medium 2xl:mt-3">Sex</p>
-                        <div className="sex-checkbox 2xl:ml-8">
-                            <BaseCheckbox checkValue={male} setValue={handleMaleChange} label='male' />
-                            <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5">Male</p>
-                            <br />
-                            <BaseCheckbox checkValue={female} setValue={handleFemaleChange} label='female' />
-                            <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5" >Female</p>
-                            <br />
-                            <BaseCheckbox checkValue={unknow} setValue={handleUnknowChange} label='unknow' />
-                            <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5" >Unknow</p>
-                        </div>
-                        <p className="text-xl font-medium 2xl:mt-3">Pet collar</p>
-                        <div className="collar-checkbox 2xl:ml-8">
-                            <BaseCheckbox checkValue={haveCollar} setValue={handleHaveCollarChange} label='have collar' />
-                            <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5">Have</p>
-                            <br />
-                            <BaseCheckbox checkValue={notHaveCollar} setValue={handleNotHaveCollarChange} label='not have collar' />
-                            <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5" >Not have</p>
-                        </div>
-                        <div className="2xl:flex flex-wrap">
-                            <BaseButton onClickFunction={submitSearch} fill={true} fillColor={'mainOrange'} textColor={'white'} round={true} roundSize={'lg'} value={'Search'} customClass={'2xl:mt-6'}></BaseButton>
-                        </div>
-                        <p className="2xl:mt-6 text-red-500 text-xl">{validateMsg.msg}</p>
-                    </div>
-                    <div className="2xl:col-span-3">
-                        <div className="2xl:flex flex-wrap">
-                            <p className="text-xl font-normal text-white bg-mainGreen cursor-pointer 2xl:py-1 2xl:px-6 2xl:ml-auto">latest</p>
-                        </div>
-                        <div className="2xl:grid 2xl:grid-cols-3 2xl:gap-4 2xl:ml-9 2xl:mt-8">
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                            <BasePostItem />
-                        </div>
-                    </div>
-                    <div className="2xl:col-span-4 2xl:mt-16 2xl:mb-8">
-                        <div className="2xl:flex flex-wrap">
-                            <div className="2xl:ml-auto">
-                                <Pagination count={10} />
+            <ThemeProvider theme={theme}>
+                <div className={"head-sec"}>
+                    <header className="2xl:flex 2xl:flex-wrap 2xl:justify-between 2xl:mx-64 pt-3">
+                        <Link href='/'>
+                            <a>
+                                <h1 className="2xl:text-5xl 2xl:font-black text-white">Catus</h1>
+                            </a>
+                        </Link>
+                    </header>
+                    <section className="w-9/12 bg-mainCream mx-auto rounded-2xl shadow-lg 2xl:mt-20">
+                        <div className="2xl:flex 2xl:flex-wrap 2xl:py-16">
+                            <div className="2xl:ml-16">
+                                <Image src={IMAGES.user} alt='default-user' width="112" height="112" />
+                            </div>
+                            <div className="2xl:ml-12 text-xl font-normal">
+                                <p>Name: Guest</p>
+                                <p>Facebook: -</p>
+                                <p>Instragram: -</p>
+                                <p>Tel: -</p>
+                            </div>
+                            <div className="2xl:ml-64 2xl:text-center 2xl:pl-12">
+                                <p className="text-xl font-normal text-textGray">Please login</p>
+                                <BaseButton fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Login'} customClass={'2xl:mt-4 2xl:px-32'}></BaseButton>
                             </div>
                         </div>
-                    </div>
-                </section>
-            </main>
-            <footer className="2xl:h-48 bg-mainGreen">
-            </footer>
+                        <div className="2xl:grid 2xl:grid-cols-2 bg-white rounded-2xl 2xl:relative">
+                            <p onClick={setPostFoundType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium cursor-pointer " + cn({
+                                'bg-mainGreen text-white rounded-bl-2xl': postType === "found",
+                                'text-mainGreen': postType !== "found",
+                            })
+                            }>Post Found</p>
+                            <p onClick={setPostLostType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium cursor-pointer " + cn({
+                                'bg-mainGreen text-white rounded-br-2xl': postType === "lost",
+                                'text-mainGreen': postType !== "lost",
+                            })
+                            }>Post Lost</p>
+                            {postType != null ? <BasePostModal cancelFunction={togglePostType} type={postType} closeBasePostModal={togglePostType} /> : null}
+                        </div>
+                    </section>
+                    <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-3 2xl:mx-56 text-center">
+                        <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
+                            'text-mainGreen border-b-4 border-mainGreen': searchType === 'all',
+                        })} onClick={setSearchAllType}>All</p>
+                        <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
+                            'text-mainGreen border-b-4 border-mainGreen': searchType === 'found',
+                        })} onClick={setSearchFoundType}>Found</p>
+                        <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
+                            'text-mainGreen border-b-4 border-mainGreen': searchType === 'lost',
+                        })} onClick={setSearchLostType}>Lost</p>
+                    </section>
+                </div >
+                <main>
+                    <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-4 2xl:mx-56">
+                        <div>
+                            <p className="text-xl font-medium">ITEM ({searchData != null && searchData != undefined && searchData.data.result == true ? searchData.data.searchResult.length : 0})</p>
+                            <p className="text-white 2xl:px-6 py-2 bg-darkCream rounded-3xl shadow-lg cursor-pointer 2xl:mt-10 text-center">ค้นหาด้วยข้อมูล Post ของฉัน</p>
+                            <p className={"text-xl font-medium 2xl:mt-11 "}>Change Location</p>
+                            {
+                                mapPreview === true ?
+                                    <div id="map-preview" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '355px', height: '255px' }}>
+                                    </div>
+                                    :
+                                    <div id="map-preview-default" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '355px', height: '255px' }}>
+                                        <Image src={IMAGES.map} alt='default-map' width="355" height="255" className="2xl:absolute cursor-pointer 2xl:top-1/3 2xl:left-16 " />
+                                        <p className={"2xl:absolute text-white 2xl:px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + UtilStyle.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
+                                    </div>
+                            }
+                            <BaseModalMap handleClose={closeMapModal} radiusDefault={radius} setRadius={setRadius} modalMap={modalMap} searchPlace={searchPlace} map={mapObj} location={location} confirmStatusLocation={confirmStatusLocation} cancelLocation={cancelLocation} />
+                            <p className="text-xl font-medium 2xl:mt-8">Sex</p>
+                            <div className="sex-checkbox 2xl:ml-8">
+                                <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={male} setValue={handleMaleChange} label='male' />
+                                <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5">Male</p>
+                                <br />
+                                <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={female} setValue={handleFemaleChange} label='female' />
+                                <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5" >Female</p>
+                                <br />
+                                <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={unknow} setValue={handleUnknowChange} label='unknow' />
+                                <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5" >Unknow</p>
+                            </div>
+                            <p className="text-xl font-medium 2xl:mt-3">Pet collar</p>
+                            <div className="collar-checkbox 2xl:ml-8">
+                                <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={haveCollar} setValue={handleHaveCollarChange} label='have collar' />
+                                <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5">Have</p>
+                                <br />
+                                <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={notHaveCollar} setValue={handleNotHaveCollarChange} label='not have collar' />
+                                <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5" >Not have</p>
+                            </div>
+                            {/* <div className="2xl:flex flex-wrap">
+                            <BaseButton onClickFunction={submitSearch} fill={true} fillColor={'mainOrange'} textColor={'white'} round={true} roundSize={'lg'} value={'Search'} customClass={'2xl:mt-6'}></BaseButton>
+                        </div> */}
+                            {/* <p className="2xl:mt-6 text-red-500 text-xl">{validateMsg.msg}</p> */}
+                        </div>
+                        <div className="2xl:col-span-3">
+                            <div className="2xl:flex flex-wrap">
+                                <div className="2xl:py-1 2xl:px-6 2xl:ml-auto">
+                                    <Button color="primary" variant="contained" aria-controls="sort-menu" aria-haspopup="true" onClick={handleOpenSortMenu}>
+                                        {sortType}
+                                    </Button>
+                                    <Menu
+                                        id="sort-menu"
+                                        anchorEl={sortMenu}
+                                        keepMounted
+                                        open={Boolean(sortMenu)}
+                                        onClose={handleCloseSortMenu}
+                                    >
+                                        <MenuItem disabled={searchStatus == true ? true : false} selected={sortType == 'latest' ? true : false} onClick={handleSetSort}>latest</MenuItem>
+                                        <MenuItem disabled={searchStatus == true || locationConfirm == null ? true : false} selected={sortType == 'radius' ? true : false} onClick={handleSetSort}>radius</MenuItem>
+                                    </Menu>
+                                </div>
+                            </div>
+                            <div className="2xl:grid 2xl:grid-cols-3 2xl:gap-4 2xl:ml-9 2xl:mt-8">
+                                {searchStatus == true ?
+                                    <div className="2xl:col-span-3 2xl:mx-auto 2xl:mt-72">
+                                        <CircularProgress />
+                                    </div>
+                                    :
+                                    searchData != null && searchData != undefined && searchData.data.result == true ?
+                                        searchData.data.searchResult.length > 0
+                                            ?
+                                            searchData.data.searchResult.map((item, index) => {
+                                                return (<BasePostItem key={index} data={item} position={index} onClickFunction={openDisplayModal} />)
+                                            })
+                                            :
+                                            <p className="text-2xl font-bold text-center 2xl:col-span-3 2xl:mt-72">nothing found here.</p>
+                                        :
+                                        <p className="text-2xl font-bold text-center 2xl:col-span-3 2xl:mt-72">error please retry later :(</p>
+                                }
+                            </div>
+                        </div>
+                        <div className="2xl:col-span-4 2xl:mt-16 2xl:mb-8">
+                            <div className="2xl:flex flex-wrap">
+                                <div className="2xl:ml-auto">
+                                    {searchData != null && searchData != undefined && searchData.data.result == true ? <Pagination onChange={(e, page) => { setPage(page) }} page={page} count={searchData.data.count == 0 ? 1 : Math.ceil(searchData.data.count / 12)} disabled={searchStatus == true ? true : false} /> : null}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+                <footer className="2xl:h-48 bg-mainGreen">
+                </footer>
+                <BasePostDisplay modalStatus={displayStatus} closeModal={closeDisplayModal} post={searchData} target={displayTarget} />
+            </ThemeProvider>
         </div >
     )
 }

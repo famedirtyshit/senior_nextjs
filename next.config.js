@@ -1,4 +1,7 @@
-module.exports = {
+const withPlugins = require('next-compose-plugins');
+const withImages = require('next-images');
+
+const nextConfig = {
   reactStrictMode: true,
   env: {
     GMAPKEY: process.env.GMAPKEY,
@@ -11,4 +14,9 @@ module.exports = {
     // Will be available on both server and client
     // CUSTOMKEY: process.env.CUSTOMKEY,
   },
+  images: {
+    domains: ['firebasestorage.googleapis.com']
+  }
 }
+
+module.exports = withPlugins([[withImages]], nextConfig);
