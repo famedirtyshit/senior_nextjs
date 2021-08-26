@@ -7,6 +7,7 @@ export default function BaseCheckBox(prop) {
             onChange={prop.setValue}
             color="primary"
             inputProps={{ 'aria-label': `${prop.label} checkbox` }}
+            disabled={prop.disabled}
         />
     )
 }

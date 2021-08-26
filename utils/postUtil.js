@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const allPostUtil = {
-    search: async (lat, lng, sex, collar, radius, type) => {
+    search: async (lat, lng, sex, collar, radius, type, page, sortType) => {
         try {
             let endpoint = '';
             if (type == 'lost') {
@@ -16,7 +16,28 @@ const allPostUtil = {
             let unknow = sex.unknow;
             let haveCollar = collar.haveCollar;
             let notHaveCollar = collar.notHaveCollar;
-            let res = await axios.get(process.env.API_KEY + `/${endpoint}/get/${lat}/${lng}/${radius}/${male}/${female}/${unknow}/${haveCollar}/${notHaveCollar}`)
+            let res = await axios.get(process.env.API_KEY + `/${endpoint}/get/${lat}/${lng}/${radius}/${male}/${female}/${unknow}/${haveCollar}/${notHaveCollar}/${page}/${sortType}`)
+            return res;
+        } catch (e) {
+            return e.response;
+        }
+    },
+    searchNoMap: async (sex, collar, type, page) => {
+        try {
+            let endpoint = '';
+            if (type == 'lost') {
+                endpoint = 'searchLostCat'
+            } else if (type == 'found') {
+                endpoint = 'searchFoundCat'
+            } else {
+                endpoint = 'searchAll'
+            }
+            let male = sex.male;
+            let female = sex.female;
+            let unknow = sex.unknow;
+            let haveCollar = collar.haveCollar;
+            let notHaveCollar = collar.notHaveCollar;
+            let res = await axios.get(process.env.API_KEY + `/${endpoint}/getAll/${male}/${female}/${unknow}/${haveCollar}/${notHaveCollar}/${page}`)
             return res;
         } catch (e) {
             return e.response;

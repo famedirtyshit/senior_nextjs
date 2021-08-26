@@ -5,13 +5,14 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Slider from '@material-ui/core/Slider';
 
 const theme = createTheme({
     palette: {
         primary: {
-            light: '#757ce8',
+            light: '#356053',
             main: '#356053',
-            dark: '#3f50b5',
+            dark: '#356053',
             contrastText: '#fff',
         },
         secondary: {
@@ -42,6 +43,9 @@ const modalStyles = makeStyles((theme) => ({
 const mapStyles = makeStyles((theme) => ({
     height: {
         height: '85%'
+    },
+    heightWithRadius: {
+        height: '100%'
     }
 }));
 
@@ -62,6 +66,7 @@ const inputTextStyles = makeStyles((theme) => ({
 
 export default function BaseModalMap(prop) {
     const [placeQuery, setPlaceQuery] = useState('');
+    const [radiusSelected, setRadiusSelected] = useState(1);
 
     useEffect(() => {
         setPlaceQuery('');
@@ -72,6 +77,12 @@ export default function BaseModalMap(prop) {
             }
         }, 100);
     }, [prop.modalMap])
+
+    useEffect(() => {
+        if (prop.radius != undefined && prop.radius != null) {
+            setRadiusSelected(prop.radius)
+        }
+    }, [prop.radius])
 
     const modalClass = modalStyles();
     const inputClass = inputTextStyles();
@@ -109,6 +120,20 @@ export default function BaseModalMap(prop) {
         setPlaceQuery(query);
     }
 
+    const getRadiusValue = (value) => {
+        setRadiusSelected(value);
+        return value;
+    }
+
+    const confirm = () => {
+        prop.confirmStatusLocation();
+        // check have radius with map or not
+        if (prop.radiusDefault) {
+            console.log('set radius')
+            prop.setRadius(radiusSelected);
+        }
+    }
+
     return (
         <div>
             <Modal
@@ -132,11 +157,34 @@ export default function BaseModalMap(prop) {
                                 </div>
                                 <div className="button-action 2xl:flex items-center">
                                     {placeQuery.length > 0 ? <Button onClick={searchPlace} variant="contained" color="default" className="2xl:max-h-9" >Search</Button> : <Button variant="contained" color="default" className="2xl:max-h-9" disabled>Search</Button>}
-                                    {prop.location != null ? <Button onClick={prop.confirmStatusLocation} variant="contained" color="primary" className={"2xl:max-h-9 " + buttonClass.style}>Confirm</Button> : <Button onClick={prop.confirmStatusLocation} variant="contained" color="primary" className={"2xl:max-h-9 " + buttonClass.style} disabled>Confirm</Button>}
+                                    {prop.location != null ? <Button onClick={confirm} variant="contained" color="primary" className={"2xl:max-h-9 " + buttonClass.style}>Confirm</Button> : <Button onClick={confirm} variant="contained" color="primary" className={"2xl:max-h-9 " + buttonClass.style} disabled>Confirm</Button>}
                                     <Button onClick={prop.cancelLocation} variant="contained" color="secondary" className={"2xl:max-h-9 " + buttonClass.style}>Cancel</Button>
                                 </div>
                             </div>
-                            <div id={prop.type == 'post' ? "map-post" : "map"} className={"w-auto mt-2 border border-gray-300 border-solid " + mapClass.height}></div>
+                            {prop.radiusDefault ?
+                                <div className="grid grid-cols-12 h-5/6">
+                                    <div className="h-full my-auto">
+                                        <p className="text-xl font-medium mt-16">Radius</p>
+                                        <div className="h-4/6 mt-6">
+                                            <Slider
+                                                defaultValue={prop.radiusDefault}
+                                                orientation="vertical"
+                                                getAriaValueText={getRadiusValue}
+                                                aria-labelledby="vertical-slider"
+                                                valueLabelDisplay="auto"
+                                                step={1}
+                                                marks={[{ value: 1, label: '1KM' }, { value: 2, label: '2KM' }, { value: 3, label: '3KM' }, { value: 4, label: '4KM' }, { value: 5, label: '5KM' }]}
+                                                min={1}
+                                                max={5}
+                                                color="primary"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div id={prop.type == 'post' ? "map-post" : "map"} className={"w-auto col-span-11 mt-2 border border-gray-300 border-solid " + mapClass.heightWithRadius}></div>
+                                </div>
+                                :
+                                <div id={prop.type == 'post' ? "map-post" : "map"} className={"w-auto mt-2 border border-gray-300 border-solid " + mapClass.height}></div>
+                            }
                         </div>
                     </ThemeProvider>
                 </Fade>
