@@ -1,6 +1,6 @@
 import BasePostModalStyles from "@styles/BasePostModal.module.css";
 import UtilStyles from "@styles/Util.module.css";
-import Image from 'next/dist/client/image';
+import Image from 'next/image';
 import IMAGES from '@constants/IMAGES';
 import BaseModalMap from '@components/BaseModalMap';
 import BaseImageUpload from "@components/BaseImageUpload";

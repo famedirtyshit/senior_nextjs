@@ -3,7 +3,7 @@ import FeedStyle from '@styles/Feed.module.css';
 import UtilStyle from '@styles/Util.module.css';
 import BaseButton from '@components/BaseButton'
 import IMAGES from '@constants/IMAGES';
-import Image from 'next/dist/client/image';
+import Image from 'next/image';
 import BaseCheckbox from '@components/BaseCheckBox';
 import BasePostItem from '@components/BasePostItem';
 import BaseModalMap from '@components/BaseModalMap';

@@ -1,5 +1,5 @@
 import IMAGES from '@constants/IMAGES';
-import Image from 'next/dist/client/image';
+import Image from 'next/image';
 
 export default function BasePostItem(prop) {
 
