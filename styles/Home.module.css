@@ -113,18 +113,29 @@
   margin-left: 0.5rem;
 }
 .bgImg {
-  background-image: url('/images/homeBg.png');
-  background-size: contain;
+  background-image: url('/images/Newbackground.png');
+  background-size: cover;
   background-position: top;
   background-repeat: no-repeat;
+  /* height: 8177px; */
+
 }
-.footer {
-  background-image: url('/images/Footer.png');
-  background-size: cover;
+
+.footerOrange{
+  background-image: url('/images/footerOrange.png');
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  width: 1920px;
-  height: 231px;
+  width: 100%;
+  height: 259px;
+}
+.footerGreen {
+  background-image: url('/images/footerGreen.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 331px;
 }
 
 @media (max-width: 600px) {

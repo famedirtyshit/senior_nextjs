@@ -35,6 +35,9 @@ module.exports = {
         textGray: '#939393',
         darkCream: '#DBC09C',
         postTitle: '#626262',
+        mainBgGreen: '#378566',
+        mainOrange: '#F0930D',
+        mainYellow:'#F4C444',
       },
       textColor: {
         mainGreen: '#356053'
