@@ -15,7 +15,7 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Carousel from "react-material-ui-carousel";
 import { Paper, Button, Grid } from "@material-ui/core";
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -37,7 +37,7 @@ export default function Account() {
   const [openListSubMyPost1, setOpenListSubMyPost1] = useState(false);
   const [openListSubMyPost2, setOpenListSubMyPost2] = useState(false);
   const [openListMyLost, setOpenListMyLost] = useState(false);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(3);
   const [currentFoundPost, setCurrentFoundPost] = useState([]);
   const [postData, setPostData] = useState([
     {
@@ -132,6 +132,168 @@ export default function Account() {
       sex: "false",
       collar: false,
       description: "arr4",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat3.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat1.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr5",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat1.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat3.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr6",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat3.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat1.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr7",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat1.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat3.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr8",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat3.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat1.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr8",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat1.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat3.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr10",
       urls: [
         {
           id: "6127672cf18cc96f2a8e125f",
@@ -286,32 +448,58 @@ export default function Account() {
                 </ListItem>
 
                 <Collapse in={openListSubMyPost1} timeout="auto" unmountOnExit>
+                  {openListSubMyPost1 ? (
+                    <div>
+                      <div className="2xl:absolute 2xl:mt-64">
+                        <ArrowBackIosIcon
+                          style={{
+                            color: "#828282",
+                            width: "60px",
+                            height: "60px",
+                          }}
+                        />
+                      </div>
+                      <div className="2xl:absolute 2xl:mt-64 " style={{marginLeft:"1380px"}}>
+                        <ArrowForwardIosIcon
+                        onClick={setPage(page++)}
+                          style={{
+                            color: "#828282",
+                            width: "60px",
+                            height: "60px",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : null}
+
                   <List component="div" disablePadding>
                     <ListItem className={classes.nested}>
-                      <div className="2xl:mx-auto 2xl:mt-5"  >
-                      <Grid container spacing={10}>
-                        {currentFoundPost.map((item, i) => (
-                          <Grid key={i} item xs={4} md={5} lg={4}>
-                            <Carousel navButtonsAlwaysVisible={true}>
-                              {item.urls.map((items, i) => (
-                                <Image
-                                  key={i}
-                                  src={items.url}
-                                  alt={"previewImg-" + i}
-                                  width="326px"
-                                  height="400px"
-                                />
-                              ))}
-                            </Carousel>
-                            <ListItemText primary={"Date: " + item.date} />
-                            <ListItemText primary={"Sex: " + item.sex} />
-                            <ListItemText primary={"Collar: " + item.collar} />
-                            <ListItemText
-                              primary={"Description: " + item.description}
-                            />
-                          </Grid>
-                        ))}
-                      </Grid>
+                      <div className="2xl:mx-auto 2xl:mt-5">
+                        <Grid container spacing={10}>
+                          {currentFoundPost.map((item, i) => (
+                            <Grid key={i} item xs={4} md={5} lg={4}>
+                              <Carousel navButtonsAlwaysVisible={true}>
+                                {item.urls.map((items, i) => (
+                                  <Image
+                                    key={i}
+                                    src={items.url}
+                                    alt={"previewImg-" + i}
+                                    width="326px"
+                                    height="400px"
+                                  />
+                                ))}
+                              </Carousel>
+                              <ListItemText primary={"Date: " + item.date} />
+                              <ListItemText primary={"Sex: " + item.sex} />
+                              <ListItemText
+                                primary={"Collar: " + item.collar}
+                              />
+                              <ListItemText
+                                primary={"Description: " + item.description}
+                              />
+                            </Grid>
+                          ))}
+                        </Grid>
                       </div>
                     </ListItem>
                   </List>
@@ -341,7 +529,6 @@ export default function Account() {
       </main>
       <footer className="2xl:mt-32">
         <div className="2xl:bg-mainGreen 2xl:w-full 2xl:h-44"></div>
-        <ArrowForwardIosIcon />
       </footer>
     </div>
   );
