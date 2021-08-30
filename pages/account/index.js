@@ -2,7 +2,7 @@ import Head from "next/head";
 import BaseButton from "@components/BaseButton";
 import IMAGES from "@constants/IMAGES";
 import Image from "next/dist/client/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import AccountStyle from "@styles/Account.module.css";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -14,7 +14,8 @@ import Collapse from "@material-ui/core/Collapse";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Carousel from "react-material-ui-carousel";
-import { Paper, Button } from "@material-ui/core";
+import { Paper, Button, Grid } from "@material-ui/core";
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -36,6 +37,8 @@ export default function Account() {
   const [openListSubMyPost1, setOpenListSubMyPost1] = useState(false);
   const [openListSubMyPost2, setOpenListSubMyPost2] = useState(false);
   const [openListMyLost, setOpenListMyLost] = useState(false);
+  const [page, setPage] = useState(1);
+  const [currentFoundPost, setCurrentFoundPost] = useState([]);
   const [postData, setPostData] = useState([
     {
       location: {
@@ -47,35 +50,7 @@ export default function Account() {
       date: "2021-08-12T10:00:00.000Z",
       sex: "false",
       collar: false,
-      description: "fe not have with 5 pic",
-      urls: [
-        {
-          id: "6127672cf18cc96f2a8e125f",
-          url: "/images/cat1.jpg",
-        },
-        {
-          id: "6127672df18cc96f2a8e1260",
-          url: "/images/cat1.jpg",
-        },
-        {
-          id: "6127672ff18cc96f2a8e1261",
-          url: "/images/cat1.jpg",
-        },
-        
-      ],
-      __v: 0,
-    },
-    {
-      location: {
-        type: "Point",
-        coordinates: [100.4947931583359, 13.651317739545558],
-      },
-      postType: "lost",
-      _id: "6127672bf18cc96f2a8e125e",
-      date: "2021-08-12T10:00:00.000Z",
-      sex: "false",
-      collar: false,
-      description: "fe not have with 5 pic",
+      description: "arr1",
       urls: [
         {
           id: "6127672cf18cc96f2a8e125f",
@@ -89,7 +64,6 @@ export default function Account() {
           id: "6127672ff18cc96f2a8e1261",
           url: "/images/cat3.jpg",
         },
-        
       ],
       __v: 0,
     },
@@ -103,11 +77,38 @@ export default function Account() {
       date: "2021-08-12T10:00:00.000Z",
       sex: "false",
       collar: false,
-      description: "fe not have with 5 pic",
+      description: "arr2",
       urls: [
         {
           id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat3.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
           url: "/images/cat1.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr3",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
         },
         {
           id: "6127672df18cc96f2a8e1260",
@@ -115,13 +116,43 @@ export default function Account() {
         },
         {
           id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat3.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr4",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat3.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
           url: "/images/cat1.jpg",
         },
-        
       ],
       __v: 0,
     },
   ]);
+
+  useEffect(() => {
+    renderFoundPost();
+  }, []);
 
   const classes = useStyles();
 
@@ -141,20 +172,15 @@ export default function Account() {
     setOpenListMyLost(!openListMyLost);
   };
 
-  var items = [
-    {
-      name: "cat1",
-      src: "/images/cat1.jpg",
-    },
-    {
-      name: "cat2",
-      src: "/images/cat1.jpg.jpg",
-    },
-    {
-      name: "cat3",
-      src: "/images/cat3.jpg",
-    },
-  ];
+  const renderFoundPost = () => {
+    let store = [];
+    let initIndex = (page - 1) * 3;
+    for (let i = initIndex; i < initIndex + 3; i++) {
+      store.push(postData[i]);
+    }
+    setCurrentFoundPost(store);
+    console.log(store);
+  };
 
   return (
     <div className={" mx-auto " + AccountStyle.bgImg}>
@@ -261,25 +287,35 @@ export default function Account() {
 
                 <Collapse in={openListSubMyPost1} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
-                    <section className="2xl:flex 2xl:flex-wrap 2xl:mx-16 2xl:my-10 2xl:gap-16 2xl:justify-center">
-                      <div>
-                        {postData.map((item, i) => {     
-                            item.urls.map((items, i) => {
-                                <div key={i}>
-                                 <Image src={items.url} alt={item.description} width="326px" height="400px" />
-                                </div>; 
-                                <div>
-                                  {/* {item.description} */}
-                                 r
-                                </div>
-                                console.log(item.description)
-                            });     
-                        })}
+                    <ListItem className={classes.nested}>
+                      <div className="2xl:mx-auto 2xl:mt-5"  >
+                      <Grid container spacing={10}>
+                        {currentFoundPost.map((item, i) => (
+                          <Grid key={i} item xs={4} md={5} lg={4}>
+                            <Carousel navButtonsAlwaysVisible={true}>
+                              {item.urls.map((items, i) => (
+                                <Image
+                                  key={i}
+                                  src={items.url}
+                                  alt={"previewImg-" + i}
+                                  width="326px"
+                                  height="400px"
+                                />
+                              ))}
+                            </Carousel>
+                            <ListItemText primary={"Date: " + item.date} />
+                            <ListItemText primary={"Sex: " + item.sex} />
+                            <ListItemText primary={"Collar: " + item.collar} />
+                            <ListItemText
+                              primary={"Description: " + item.description}
+                            />
+                          </Grid>
+                        ))}
+                      </Grid>
                       </div>
-                    </section>
+                    </ListItem>
                   </List>
                 </Collapse>
-
                 <ListItem
                   button
                   className={classes.nested}
@@ -305,6 +341,7 @@ export default function Account() {
       </main>
       <footer className="2xl:mt-32">
         <div className="2xl:bg-mainGreen 2xl:w-full 2xl:h-44"></div>
+        <ArrowForwardIosIcon />
       </footer>
     </div>
   );

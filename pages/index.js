@@ -57,7 +57,7 @@ export default function Home() {
                 ></BaseButton>
               </a>
             </Link>
-            <Link href="">
+            <Link href="/account">
               <a>
                 <BaseButton
                   style={"color: white"}
