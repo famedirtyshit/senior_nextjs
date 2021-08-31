@@ -22,6 +22,9 @@ const IMAGES = {
     deviceLeftfor4step:'/images/deviceLeftfor4step.png',
     scrollDown:'/images/scrollDown.png',
     bgAccountHeader:'/images/bgAccountHeader.png',
+    cat1:'/images/cat1.png',
+    cat2:'/images/cat2.png',
+    cat3:'/images/cat3.png',
     
     
 

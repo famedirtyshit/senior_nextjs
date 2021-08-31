@@ -501,9 +501,36 @@ export default function Account() {
                         )}
                       </div>
                       <div className="2xl:mx-auto 2xl:mt-5">
-                        <Grid container spacing={10}>
+                        {/* <Grid container spacing={10}>
                           {currentFoundPost.map((item, i) => (
                             <Grid key={i} item lg={4}>
+                              
+                                <Carousel navButtonsAlwaysVisible={true}>
+                                  {item.urls.map((items, i) => (
+                                    <Image
+                                      key={i}
+                                      src={items.url}
+                                      alt={"previewImg-" + i}
+                                      width="326px"
+                                      height="400px"
+                                    />
+                                  ))}
+                                </Carousel>
+                                <ListItemText primary={"Date: " + item.date} />
+                                <ListItemText primary={"Sex: " + item.sex} />
+                                <ListItemText
+                                  primary={"Collar: " + item.collar}
+                                />
+                                <ListItemText
+                                  primary={"Description: " + item.description}
+                                />
+                              
+                            </Grid>
+                          ))}
+                        </Grid> */}
+                        <section className="2xl:flex 2xl:flex-wrap 2xl:gap-28 flex-start">
+                          {currentFoundPost.map((item, i) => (
+                            <section key={i}>
                               <Carousel navButtonsAlwaysVisible={true}>
                                 {item.urls.map((items, i) => (
                                   <Image
@@ -523,9 +550,9 @@ export default function Account() {
                               <ListItemText
                                 primary={"Description: " + item.description}
                               />
-                            </Grid>
+                            </section>
                           ))}
-                        </Grid>
+                        </section>
                       </div>
                       {pageFoundPost >= maxPageFoundPost ? (
                         <ArrowForwardIosIcon
@@ -574,6 +601,34 @@ export default function Account() {
       </main>
       <footer className="2xl:mt-32">
         <div className="2xl:bg-mainGreen 2xl:w-full 2xl:h-44"></div>
+        <div className="2xl:mx-auto 2xl:mt-5">
+          <Grid container spacing={2}>
+            <Grid item lg={4}>
+              <Image
+                src={"/images/cat1.jpg"}
+                alt={"previewImg"}
+                width="326px"
+                height="400px"
+              />
+            </Grid>
+            <Grid item lg={4}>
+              <Image
+                src={"/images/cat1.jpg"}
+                alt={"previewImg"}
+                width="326px"
+                height="400px"
+              />
+            </Grid>
+            <Grid item lg={4}>
+              <Image
+                src={"/images/cat1.jpg"}
+                alt={"previewImg"}
+                width="326px"
+                height="400px"
+              />
+            </Grid>
+          </Grid>
+        </div>
       </footer>
     </div>
   );
