@@ -37,8 +37,9 @@ export default function Account() {
   const [openListSubMyPost1, setOpenListSubMyPost1] = useState(false);
   const [openListSubMyPost2, setOpenListSubMyPost2] = useState(false);
   const [openListMyLost, setOpenListMyLost] = useState(false);
-  const [page, setPage] = useState(3);
+  const [pageFoundPost, setPageFoundPost] = useState(1);
   const [currentFoundPost, setCurrentFoundPost] = useState([]);
+  const [maxPageFoundPost, setMaxPageFoundPost] = useState(0);
   const [postData, setPostData] = useState([
     {
       location: {
@@ -314,6 +315,12 @@ export default function Account() {
 
   useEffect(() => {
     renderFoundPost();
+    console.log("current" + pageFoundPost);
+    console.log(pageFoundPost == maxPageFoundPost ? true : false);
+  }, [pageFoundPost]);
+
+  useEffect(() => {
+    setMaxPageFoundPost(Math.ceil(postData.length / 3));
   }, []);
 
   const classes = useStyles();
@@ -336,12 +343,30 @@ export default function Account() {
 
   const renderFoundPost = () => {
     let store = [];
-    let initIndex = (page - 1) * 3;
-    for (let i = initIndex; i < initIndex + 3; i++) {
+    let initIndex = (pageFoundPost - 1) * 3;
+    for (let i = initIndex; i < initIndex + 3 && i < postData.length; i++) {
       store.push(postData[i]);
     }
     setCurrentFoundPost(store);
     console.log(store);
+  };
+
+  const nextPage = () => {
+    let count = pageFoundPost;
+    if (pageFoundPost >= maxPageFoundPost) {
+      return;
+    } else {
+      setPageFoundPost(++count);
+    }
+  };
+
+  const backPage = () => {
+    let count = pageFoundPost;
+    if (pageFoundPost <= 1) {
+      return;
+    } else {
+      setPageFoundPost(--count);
+    }
   };
 
   return (
@@ -364,16 +389,20 @@ export default function Account() {
           className="w-9/12 bg-mainYellow mx-auto  rounded-2xl shadow-lg 2xl:mt-20"
           style={{ height: "776px" }}
         >
+          <div className="2xl:mt-11 2xl:absolute 2xl:ml-12">
+            <Link href="/">
+              <a>
+                <ArrowBackIosIcon
+                  style={{ color: "white", width: "40px", height: "40px" }}
+                />
+              </a>
+            </Link>
+          </div>
           <div className="2xl:flex 2xl:flex-wrap 2xl:justify-center">
-            <div className="2xl:mt-11 ">
-              <ArrowBackIosIcon
-                style={{ color: "white", width: "40px", height: "40px" }}
-              />
-            </div>
             <p className="2xl:text-4xl 2xl:font-bold 2xl:mt-11 ">My Account</p>
           </div>
           <div className="2xl:flex 2xl:flex-wrap 2xl:justify-center 2xl:py-16">
-            <div className="2xl:ml-16">
+            <div className="">
               <Image
                 src={IMAGES.user}
                 alt="default-user"
@@ -448,36 +477,33 @@ export default function Account() {
                 </ListItem>
 
                 <Collapse in={openListSubMyPost1} timeout="auto" unmountOnExit>
-                  {openListSubMyPost1 ? (
-                    <div>
-                      <div className="2xl:absolute 2xl:mt-64">
-                        <ArrowBackIosIcon
-                          style={{
-                            color: "#828282",
-                            width: "60px",
-                            height: "60px",
-                          }}
-                        />
-                      </div>
-                      <div className="2xl:absolute 2xl:mt-64 " style={{marginLeft:"1380px"}}>
-                        <ArrowForwardIosIcon
-                        onClick={setPage(page++)}
-                          style={{
-                            color: "#828282",
-                            width: "60px",
-                            height: "60px",
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ) : null}
-
                   <List component="div" disablePadding>
                     <ListItem className={classes.nested}>
+                      <div className="">
+                        {pageFoundPost <= 1 ? (
+                          <ArrowBackIosIcon
+                            style={{
+                              color: "#828282",
+                              width: "60px",
+                              height: "60px",
+                            }}
+                            onClick={() => backPage()}
+                          />
+                        ) : (
+                          <ArrowBackIosIcon
+                            style={{
+                              color: "#356053",
+                              width: "60px",
+                              height: "60px",
+                            }}
+                            onClick={() => backPage()}
+                          />
+                        )}
+                      </div>
                       <div className="2xl:mx-auto 2xl:mt-5">
                         <Grid container spacing={10}>
                           {currentFoundPost.map((item, i) => (
-                            <Grid key={i} item xs={4} md={5} lg={4}>
+                            <Grid key={i} item lg={4}>
                               <Carousel navButtonsAlwaysVisible={true}>
                                 {item.urls.map((items, i) => (
                                   <Image
@@ -501,6 +527,25 @@ export default function Account() {
                           ))}
                         </Grid>
                       </div>
+                      {pageFoundPost >= maxPageFoundPost ? (
+                        <ArrowForwardIosIcon
+                          style={{
+                            color: "#828282",
+                            width: "60px",
+                            height: "60px",
+                          }}
+                          onClick={() => nextPage()}
+                        />
+                      ) : (
+                        <ArrowForwardIosIcon
+                          style={{
+                            color: "#356053",
+                            width: "60px",
+                            height: "60px",
+                          }}
+                          onClick={() => nextPage()}
+                        />
+                      )}
                     </ListItem>
                   </List>
                 </Collapse>
