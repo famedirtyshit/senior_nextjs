@@ -48,7 +48,8 @@ const theme = createTheme({
 
 export default function Feed() {
     const [mapObj, setMapObj] = useState(null);
-    const [googleStatus, setGoogleStatus] = useState(false);
+    // const [googleStatus, setGoogleStatus] = useState(false);
+    const googleStatus = useRef(false);
     const [modalMap, setModalMap] = useState(false);
     const [mapPreview, setMapPreview] = useState(false);
     const marker = useRef(null);
@@ -121,7 +122,7 @@ export default function Feed() {
 
     useEffect(() => {
         try {
-            if (modalMap === true) {
+            if (modalMap === true ) {
                 let checkExist = setInterval(function () {
                     if (document.getElementById('map')) {
                         clearInterval(checkExist);
@@ -132,7 +133,7 @@ export default function Feed() {
         } catch (e) {
             console.warn(e)
         }
-    }, [googleStatus, modalMap])
+    }, [googleStatus.current, modalMap])
 
     useEffect(() => {
         if (locationConfirmStatus === true && locationConfirm != null) {
@@ -448,9 +449,9 @@ export default function Feed() {
                 <title>CatUs</title>
                 <meta name="description" content="CatUs Service" />
                 <link rel="icon" href="/favicon.ico" />
-                <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+                <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />               
             </Head>
-            <Script async defer src={`https://maps.googleapis.com/maps/api/js?v=3.44&key=${process.env.GMAPKEY}&libraries=places&region=TH&language=th`} onLoad={() => { setGoogleStatus(true) }} strategy="beforeInteractive" />
+            <Script async defer src={`https://maps.googleapis.com/maps/api/js?v=3.44&key=${process.env.GMAPKEY}&libraries=places&region=TH&language=th`} onLoad={() => { googleStatus.current = true }} />
             <ThemeProvider theme={theme}>
                 <div className={"head-sec"}>
                     <header className="2xl:flex 2xl:flex-wrap 2xl:justify-between 2xl:mx-64 pt-3">
