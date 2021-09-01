@@ -16,6 +16,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import Carousel from "react-material-ui-carousel";
 import { Paper, Button, Grid } from "@material-ui/core";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import Footer from "@components/footer";
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -38,9 +39,12 @@ export default function Account() {
   const [openListSubMyPost2, setOpenListSubMyPost2] = useState(false);
   const [openListMyLost, setOpenListMyLost] = useState(false);
   const [pageFoundPost, setPageFoundPost] = useState(1);
+  const [pageLostPost, setPageLostPost] = useState(1);
   const [currentFoundPost, setCurrentFoundPost] = useState([]);
+  const [currentLostPost, setCurrentLostPost] = useState([]);
   const [maxPageFoundPost, setMaxPageFoundPost] = useState(0);
-  const [postData, setPostData] = useState([
+  const [maxPageLostPost, setMaxPageLostPost] = useState(0);
+  const [postFoundData, setPostFoundData] = useState([
     {
       location: {
         type: "Point",
@@ -267,7 +271,280 @@ export default function Account() {
       date: "2021-08-12T10:00:00.000Z",
       sex: "false",
       collar: false,
+      description: "arr9",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat1.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat3.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr10",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat3.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat1.jpg",
+        },
+      ],
+      __v: 0,
+    },
+  ]);
+
+  const [postLostData, setPostLostData] = useState([
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr1",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat1.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat3.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr2",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat3.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat1.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr3",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat1.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat3.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr4",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat3.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat1.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr5",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat1.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat3.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr6",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat3.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat1.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr7",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat1.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat3.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
       description: "arr8",
+      urls: [
+        {
+          id: "6127672cf18cc96f2a8e125f",
+          url: "/images/cat2.jpg",
+        },
+        {
+          id: "6127672df18cc96f2a8e1260",
+          url: "/images/cat3.jpg",
+        },
+        {
+          id: "6127672ff18cc96f2a8e1261",
+          url: "/images/cat1.jpg",
+        },
+      ],
+      __v: 0,
+    },
+    {
+      location: {
+        type: "Point",
+        coordinates: [100.4947931583359, 13.651317739545558],
+      },
+      postType: "lost",
+      _id: "6127672bf18cc96f2a8e125e",
+      date: "2021-08-12T10:00:00.000Z",
+      sex: "false",
+      collar: false,
+      description: "arr9",
       urls: [
         {
           id: "6127672cf18cc96f2a8e125f",
@@ -315,12 +592,16 @@ export default function Account() {
 
   useEffect(() => {
     renderFoundPost();
-    console.log("current" + pageFoundPost);
-    console.log(pageFoundPost == maxPageFoundPost ? true : false);
-  }, [pageFoundPost]);
+    renderLostPost();
+    console.log("pageLostPost" + pageLostPost);
+    console.log("maxLostPage" + maxPageLostPost);
+  }, [pageFoundPost, pageLostPost]);
 
   useEffect(() => {
-    setMaxPageFoundPost(Math.ceil(postData.length / 3));
+    setMaxPageFoundPost(Math.ceil(postFoundData.length / 3));
+    setMaxPageLostPost(Math.ceil(postLostData.length / 3));
+    console.log(postLostData)
+    console.log(currentLostPost)
   }, []);
 
   const classes = useStyles();
@@ -341,33 +622,83 @@ export default function Account() {
     setOpenListMyLost(!openListMyLost);
   };
 
+  // const nextPageLost = () =>{
+  //   if (pageFoundPost >= maxPageFoundPost) {
+  //           return;
+  //         } else {
+  //           setPageLostPost(++count);
+  //         }
+  // };
+
+  // const backPageLost = () => {
+  //   if (pageLostPost <= 1) {
+  //           return;
+  //         } else {
+  //           setPageLostPost(--count);
+  //         }
+  // }
+
   const renderFoundPost = () => {
     let store = [];
     let initIndex = (pageFoundPost - 1) * 3;
-    for (let i = initIndex; i < initIndex + 3 && i < postData.length; i++) {
-      store.push(postData[i]);
+    for (
+      let i = initIndex;
+      i < initIndex + 3 && i < postFoundData.length;
+      i++
+    ) {
+      store.push(postFoundData[i]);
     }
     setCurrentFoundPost(store);
     console.log(store);
   };
+  
+  const renderLostPost = () => {
+    let store = [];
+    let initIndex = (pageLostPost - 1) * 3;
+    for (let i = initIndex; i < initIndex + 3 && i < postLostData.length; i++) {
+      store.push(postLostData[i]);
+    }
+    setCurrentLostPost(store);
+    console.log(store);
+  };
 
-  const nextPage = () => {
-    let count = pageFoundPost;
-    if (pageFoundPost >= maxPageFoundPost) {
-      return;
-    } else {
-      setPageFoundPost(++count);
+  const nextPage = (pageType) => {
+    let countFound = pageFoundPost;
+    let countLost = pageLostPost;
+    if (pageType == "found") {
+      if (pageFoundPost >= maxPageFoundPost) {
+        return;
+      } else {
+        setPageFoundPost(++countFound);
+      }
+    } else if (pageType == "lost") {
+      if (pageLostPost >= maxPageLostPost) {
+        return;
+      } else {
+        setPageLostPost(++countLost);
+      }
     }
   };
 
-  const backPage = () => {
-    let count = pageFoundPost;
-    if (pageFoundPost <= 1) {
-      return;
-    } else {
-      setPageFoundPost(--count);
+  const backPage = (pageType) => {
+    let countFound = pageFoundPost;
+    let countLost = pageLostPost;
+    if (pageType == "found") {
+      if (pageFoundPost <= 1) {
+        return;
+      } else {
+        setPageFoundPost(--countFound);
+      }
+    } else if (pageType == "lost") {
+      if (pageLostPost <= 1) {
+        return;
+      } else {
+        setPageLostPost(--countLost);
+      }
     }
   };
+
+  
 
   return (
     <div className={" mx-auto " + AccountStyle.bgImg}>
@@ -487,7 +818,6 @@ export default function Account() {
                               width: "60px",
                               height: "60px",
                             }}
-                            onClick={() => backPage()}
                           />
                         ) : (
                           <ArrowBackIosIcon
@@ -496,38 +826,11 @@ export default function Account() {
                               width: "60px",
                               height: "60px",
                             }}
-                            onClick={() => backPage()}
+                            // onClick={() => backPageFound()}
                           />
                         )}
                       </div>
                       <div className="2xl:mx-auto 2xl:mt-5">
-                        {/* <Grid container spacing={10}>
-                          {currentFoundPost.map((item, i) => (
-                            <Grid key={i} item lg={4}>
-                              
-                                <Carousel navButtonsAlwaysVisible={true}>
-                                  {item.urls.map((items, i) => (
-                                    <Image
-                                      key={i}
-                                      src={items.url}
-                                      alt={"previewImg-" + i}
-                                      width="326px"
-                                      height="400px"
-                                    />
-                                  ))}
-                                </Carousel>
-                                <ListItemText primary={"Date: " + item.date} />
-                                <ListItemText primary={"Sex: " + item.sex} />
-                                <ListItemText
-                                  primary={"Collar: " + item.collar}
-                                />
-                                <ListItemText
-                                  primary={"Description: " + item.description}
-                                />
-                              
-                            </Grid>
-                          ))}
-                        </Grid> */}
                         <section className="2xl:flex 2xl:flex-wrap 2xl:gap-28 flex-start">
                           {currentFoundPost.map((item, i) => (
                             <section key={i}>
@@ -561,7 +864,6 @@ export default function Account() {
                             width: "60px",
                             height: "60px",
                           }}
-                          onClick={() => nextPage()}
                         />
                       ) : (
                         <ArrowForwardIosIcon
@@ -570,7 +872,7 @@ export default function Account() {
                             width: "60px",
                             height: "60px",
                           }}
-                          onClick={() => nextPage()}
+                          onClick={() => nextPage("found")}
                         />
                       )}
                     </ListItem>
@@ -587,6 +889,78 @@ export default function Account() {
                   />
                   {openListSubMyPost2 ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
+                <Collapse in={openListSubMyPost2} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    <ListItem className={classes.nested}>
+                      <div className="">
+                        {pageLostPost <= 1 ? (
+                          <ArrowBackIosIcon
+                            style={{
+                              color: "#828282",
+                              width: "60px",
+                              height: "60px",
+                            }}
+                          />
+                        ) : (
+                          <ArrowBackIosIcon
+                            style={{
+                              color: "#356053",
+                              width: "60px",
+                              height: "60px",
+                            }}
+                            onClick={() => backPage("lost")}
+                          />
+                        )}
+       
+                      </div>
+                      <div className="2xl:mx-auto 2xl:mt-5">
+                        <section className="2xl:flex 2xl:flex-wrap 2xl:gap-28 flex-start">
+                          {currentLostPost.map((item, i) => (
+                            <section key={i}>
+                              <Carousel navButtonsAlwaysVisible={true}>
+                                {item.urls.map((items, i) => (
+                                  <Image
+                                    key={i}
+                                    src={items.url}
+                                    alt={"previewImg-" + i}
+                                    width="326px"
+                                    height="400px"
+                                  />
+                                ))}
+                              </Carousel>
+                              <ListItemText primary={"Date: " + item.date} />
+                              <ListItemText primary={"Sex: " + item.sex} />
+                              <ListItemText
+                                primary={"Collar: " + item.collar}
+                              />
+                              <ListItemText
+                                primary={"Description: " + item.description}
+                              />
+                            </section>
+                          ))}
+                        </section>
+                      </div>
+                      {pageLostPost >= maxPageLostPost ? (
+                        <ArrowForwardIosIcon
+                          style={{
+                            color: "#828282",
+                            width: "60px",
+                            height: "60px",
+                          }}
+                        />
+                      ) : (
+                        <ArrowForwardIosIcon
+                          style={{
+                            color: "#356053",
+                            width: "60px",
+                            height: "60px",
+                          }}
+                          onClick={() => nextPage("lost")}
+                        />
+                      )}
+                    </ListItem>
+                  </List>
+                </Collapse>
               </List>
             </Collapse>
             <ListItem button onClick={handleClickListMyLost}>
@@ -600,35 +974,7 @@ export default function Account() {
         </section>
       </main>
       <footer className="2xl:mt-32">
-        <div className="2xl:bg-mainGreen 2xl:w-full 2xl:h-44"></div>
-        <div className="2xl:mx-auto 2xl:mt-5">
-          <Grid container spacing={2}>
-            <Grid item lg={4}>
-              <Image
-                src={"/images/cat1.jpg"}
-                alt={"previewImg"}
-                width="326px"
-                height="400px"
-              />
-            </Grid>
-            <Grid item lg={4}>
-              <Image
-                src={"/images/cat1.jpg"}
-                alt={"previewImg"}
-                width="326px"
-                height="400px"
-              />
-            </Grid>
-            <Grid item lg={4}>
-              <Image
-                src={"/images/cat1.jpg"}
-                alt={"previewImg"}
-                width="326px"
-                height="400px"
-              />
-            </Grid>
-          </Grid>
-        </div>
+         <Footer />
       </footer>
     </div>
   );
