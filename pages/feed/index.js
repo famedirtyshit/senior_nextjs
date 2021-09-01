@@ -23,6 +23,9 @@ import accountUtil from '@utils/accountUtil';
 import initFirebase from '@utils/initFirebase';
 import startOfDay from 'date-fns/startOfDay';
 import endOfDay from 'date-fns/endOfDay';
+import $ from 'jquery';
+import 'daterangepicker';
+import 'moment';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useState, useEffect, useRef } from 'react';
 
@@ -448,9 +451,6 @@ export default function Feed() {
                 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
             </Head>
             <Script async defer src={`https://maps.googleapis.com/maps/api/js?v=3.44&key=${process.env.GMAPKEY}&libraries=places&region=TH&language=th`} onLoad={() => { setGoogleStatus(true) }} strategy="beforeInteractive" />
-            <Script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js" strategy="beforeInteractive" ></Script>
-            <Script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js" strategy="beforeInteractive" ></Script>
-            <Script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js" strategy="beforeInteractive" ></Script>
             <ThemeProvider theme={theme}>
                 <div className={"head-sec"}>
                     <header className="2xl:flex 2xl:flex-wrap 2xl:justify-between 2xl:mx-64 pt-3">
