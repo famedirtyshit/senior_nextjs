@@ -66,6 +66,8 @@ export default function Account() {
           );
           if (account.data.result === true) {
             setUserAccount(account.data.searchResult[0]);
+            console.log(userAccount.firstname)
+            // console.log(account.data.searchResult[0].firstname)
           } else {
             setUserAccount(null);
             alert("user not found");
@@ -94,14 +96,6 @@ export default function Account() {
   }, []);
 
   useEffect(() => {
-    postFoundData.map((item, i) => {
-      console.log("---------------------------");
-      console.log(postFoundData);
-      console.log("---------------------------");
-    });
-  }, [postFoundData]);
-
-  useEffect(() => {
     renderFoundPost();
   }, [pageFoundPost, postFoundData]);
 
@@ -112,9 +106,6 @@ export default function Account() {
   useEffect(() => {
     setMaxPageFoundPost(Math.ceil(postFoundData.length / 3));
     setMaxPageLostPost(Math.ceil(postLostData.length / 3));
-
-    // console.log(postLostData);
-    // console.log(currentLostPost);
   }, []);
 
   const classes = useStyles();
@@ -249,7 +240,7 @@ export default function Account() {
                 </div>
                 <div>
                   <div className="2xl:m-9">
-                    <p className="2xl:text-3xl 2xl:font-bold">{userName}</p>
+                    <p className="2xl:text-3xl 2xl:font-bold"></p>
                   </div>
                 </div>
                 <div className="2xl:mt-3">
@@ -272,15 +263,15 @@ export default function Account() {
                 <p className="2xl:mt-2 " style={{ color: "#6E6E6E" }}>
                   Number
                 </p>
-                <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">{userNumber}</p>
+                <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">{userAccount.phone}</p>
                 <p className="2xl:mt-2" style={{ color: "#6E6E6E" }}>
                   Contact
                 </p>
                 <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
-                  Facebook: {userContactFB}
+                  Facebook: {userAccount.facebook}
                 </p>
                 <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
-                  Instagram: {userContactIG}
+                  Instagram: {userAccount.instagram}
                 </p>
               </section>
             </div>
