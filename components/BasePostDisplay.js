@@ -187,12 +187,12 @@ export default function BasePostDisplay(prop) {
                                             </div>
                                         </div>
                                         <p className="text-textGray text-lg font-normal mb-4">Name</p>
-                                        <p className="text-lg font-normal mb-4">สมชาย บินทะลุบ้าน</p>
+                                        <p className="text-lg font-normal mb-4">{checkProp ? prop.post.data.searchResult[prop.target].owner.firstname + ' ' + prop.post.data.searchResult[prop.target].owner.lastname : '-'}</p>
                                         <p className="text-textGray text-lg font-normal mb-4">Number</p>
-                                        <p className="text-lg font-normal mb-4">091-xxx-xxxx</p>
+                                        <p className="text-lg font-normal mb-4">{checkProp ? prop.post.data.searchResult[prop.target].owner.phone : '-'}</p>
                                         <p className="text-textGray text-lg font-normal mb-4">Contact</p>
-                                        <p className="text-lg font-normal mb-4 ml-6">Facebook: somchai flyhigh</p>
-                                        <p className="text-lg font-normal mb-4 ml-6">Instragram: somchaiFly657</p>
+                                        <p className="text-lg font-normal mb-4 ml-6">Facebook: {checkProp ? prop.post.data.searchResult[prop.target].owner.facebook != null ? prop.post.data.searchResult[prop.target].owner.facebook : '-' : '-'}</p>
+                                        <p className="text-lg font-normal mb-4 ml-6">Instragram: {checkProp ? prop.post.data.searchResult[prop.target].owner.instagram != null ? prop.post.data.searchResult[prop.target].owner.instagram : '-' : '-'}</p>
                                     </div>
                                 </div>
                             </div>

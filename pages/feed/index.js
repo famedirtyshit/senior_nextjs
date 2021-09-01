@@ -19,6 +19,11 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import BasePostDisplay from '@components/BasePostDisplay';
+import accountUtil from '@utils/accountUtil';
+import initFirebase from '@utils/initFirebase';
+import startOfDay from 'date-fns/startOfDay';
+import endOfDay from 'date-fns/endOfDay';
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useState, useEffect, useRef } from 'react';
 
 const theme = createTheme({
@@ -56,6 +61,7 @@ export default function Feed() {
     const [haveCollar, setHaveCollar] = useState(true);
     const [notHaveCollar, setNotHaveCollar] = useState(true);
     const [radius, setRadius] = useState(1);
+    const [fromTo, setFromTo] = useState([startOfDay(new Date(new Date().setDate(new Date().getDate() - 7))), endOfDay(new Date())]);
     const [postType, setPostType] = useState(null);
     const [searchStatus, setSearchStatus] = useState(false);
     const [searchData, setSearchData] = useState(null);
@@ -66,9 +72,53 @@ export default function Feed() {
     const [displayStatus, setDisplayStatus] = useState(false);
     const [displayTarget, setDisplayTarget] = useState(null);
 
+    const [userAccount, setUserAccount] = useState(null);
+
+    useEffect(() => {
+        let res = initFirebase();
+        if (res != false) {
+            console.log('init firebase');
+            const auth = getAuth();
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    let account = await accountUtil.getUser(user.uid);
+                    if (account.data.result === true) {
+                        setUserAccount(account.data.searchResult[0]);
+                    } else {
+                        setUserAccount(null);
+                        alert('user not found');
+                        signOut(auth).then(() => {
+                            console.log('signout')
+                        }).catch((error) => {
+                            console.log('signout fail')
+                            console.log(error)
+                        });
+                    }
+                } else {
+                    setUserAccount(null);
+                }
+            });
+        } else {
+            console.log('init firebase error')
+        }
+    }, [])
+
+    useEffect(() => {
+        $(function () {
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'right',
+                startDate: new Date(new Date().setDate(new Date().getDate() - 7)),
+                endDate: new Date(),
+                maxDate: new Date()
+            }, function (start, end, label) {
+                setFromTo([new Date(start), new Date(end)])
+            });
+        });
+    },[])
+
     useEffect(() => {
         try {
-            if (googleStatus === true && modalMap === true) {
+            if (modalMap === true) {
                 let checkExist = setInterval(function () {
                     if (document.getElementById('map')) {
                         clearInterval(checkExist);
@@ -112,7 +162,7 @@ export default function Feed() {
                 submitSearch();
             }
         }
-    }, [male, female, unknow, haveCollar, notHaveCollar, radius, locationConfirm, searchType, sortType])
+    }, [male, female, unknow, haveCollar, notHaveCollar, radius, locationConfirm, searchType, sortType, fromTo])
 
     useEffect(() => {
         setSearchStatus(true);
@@ -370,13 +420,13 @@ export default function Feed() {
         if (!valid) {
             let sexInput = { male: male, female: female, unknow: unknow };
             let collarInput = { haveCollar: haveCollar, notHaveCollar: notHaveCollar };
-            let res = await postUtil.searchNoMap(sexInput, collarInput, searchType, page)
+            let res = await postUtil.searchNoMap(sexInput, collarInput, searchType, page, fromTo)
             setSearchData(res);
             setSearchStatus(false);
         } else {
             let sexInput = { male: male, female: female, unknow: unknow };
             let collarInput = { haveCollar: haveCollar, notHaveCollar: notHaveCollar };
-            let res = await postUtil.search(locationConfirm.lat, locationConfirm.lng, sexInput, collarInput, radius, searchType, page, sortType)
+            let res = await postUtil.search(locationConfirm.lat, locationConfirm.lng, sexInput, collarInput, radius, searchType, page, sortType, fromTo)
             setSearchData(res);
             setSearchStatus(false);
         }
@@ -395,8 +445,12 @@ export default function Feed() {
                 <title>CatUs</title>
                 <meta name="description" content="CatUs Service" />
                 <link rel="icon" href="/favicon.ico" />
+                <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
             </Head>
-            <Script async defer src={`https://maps.googleapis.com/maps/api/js?v=3.44&key=${process.env.GMAPKEY}&libraries=places&region=TH&language=th`} onLoad={() => { setGoogleStatus(true) }} />
+            <Script async defer src={`https://maps.googleapis.com/maps/api/js?v=3.44&key=${process.env.GMAPKEY}&libraries=places&region=TH&language=th`} onLoad={() => { setGoogleStatus(true) }} strategy="beforeInteractive" />
+            <Script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js" strategy="beforeInteractive" ></Script>
+            <Script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js" strategy="beforeInteractive" ></Script>
+            <Script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js" strategy="beforeInteractive" ></Script>
             <ThemeProvider theme={theme}>
                 <div className={"head-sec"}>
                     <header className="2xl:flex 2xl:flex-wrap 2xl:justify-between 2xl:mx-64 pt-3">
@@ -412,29 +466,49 @@ export default function Feed() {
                                 <Image src={IMAGES.user} alt='default-user' width="112" height="112" />
                             </div>
                             <div className="2xl:ml-12 text-xl font-normal">
-                                <p>Name: Guest</p>
-                                <p>Facebook: -</p>
-                                <p>Instragram: -</p>
-                                <p>Tel: -</p>
+                                {userAccount == null
+                                    ?
+                                    <div>
+                                        <p>Name: Guest</p>
+                                        <p>Facebook: -</p>
+                                        <p>Instragram: -</p>
+                                        <p>Tel: -</p>
+                                    </div>
+                                    :
+                                    <div>
+                                        <p>Name: {`${userAccount.firstname} ${userAccount.lastname}`}</p>
+                                        <p>Facebook: {userAccount.facebook != null ? userAccount.facebook : '-'}</p>
+                                        <p>Instragram: {userAccount.instagram != null ? userAccount.instagram : '-'}</p>
+                                        <p>Tel: {userAccount.phone}</p>
+                                    </div>
+                                }
                             </div>
-                            <div className="2xl:ml-64 2xl:text-center 2xl:pl-12">
-                                <p className="text-xl font-normal text-textGray">Please login</p>
-                                <BaseButton fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Login'} customClass={'2xl:mt-4 2xl:px-32'}></BaseButton>
+                            {
+                                userAccount == null ?
+                                    <div className="2xl:ml-64 2xl:text-center 2xl:pl-12">
+                                        <p className="text-xl font-normal text-textGray">Please login</p>
+                                        <BaseButton onClickFunction={() => { window.location.href = '/authen' }} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Login'} customClass={'2xl:mt-4 2xl:px-32'}></BaseButton>
+                                    </div>
+                                    :
+                                    null
+                            }
+                        </div>
+                        {userAccount != null ?
+                            <div className="2xl:grid 2xl:grid-cols-2 bg-white rounded-2xl 2xl:relative">
+                                <p onClick={setPostFoundType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium cursor-pointer " + cn({
+                                    'bg-mainGreen text-white rounded-bl-2xl': postType === "found",
+                                    'text-mainGreen': postType !== "found",
+                                })
+                                }>Post Found</p>
+                                <p onClick={setPostLostType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium cursor-pointer " + cn({
+                                    'bg-mainGreen text-white rounded-br-2xl': postType === "lost",
+                                    'text-mainGreen': postType !== "lost",
+                                })
+                                }>Post Lost</p>
+                                {postType != null ? <BasePostModal user={userAccount} cancelFunction={togglePostType} type={postType} closeBasePostModal={togglePostType} /> : null}
                             </div>
-                        </div>
-                        <div className="2xl:grid 2xl:grid-cols-2 bg-white rounded-2xl 2xl:relative">
-                            <p onClick={setPostFoundType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium cursor-pointer " + cn({
-                                'bg-mainGreen text-white rounded-bl-2xl': postType === "found",
-                                'text-mainGreen': postType !== "found",
-                            })
-                            }>Post Found</p>
-                            <p onClick={setPostLostType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium cursor-pointer " + cn({
-                                'bg-mainGreen text-white rounded-br-2xl': postType === "lost",
-                                'text-mainGreen': postType !== "lost",
-                            })
-                            }>Post Lost</p>
-                            {postType != null ? <BasePostModal cancelFunction={togglePostType} type={postType} closeBasePostModal={togglePostType} /> : null}
-                        </div>
+                            : null
+                        }
                     </section>
                     <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-3 2xl:mx-56 text-center">
                         <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
@@ -483,6 +557,10 @@ export default function Feed() {
                                 <br />
                                 <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={notHaveCollar} setValue={handleNotHaveCollarChange} label='not have collar' />
                                 <p className="2xl:inline-block text-xl font-medium align-middle 2xl:ml-2.5" >Not have</p>
+                            </div>
+                            <p className="text-xl font-medium 2xl:my-3">From-To</p>
+                            <div className="dateRangeSelect 2xl:mt-3 2xl:ml-6">
+                                <input readOnly type="text" name="daterange" className="border border-solid border-gray-700 p-1 text-center rounded-lg text-base font-medium cursor-pointer" />
                             </div>
                             {/* <div className="2xl:flex flex-wrap">
                             <BaseButton onClickFunction={submitSearch} fill={true} fillColor={'mainOrange'} textColor={'white'} round={true} roundSize={'lg'} value={'Search'} customClass={'2xl:mt-6'}></BaseButton>
