@@ -321,7 +321,7 @@ export default function BasePostModal(prop) {
                 collarToBoolean = null;
             }
             setPostResStatus(true);
-            let result = await postUtil.post(locationConfirm.lat, locationConfirm.lng, selectedDate, sexToBoolean, collarToBoolean, desc, image, prop.type);
+            let result = await postUtil.post(locationConfirm.lat, locationConfirm.lng, selectedDate, sexToBoolean, collarToBoolean, desc, image, prop.type, prop.user._id);
             setPostRes(result);
         }
     }

@@ -36,7 +36,6 @@ module.exports = {
         darkCream: '#DBC09C',
         postTitle: '#626262',
         mainBgGreen: '#378566',
-        mainOrange: '#F0930D',
         mainYellow:'#F4C444',
       },
       textColor: {
@@ -55,6 +54,9 @@ module.exports = {
         '0.7': 0.7,
         '0.8': 0.8,
         '0.9': 0.9,
+      },
+      spacing: {
+        'c3.4': '3.4rem'
       }
     }
   }
