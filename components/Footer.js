@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function footer(prop){
+export default function Footer(prop){
     return (
     <section
           className="footer-orange 2xl:flex 2xl:flex-col 2xl:justify-center 2xl:items-center 2xl:bg-mainBgGreen"
