@@ -5,7 +5,7 @@ import Image from "next/dist/client/image";
 import HomeStyle from "@styles/Home.module.css";
 import React, { useState } from "react";
 import Link from "next/link";
-import Footer from "@components/footer";
+import Footer from "@components/Footer";
 // import { Link ,animateScroll as scroll } from "react-scroll";
 
 export default function Home() {

@@ -16,7 +16,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import Carousel from "react-material-ui-carousel";
 import { Paper, Button, Grid } from "@material-ui/core";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import Footer from "@components/footer";
+import Footer from "@components/Footer";
 
 const useStyles = makeStyles((theme) => ({
   nested: {
