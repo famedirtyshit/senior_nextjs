@@ -32,7 +32,14 @@ const allAccountUtil = {
             return res;
         } catch (e) {
             return e.response;
-        }
+        } 
+    },getMyPost: async (id) => {
+        try {
+            let res = await axios.get(process.env.API_KEY + `/account/getMyPost/${id}`);
+            return res;
+        } catch (e) {
+            return e.response;
+        } 
     }
 }
 

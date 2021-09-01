@@ -85,6 +85,7 @@ export default function Feed() {
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     let account = await accountUtil.getUser(user.uid);
+                    let myPost = await accountUtil.getMyPost(account.data.searchResult[0]._id);
                     if (account.data.result === true) {
                         setUserAccount(account.data.searchResult[0]);
                     } else {
