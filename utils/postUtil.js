@@ -67,7 +67,7 @@ const allPostUtil = {
             for (let i = 0; i < blob.length; i++) {
                 formData.append(`fileUp_ ${i + 1}.png`, blob[i]);
             }
-            formData.append('owner',owner)
+            formData.append('owner', owner)
             let res = await axios({
                 method: "post",
                 url: process.env.API_KEY + `/${endpoint}/post`,
@@ -77,6 +77,30 @@ const allPostUtil = {
             return res;
         } catch (e) {
             // console.log(e)
+            return e.response;
+        }
+    },
+    getNearPost: async (postId) => {
+        try {
+            let res = await axios.get(process.env.API_KEY + `/searchFoundCat/getNearPost/${postId}`)
+            return res;
+        } catch (e) {
+            return e.response;
+        }
+    },
+    checkNearPost: async (lostPostId, foundPostId) => {
+        try {
+            let res = await axios.get(process.env.API_KEY + `/searchFoundCat/checkNearPost/${lostPostId}/${foundPostId}`)
+            return res;
+        } catch (e) {
+            return e.response;
+        }
+    },
+    checkCheckedLostPost: async (lostPostId) => {
+        try {
+            let res = await axios.get(process.env.API_KEY + `/searchLostCat/checkCheckedLostPost/${lostPostId}`)
+            return res;
+        } catch (e) {
             return e.response;
         }
     }

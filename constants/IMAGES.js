@@ -21,7 +21,7 @@ const IMAGES = {
     deviceRightfor4step:'/images/deviceRightfor4step.png',
     deviceLeftfor4step:'/images/deviceLeftfor4step.png',
     scrollDown:'/images/scrollDown.png',
-    
+    greenBg: '/images/greenBg.png'
     
 
 };

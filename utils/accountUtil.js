@@ -33,6 +33,14 @@ const allAccountUtil = {
         } catch (e) {
             return e.response;
         }
+    },
+    getMyDashboard: async (id) => {
+        try {
+            let res = await axios.get(process.env.API_KEY + `/account/getMyDashboard/${id}`);
+            return res;
+        } catch (e) {
+            return e.response;
+        }
     }
 }
 

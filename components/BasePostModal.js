@@ -163,7 +163,8 @@ export default function BasePostModal(prop) {
             scaleControl: true,
             streetViewControl: false,
             rotateControl: false,
-            fullscreenControl: true
+            fullscreenControl: true,
+            clickableIcons: false
         });
         if (markerPosition != null) {
             createMarker(markerPosition, null, map, true);
@@ -223,7 +224,8 @@ export default function BasePostModal(prop) {
             rotateControl: false,
             fullscreenControl: false,
             scrollwheel: false,
-            disableDoubleClickZoom: true
+            disableDoubleClickZoom: true,
+            clickableIcons: false
         });
         // console.log('create preview marker')
         createMarker(locationConfirm, null, map, true, true);
