@@ -78,7 +78,7 @@ export default function Dashboard() {
                     let account = await accountUtil.getUser(user.uid);
                     if (account.data.result === true) {
                         // socket
-                        const socket = io('http://localhost:8000');
+                        const socket = io('http://192.168.1.113:8000');
                         socket.on('connect', () => {
                             socket.emit("saveSession", account.data.searchResult[0]._id)
                         })

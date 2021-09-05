@@ -19,6 +19,8 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import BasePostDisplay from '@components/BasePostDisplay';
+import BaseDashboardAlert from '@components/BaseDashboardAlert';
+import BaseSearchMyPostModal from '@components/BaseSearchMyPostModal';
 import accountUtil from '@utils/accountUtil';
 import initFirebase from '@utils/initFirebase';
 import startOfDay from 'date-fns/startOfDay';
@@ -28,6 +30,7 @@ import 'daterangepicker';
 import 'moment';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useState, useEffect, useRef } from 'react';
+import { io } from 'socket.io-client';
 
 const theme = createTheme({
     palette: {
@@ -67,6 +70,10 @@ export default function Feed() {
     const [radius, setRadius] = useState(1);
     const [fromTo, setFromTo] = useState([startOfDay(new Date(new Date().setDate(new Date().getDate() - 7))), endOfDay(new Date())]);
     const [postType, setPostType] = useState(null);
+    const [searchMyPostStatus, setSearchMyPostStatus] = useState(false);
+    const [myPostData, setMyPostData] = useState(null);
+    const [searchMyPostLoading, setSearchMyPostLoading] = useState(false);
+    const [myPostSelected, setMyPostSelected] = useState(null);
     const [searchStatus, setSearchStatus] = useState(false);
     const [searchData, setSearchData] = useState(null);
     const [page, setPage] = useState(1);
@@ -77,6 +84,8 @@ export default function Feed() {
     const [displayTarget, setDisplayTarget] = useState(null);
 
     const [userAccount, setUserAccount] = useState(null);
+    const [dashboardData, setDashboardData] = useState(null);
+    const currentDashboardData = useRef(null);
 
     useEffect(() => {
         let res = initFirebase();
@@ -87,7 +96,40 @@ export default function Feed() {
                 if (user) {
                     let account = await accountUtil.getUser(user.uid);
                     if (account.data.result === true) {
+                        const socket = io('http://localhost:8000');
+                        socket.on('connect', () => {
+                            socket.emit("saveSession", account.data.searchResult[0]._id)
+                        })
                         setUserAccount(account.data.searchResult[0]);
+                        let dashboardRes = await accountUtil.getMyDashboard(account.data.searchResult[0]._id);
+                        if (dashboardRes.data.result == false) {
+                            setDashboardData(dashboardRes.data);
+                            currentDashboardData.current = dashboardRes.data;
+                        } else {
+                            let formatDashboardData = { result: true, searchResult: [] };
+                            dashboardRes.data.searchResult.map(item => {
+                                for (let i = 0; i < item.nearFoundCat.length; i++) {
+                                    if (item.nearFoundCat[i].status == true) {
+                                        formatDashboardData.searchResult.push(item);
+                                        i = item.nearFoundCat.length
+                                    }
+                                }
+                            })
+                            setDashboardData(formatDashboardData);
+                            currentDashboardData.current = formatDashboardData;
+                            socket.on("newNearPost", function (data) {
+                                let alreadyHave = false;
+                                for (let j = 0; j < currentDashboardData.current.searchResult.length; j++) {
+                                    if (currentDashboardData.current.searchResult[j]._id == data.lostPost._id) {
+                                        alreadyHave = true;
+                                        j = currentDashboardData.current.searchResult.length;
+                                    }
+                                }
+                                if (alreadyHave == false) {
+                                    currentDashboardData.current.searchResult.push(data.lostPost);
+                                }
+                            })
+                        }
                     } else {
                         setUserAccount(null);
                         alert('user not found');
@@ -118,11 +160,11 @@ export default function Feed() {
                 setFromTo([new Date(start), new Date(end)])
             });
         });
-    },[])
+    }, [])
 
     useEffect(() => {
         try {
-            if (modalMap === true ) {
+            if (modalMap === true) {
                 let checkExist = setInterval(function () {
                     if (document.getElementById('map')) {
                         clearInterval(checkExist);
@@ -173,6 +215,74 @@ export default function Feed() {
         submitSearch();
     }, [page])
 
+    useEffect(() => {
+        if (searchMyPostStatus == true) {
+            async function fetchMyPost() {
+                setSearchMyPostLoading(true);
+                let myPostRes = await accountUtil.getMyPost(userAccount._id);
+                if (myPostRes.data.result == false) {
+                    setMyPostData(myPostRes.data);
+                    setSearchMyPostLoading(false);
+                } else {
+                    let formatData = [];
+                    let dataPerPage = [];
+                    if (searchType == 'all') {
+                        myPostRes.data.searchResult.postLost.concat(myPostRes.data.searchResult.postFound).map((item, index) => {
+                            dataPerPage.push(item);
+                            if ((index + 1) % 3 == 0 || index == myPostRes.data.searchResult.postLost.concat(myPostRes.data.searchResult.postFound).length - 1) {
+                                formatData.push(dataPerPage);
+                                dataPerPage = [];
+                            }
+                        })
+                        setMyPostData({ result: true, searchResult: formatData });
+                        setSearchMyPostLoading(false);
+                    } else {
+                        let postWithTargetType = searchType == 'lost' ? myPostRes.data.searchResult.postLost : myPostRes.data.searchResult.postFound;
+                        postWithTargetType.map((item, index) => {
+                            dataPerPage.push(item);
+                            if ((index + 1) % 3 == 0 || index == postWithTargetType.length - 1) {
+                                formatData.push(dataPerPage);
+                                dataPerPage = [];
+                            }
+                        })
+                        setMyPostData({ result: true, searchResult: formatData });
+                        setSearchMyPostLoading(false);
+                    }
+                }
+            }
+            fetchMyPost();
+        }
+    }, [searchMyPostStatus])
+
+    useEffect(() => {
+        if (myPostSelected != null && myPostData != null && myPostData.result != false) {
+            let postFilter = myPostData.searchResult[myPostSelected.page][myPostSelected.post];
+            if (postFilter.sex == 'unknow') {
+                setUnknow(true);
+                setMale(false);
+                setFemale(false);
+            } else if (postFilter.sex == 'true') {
+                setUnknow(false);
+                setMale(true);
+                setFemale(false);
+            } else {
+                setUnknow(false);
+                setMale(false);
+                setFemale(true);
+            }
+            if (postFilter.collar == true) {
+                setHaveCollar(true);
+                setNotHaveCollar(false);
+            } else {
+                setHaveCollar(false);
+                setNotHaveCollar(true);
+            }
+            createMarker({ lat: postFilter.location.coordinates[1], lng: postFilter.location.coordinates[0] }, null, mapObj, false, false, true)
+            setLocationConfirmStatus(true);
+            setLocationConfirm({ lat: postFilter.location.coordinates[1], lng: postFilter.location.coordinates[0] });
+        }
+    }, [myPostSelected])
+
     const closeDisplayModal = () => {
         setDisplayStatus(false);
     }
@@ -184,7 +294,7 @@ export default function Feed() {
 
     let map, infoWindow;
 
-    const createMarker = async (latLng, name, map, isOldPosition, isPreview) => {
+    const createMarker = async (latLng, name, map, isOldPosition, isPreview, locationCustom) => {
         let oldMarkerTarget = isPreview ? markerPreview : marker;
         if (oldMarkerTarget.current != null) {
             oldMarkerTarget.current.setMap(null);
@@ -197,7 +307,11 @@ export default function Feed() {
         });
         oldMarkerTarget.current = markerObj;
         if (!isOldPosition) {
-            setLocation(latLng.toJSON())
+            if (locationCustom == true) {
+                setLocation(latLng)
+            } else {
+                setLocation(latLng.toJSON())
+            }
         }
     }
 
@@ -303,7 +417,8 @@ export default function Feed() {
             fillColor: "#356053",
             fillOpacity: 0.35,
             map,
-            center: marker.current.position,
+            // center: marker.current.position,
+            center: locationConfirm,
             radius: radius * 1000,
         });
         map.fitBounds(circle.getBounds(), 0);
@@ -339,6 +454,10 @@ export default function Feed() {
             );
         }
         infoWindow.open(map);
+    }
+
+    const closeSearchByMyPostModal = () => {
+        setSearchMyPostStatus(false);
     }
 
     const openMapModal = () => {
@@ -449,7 +568,7 @@ export default function Feed() {
                 <title>CatUs</title>
                 <meta name="description" content="CatUs Service" />
                 <link rel="icon" href="/favicon.ico" />
-                <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />               
+                <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
             </Head>
             <Script async defer src={`https://maps.googleapis.com/maps/api/js?v=3.44&key=${process.env.GMAPKEY}&libraries=places&region=TH&language=th`} onLoad={() => { googleStatus.current = true }} />
             <ThemeProvider theme={theme}>
@@ -461,7 +580,10 @@ export default function Feed() {
                             </a>
                         </Link>
                     </header>
-                    <section className="w-9/12 bg-mainCream mx-auto rounded-2xl shadow-lg 2xl:mt-20">
+                    <section className="relative w-9/12 bg-mainCream mx-auto rounded-2xl shadow-lg 2xl:mt-20">
+                        <div onClick={()=>{window.location.href="/account"}} className={"absolute top-4 right-4 cursor-pointer"}>
+                            <Image alt={'account-link-img'} src={IMAGES.accountLink} width="30" height="30"></Image>
+                        </div>
                         <div className="2xl:flex 2xl:flex-wrap 2xl:py-16">
                             <div className="2xl:ml-16">
                                 <Image src={IMAGES.user} alt='default-user' width="112" height="112" />
@@ -527,7 +649,15 @@ export default function Feed() {
                     <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-4 2xl:mx-56">
                         <div>
                             <p className="text-xl font-medium">ITEM ({searchData != null && searchData != undefined && searchData.data.result == true ? searchData.data.searchResult.length : 0})</p>
-                            <p className="text-white 2xl:px-6 py-2 bg-darkCream rounded-3xl shadow-lg cursor-pointer 2xl:mt-10 text-center">ค้นหาด้วยข้อมูล Post ของฉัน</p>
+                            {
+                                userAccount != null ?
+                                    <div>
+                                        <p onClick={() => { setSearchMyPostStatus(true) }} className="text-white 2xl:px-6 py-2 bg-darkCream rounded-3xl shadow-lg cursor-pointer 2xl:mt-10 text-center">ค้นหาด้วยข้อมูล Post ของฉัน</p>
+                                        <BaseSearchMyPostModal setMyPostSelected={setMyPostSelected} myPostData={myPostData} searchMyPostLoading={searchMyPostLoading} closeSearchByMyPostModal={closeSearchByMyPostModal} searchMyPostStatus={searchMyPostStatus} />
+                                    </div>
+                                    :
+                                    null
+                            }
                             <p className={"text-xl font-medium 2xl:mt-11 "}>Change Location</p>
                             {
                                 mapPreview === true ?
@@ -616,6 +746,7 @@ export default function Feed() {
                 </main>
                 <footer className="2xl:h-48 bg-mainGreen">
                 </footer>
+                {userAccount != null ? <BaseDashboardAlert dashboardData={dashboardData} /> : null}
                 <BasePostDisplay modalStatus={displayStatus} closeModal={closeDisplayModal} post={searchData} target={displayTarget} />
             </ThemeProvider>
         </div >
