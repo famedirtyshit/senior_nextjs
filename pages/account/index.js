@@ -6,7 +6,11 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import AccountStyle from "@styles/Account.module.css";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { makeStyles } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  createTheme,
+  ThemeProvider,
+} from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -34,6 +38,23 @@ const useStyles = makeStyles((theme) => ({
     height: "350px",
   },
 }));
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      light: "#378566",
+      main: "#378566",
+      dark: "#356053",
+      contrastText: "#fff",
+    },
+    secondary: {
+      light: "#ff7961",
+      main: "#F0930D",
+      dark: "#E17F11",
+      contrastText: "#fff",
+    },
+  },
+});
 
 export default function Account() {
   const [userEmail, setUserEmail] = useState("-");
@@ -269,17 +290,17 @@ export default function Account() {
                     )}
                   </div>
                 </div>
-                <div className="2xl:mt-3">
-                  <BaseButton
-                    style={"color: white"}
-                    fill={true}
-                    fillColor={"mainGreen"}
-                    textColor={"white"}
-                    round={true}
-                    roundSize={"lg"}
-                    value={"Edit"}
-                    customClass={"2xl:mt-4 w-28 "}
-                  />
+                <div className="2xl:mt-10">
+                  <ThemeProvider theme={theme}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      style={{ width: "112px", height: "33px" }}
+                    >
+                      Edit
+                    </Button>
+                  </ThemeProvider>
                 </div>
               </section>
               <section className="content-container 2xl:mx-8 2xl:my-8 2xl:text-xl ">
@@ -329,20 +350,48 @@ export default function Account() {
                     <Skeleton animation="wave" height={35} />
                   </div>
                 ) : (
-                  <div>
+                  <div className="2xl:relative">
+                    <div className="2xl:absolute 2xl:top-16 2xl:inset-y-0 2xl:right-16 ">
+                      <ThemeProvider theme={theme}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="large"
+                          style={{ width: "112px", height: "33px" }}
+                        >
+                          Edit
+                        </Button>
+                      </ThemeProvider>
+                    </div>
+                    <div className="2xl:absolute 2xl:top-32 2xl:inset-y-0 2xl:right-16 ">
+                      <ThemeProvider theme={theme}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="large"
+                          style={{ width: "112px", height: "33px" }}
+                        >
+                          Edit
+                        </Button>
+                      </ThemeProvider>
+                    </div>
                     <p className="" style={{ color: "#6E6E6E" }}>
                       แก้ไขข้อมูลผู้ใช้งาน
                     </p>
                     <p className="2xl:mt-2 " style={{ color: "#6E6E6E" }}>
                       E-mail
                     </p>
-                    {/* <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">{userEmail}</p> */}
+                    <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
+                      {userEmail}
+                    </p>
+
                     <p className="2xl:mt-2" style={{ color: "#6E6E6E" }}>
                       รหัสผ่านและการยืนยันตัวตน
                     </p>
                     <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">********</p>
                   </div>
                 )}
+                <div></div>
               </section>
             </div>
           </section>
@@ -390,7 +439,7 @@ export default function Account() {
                               width: "60px",
                               height: "60px",
                             }}
-                            // onClick={() => backPageFound()}
+                            onClick={() => backPage("found")}
                           />
                         )}
                       </div>
@@ -537,7 +586,7 @@ export default function Account() {
           </List>
         </section>
       </main>
-      )}
+
       <footer className="2xl:mt-32">
         <Footer />
       </footer>
