@@ -20,6 +20,9 @@ import Footer from "@components/Footer";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import initFirebase from "@utils/initFirebase";
 import accountUtil from "@utils/accountUtil";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import utilStyles from "@styles/Util.module.css";
+import { Skeleton } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -33,11 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Account() {
-  const [userName, setUserName] = useState("Gridpong Sirimungkrakul");
-  const [userNumber, setUserNumber] = useState("096-071-2203");
-  const [userEmail, setUserEmail] = useState("email");
-  const [userContactFB, setUserContactFB] = useState("Gridpong Sirimungkrakul");
-  const [userContactIG, setUserContactIG] = useState("tgridpong14");
+  const [userEmail, setUserEmail] = useState("-");
   const [openListMyPost, setOpenListMyPost] = useState(false);
   const [openListSubMyPost1, setOpenListSubMyPost1] = useState(false);
   const [openListSubMyPost2, setOpenListSubMyPost2] = useState(false);
@@ -52,9 +51,12 @@ export default function Account() {
   const [postLostData, setPostLostData] = useState([]);
   const [message, setMessage] = useState("");
   const [userAccount, setUserAccount] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let res = initFirebase();
+    setLoading(true);
+
     if (res != false) {
       console.log("init firebase");
       const auth = getAuth();
@@ -64,9 +66,11 @@ export default function Account() {
           let myPost = await accountUtil.getMyPost(
             account.data.searchResult[0]._id
           );
+          setUserEmail(user.email);
           if (account.data.result === true) {
             setUserAccount(account.data.searchResult[0]);
-            console.log(userAccount.firstname)
+            setLoading(false);
+            // console.log(userAccount.firstname)
             // console.log(account.data.searchResult[0].firstname)
           } else {
             setUserAccount(null);
@@ -208,7 +212,13 @@ export default function Account() {
           </a>
         </Link>
       </header>
-
+      {/* {loading == true ? (
+          <div className="relative">
+            <div className={"absolute " + utilStyles.centerAbsolute}>
+              <CircularProgress />
+            </div>
+          </div>    
+        ) : ( */}
       <main>
         <section
           className="w-9/12 bg-mainYellow mx-auto  rounded-2xl shadow-lg 2xl:mt-20"
@@ -230,17 +240,33 @@ export default function Account() {
           <section className="contact-detail-part1 2xl:flex 2xl:flex-wrap 2xl:justify-center ">
             <div className="container 2xl:bg-white 2xl:w-3/5 2xl:h-84 2xl:rounded-2xl 2xl:shadow-lg 2xl:mt-7 ">
               <section className="2xl:flex 2xl:flex-wrap 2xl:justify-center 2xl:pt-14">
-                <div>
-                  <Image
-                    src={IMAGES.user}
-                    alt="default-user"
-                    width="119"
-                    height="119"
-                  />
-                </div>
+                {loading == true ? (
+                  <Skeleton variant="circle" width={119} height={119} />
+                ) : (
+                  <div>
+                    <Image
+                      src={IMAGES.user}
+                      alt="default-user"
+                      width="119"
+                      height="119"
+                    />
+                  </div>
+                )}
+
                 <div>
                   <div className="2xl:m-9">
-                    <p className="2xl:text-3xl 2xl:font-bold"></p>
+                    {loading == true ? (
+                      <Skeleton variant="text" width={350} height={35} />
+                    ) : (
+                      <p className="2xl:text-3xl 2xl:font-bold">
+                        {userAccount.firstname != null
+                          ? userAccount.firstname
+                          : "-"}{" "}
+                        {userAccount.lastname != null
+                          ? userAccount.lastname
+                          : "-"}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="2xl:mt-3">
@@ -257,22 +283,37 @@ export default function Account() {
                 </div>
               </section>
               <section className="content-container 2xl:mx-8 2xl:my-8 2xl:text-xl ">
-                <p className="" style={{ color: "#6E6E6E" }}>
-                  แก้ไขข้อมูลผู้ติดต่อ
-                </p>
-                <p className="2xl:mt-2 " style={{ color: "#6E6E6E" }}>
-                  Number
-                </p>
-                <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">{userAccount.phone}</p>
-                <p className="2xl:mt-2" style={{ color: "#6E6E6E" }}>
-                  Contact
-                </p>
-                <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
-                  Facebook: {userAccount.facebook}
-                </p>
-                <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
-                  Instagram: {userAccount.instagram}
-                </p>
+                {loading == true ? (
+                  <div>
+                    <Skeleton animation="wave" height={35} />
+                    <Skeleton animation="wave" height={35} />
+                    <Skeleton animation="wave" height={35} />
+                    <Skeleton animation="wave" height={35} />
+                    <Skeleton animation="wave" height={35} />
+                    <Skeleton animation="wave" height={35} />
+                  </div>
+                ) : (
+                  <div>
+                    <p className="" style={{ color: "#6E6E6E" }}>
+                      แก้ไขข้อมูลผู้ติดต่อ
+                    </p>
+                    <p className="2xl:mt-2 " style={{ color: "#6E6E6E" }}>
+                      Number
+                    </p>
+                    <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
+                      {userAccount.phone}
+                    </p>
+                    <p className="2xl:mt-2" style={{ color: "#6E6E6E" }}>
+                      Contact
+                    </p>
+                    <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
+                      Facebook: {userAccount.facebook}
+                    </p>
+                    <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
+                      Instagram: {userAccount.instagram}
+                    </p>
+                  </div>
+                )}
               </section>
             </div>
           </section>
@@ -280,21 +321,33 @@ export default function Account() {
           <section className="contact-detail-part1 2xl:flex 2xl:flex-wrap 2xl:justify-center ">
             <div className="container 2xl:bg-white 2xl:w-3/5 2xl:h-84 2xl:rounded-2xl 2xl:shadow-lg 2xl:mt-3 ">
               <section className="content-container 2xl:mx-8 2xl:my-8 2xl:text-xl ">
-                <p className="" style={{ color: "#6E6E6E" }}>
-                  แก้ไขข้อมูลผู้ใช้งาน
-                </p>
-                <p className="2xl:mt-2 " style={{ color: "#6E6E6E" }}>
-                  E-mail
-                </p>
-                <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">{userEmail}</p>
-                <p className="2xl:mt-2" style={{ color: "#6E6E6E" }}>
-                  รหัสผ่านและการยืนยันตัวตน
-                </p>
-                <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">********</p>
+                {loading == true ? (
+                  <div>
+                    <Skeleton animation="wave" height={35} />
+                    <Skeleton animation="wave" height={35} />
+                    <Skeleton animation="wave" height={35} />
+                    <Skeleton animation="wave" height={35} />
+                  </div>
+                ) : (
+                  <div>
+                    <p className="" style={{ color: "#6E6E6E" }}>
+                      แก้ไขข้อมูลผู้ใช้งาน
+                    </p>
+                    <p className="2xl:mt-2 " style={{ color: "#6E6E6E" }}>
+                      E-mail
+                    </p>
+                    {/* <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">{userEmail}</p> */}
+                    <p className="2xl:mt-2" style={{ color: "#6E6E6E" }}>
+                      รหัสผ่านและการยืนยันตัวตน
+                    </p>
+                    <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">********</p>
+                  </div>
+                )}
               </section>
             </div>
           </section>
         </section>
+
         <section className="2xl:w-9/12 2xl:ml-60">
           <List>
             <ListItem button onClick={handleClickListMyPost}>
@@ -347,16 +400,14 @@ export default function Account() {
                             <section key={i}>
                               <Carousel navButtonsAlwaysVisible={true}>
                                 {item.urls.map((items, i) => (
-                                  <div className="block">
-                                    <Image
-                                      key={i}
-                                      src={items.url}
-                                      alt={"previewImg-" + i}
-                                      width="300px"
-                                      height="300px"
-                                      layout="responsive"
-                                    />
-                                  </div>
+                                  <Image
+                                    key={i}
+                                    src={items.url}
+                                    alt={"previewImg-" + i}
+                                    width="300px"
+                                    height="300px"
+                                    layout="responsive"
+                                  />
                                 ))}
                               </Carousel>
                               <ListItemText primary={"Date: " + item.date} />
@@ -486,6 +537,7 @@ export default function Account() {
           </List>
         </section>
       </main>
+      )}
       <footer className="2xl:mt-32">
         <Footer />
       </footer>
