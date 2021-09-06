@@ -78,7 +78,7 @@ export default function Dashboard() {
                     let account = await accountUtil.getUser(user.uid);
                     if (account.data.result === true) {
                         // socket
-                        const socket = io(process.env.API_KEY);
+                        const socket = io(process.env.API_KEY,{transports: ['websocket']});
                         socket.on('connect', () => {
                             socket.emit("saveSession", account.data.searchResult[0]._id)
                         })
