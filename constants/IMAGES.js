@@ -22,9 +22,8 @@ const IMAGES = {
     deviceLeftfor4step:'/images/deviceLeftfor4step.png',
     scrollDown:'/images/scrollDown.png',
     bgAccountHeader:'/images/bgAccountHeader.png',
-   
-    
-    
+    greenBg: '/images/greenBg.png',
+    accountLink: '/images/accountLink.png',
 
 };
 export default IMAGES;

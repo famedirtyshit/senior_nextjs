@@ -32,6 +32,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-material-ui-carousel": "^2.3.1",
+    "socket.io-client": "^4.2.0",
     "tailwindcss": "^2.2.7"
   },
   "devDependencies": {

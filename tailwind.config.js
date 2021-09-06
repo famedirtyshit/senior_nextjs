@@ -57,6 +57,9 @@ module.exports = {
       },
       spacing: {
         'c3.4': '3.4rem'
+      },
+      boxShadow: {
+        'dashboardItemSelected': '0px 0px 20px #000000'
       }
     }
   }
