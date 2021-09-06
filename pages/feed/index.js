@@ -648,7 +648,7 @@ export default function Feed() {
                 <main>
                     <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-4 2xl:mx-56">
                         <div>
-                            <p className="text-xl font-medium">ITEM ({searchData != null && searchData != undefined && searchData.data.result == true ? searchData.data.searchResult.length : 0})</p>
+                            <p className="text-xl font-medium">ITEM ({searchData != null && searchData != undefined && searchData.data.result == true ? searchData.data.count : 0})</p>
                             {
                                 userAccount != null ?
                                     <div>
