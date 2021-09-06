@@ -27,12 +27,8 @@ import accountUtil from "@utils/accountUtil";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import utilStyles from "@styles/Util.module.css";
 import { Skeleton } from "@material-ui/lab";
+import TextField from '@material-ui/core/TextField';
 
-// import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -41,6 +37,12 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     width: "100%",
+  },
+  rootInput: {
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+      width: '25ch',
+    },
   },
   carousel: {
     width: "326px",
@@ -92,6 +94,8 @@ export default function Account() {
   const [message, setMessage] = useState("");
   const [userAccount, setUserAccount] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [editActive, setEditActive] = useState(false);
+  const [editValue, setEditValue] = useState("");
 
   useEffect(() => {
     let res = initFirebase();
@@ -243,6 +247,11 @@ export default function Account() {
     }
   };
 
+  const handleChangeEdit = (event) => {
+    setEditValue(event.target.value);
+    
+  };
+
   return (
     <div className={" mx-auto " + AccountStyle.bgImg}>
       <Head>
@@ -324,6 +333,9 @@ export default function Account() {
                         color="primary"
                         size="large"
                         style={{ width: "112px", height: "33px" }}
+                        onClick={() => {
+                          setEditActive(true);
+                        }}
                       >
                         Edit
                       </Button>
@@ -349,9 +361,24 @@ export default function Account() {
                     <p className="2xl:mt-2 " style={{ color: "#6E6E6E" }}>
                       Number
                     </p>
-                    <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
-                      {userAccount.phone}
-                    </p>
+                    {editActive == true ? (
+                     
+                      <input
+                        type="number"
+                        className="2xl:mt-2 2xl:ml-4 2xl:font-bold"
+                        value={editValue}
+                        onChange={handleChangeEdit}
+                      />
+                      
+                    ) : (
+                      <input
+                        type="number"
+                        className="2xl:mt-2 2xl:ml-4 2xl:font-bold"
+                        value={userAccount.phone}
+                        disabled
+                      />
+                    )}
+
                     <p className="2xl:mt-2" style={{ color: "#6E6E6E" }}>
                       Contact
                     </p>
@@ -606,9 +633,12 @@ export default function Account() {
             </Collapse>
           </List>
         </section>
-        <section className="2xl:w-9/12 2xl:mt-3" style={{ marginLeft: "238px" }}>
+        <section
+          className="2xl:w-9/12 2xl:mt-3"
+          style={{ marginLeft: "238px" }}
+        >
           <List className={classes.list}>
-            <ListItem button >
+            <ListItem button>
               <ListItemText
                 primary="Monitoring my post"
                 style={{ color: "black", margin: "14px" }}
