@@ -18,7 +18,7 @@ import Collapse from "@material-ui/core/Collapse";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Carousel from "react-material-ui-carousel";
-import { Paper, Button, Grid } from "@material-ui/core";
+import { Paper, Button, Grid, Accordion } from "@material-ui/core";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import Footer from "@components/Footer";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
@@ -28,14 +28,33 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import utilStyles from "@styles/Util.module.css";
 import { Skeleton } from "@material-ui/lab";
 
+// import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Typography from "@material-ui/core/Typography";
+
 const useStyles = makeStyles((theme) => ({
   nested: {
     paddingLeft: theme.spacing(4),
     fontSize: "20",
   },
+  root: {
+    width: "100%",
+  },
   carousel: {
     width: "326px",
     height: "350px",
+  },
+
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: "20",
+  },
+  list: {
+    border: "#e5e5e5 1px solid",
+    boxShadow: "1px 2px #c4c4c4",
   },
 }));
 
@@ -107,6 +126,9 @@ export default function Account() {
           }
           if (myPost.data.result === true) {
             setPostFoundData(myPost.data.searchResult.postFound);
+
+            console.log("----------------");
+            console.log(myPost.data.searchResult.postFound);
             setPostLostData(myPost.data.searchResult.postLost);
           } else {
             setMessage("No Post Result !!");
@@ -122,6 +144,8 @@ export default function Account() {
 
   useEffect(() => {
     renderFoundPost();
+    console.log("postFoundData");
+    console.log(postFoundData);
   }, [pageFoundPost, postFoundData]);
 
   useEffect(() => {
@@ -242,7 +266,7 @@ export default function Account() {
         ) : ( */}
       <main>
         <section
-          className="w-9/12 bg-mainYellow mx-auto  rounded-2xl shadow-lg 2xl:mt-20"
+          className="w-9/12 bg-mainYellow mx-auto  rounded-t-2xl shadow-lg 2xl:mt-20"
           style={{ height: "840px" }}
         >
           <div className="2xl:mt-11 2xl:absolute 2xl:ml-12">
@@ -291,16 +315,20 @@ export default function Account() {
                   </div>
                 </div>
                 <div className="2xl:mt-10">
-                  <ThemeProvider theme={theme}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      style={{ width: "112px", height: "33px" }}
-                    >
-                      Edit
-                    </Button>
-                  </ThemeProvider>
+                  {loading == true ? (
+                    <Skeleton animation="rect" height={30} width={112} />
+                  ) : (
+                    <ThemeProvider theme={theme}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        style={{ width: "112px", height: "33px" }}
+                      >
+                        Edit
+                      </Button>
+                    </ThemeProvider>
+                  )}
                 </div>
               </section>
               <section className="content-container 2xl:mx-8 2xl:my-8 2xl:text-xl ">
@@ -397,8 +425,8 @@ export default function Account() {
           </section>
         </section>
 
-        <section className="2xl:w-9/12 2xl:ml-60">
-          <List>
+        <section className="2xl:w-9/12" style={{ marginLeft: "238px" }}>
+          <List className={classes.list}>
             <ListItem button onClick={handleClickListMyPost}>
               <ListItemText
                 primary="My Post"
@@ -576,12 +604,15 @@ export default function Account() {
                 </Collapse>
               </List>
             </Collapse>
-            <ListItem button onClick={handleClickListMyLost}>
+          </List>
+        </section>
+        <section className="2xl:w-9/12 2xl:mt-3" style={{ marginLeft: "238px" }}>
+          <List className={classes.list}>
+            <ListItem button >
               <ListItemText
-                primary="My following post"
+                primary="Monitoring my post"
                 style={{ color: "black", margin: "14px" }}
               />
-              {openListMyLost ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
           </List>
         </section>
