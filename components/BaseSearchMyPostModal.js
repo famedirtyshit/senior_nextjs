@@ -88,7 +88,7 @@ export default function BaseSearchMyPostModal(prop) {
                                         prop.myPostData != null
                                             ?
                                             <div className="block h-full mx-4">
-                                                <Carousel autoPlay={false} navButtonsAlwaysVisible={prop.myPostData.searchResult.length > 1 ? true : false} className="h-full">
+                                                <Carousel animation="slide" autoPlay={false} navButtonsAlwaysVisible={prop.myPostData.searchResult.length > 1 ? true : false} className="h-full">
                                                     {prop.myPostData.searchResult.map((item, i) => {
                                                         return (
                                                             <div className={"grid 2xl:grid-cols-3 px-4 justify-items-center mt-6 " + postDataClasses.itemStyle} key={'dashboard-page-' + (i + 1)}>

@@ -446,7 +446,7 @@ export default function Dashboard() {
                                 dashboardData.searchResult.length > 0
                                     ?
                                     <div className="block h-full">
-                                        <Carousel autoPlay={false} navButtonsAlwaysVisible={dashboardData.searchResult.length > 1 ? true : false} className="h-full">
+                                        <Carousel animation="slide" autoPlay={false} navButtonsAlwaysVisible={dashboardData.searchResult.length > 1 ? true : false} className="h-full">
                                             {dashboardData.searchResult.map((item, i) => {
                                                 return (
                                                     <div className={"grid 2xl:grid-cols-3 px-4 justify-items-center mt-4 " + postDataClasses.itemStyle} key={'dashboard-page-' + (i + 1)}>
