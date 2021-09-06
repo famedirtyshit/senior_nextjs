@@ -87,6 +87,9 @@ export default function Feed() {
     const [dashboardData, setDashboardData] = useState(null);
     const currentDashboardData = useRef(null);
 
+    const [alertChecker, setAlertChecker] = useState(0);
+    const currentAlertChecker = useRef(0);
+
     useEffect(() => {
         let res = initFirebase();
         if (res != false) {
@@ -127,6 +130,9 @@ export default function Feed() {
                                 }
                                 if (alreadyHave == false) {
                                     currentDashboardData.current.searchResult.push(data.lostPost);
+                                    let newAlertCount = currentAlertChecker.current + 1
+                                    setAlertChecker(newAlertCount);
+                                    currentAlertChecker.current = newAlertCount;
                                 }
                             })
                         }
@@ -581,7 +587,7 @@ export default function Feed() {
                         </Link>
                     </header>
                     <section className="relative w-9/12 bg-mainCream mx-auto rounded-2xl shadow-lg 2xl:mt-20">
-                        <div onClick={()=>{window.location.href="/account"}} className={"absolute top-4 right-4 cursor-pointer"}>
+                        <div onClick={() => { window.location.href = "/account" }} className={"absolute top-4 right-4 cursor-pointer"}>
                             <Image alt={'account-link-img'} src={IMAGES.accountLink} width="30" height="30"></Image>
                         </div>
                         <div className="2xl:flex 2xl:flex-wrap 2xl:py-16">
@@ -747,6 +753,7 @@ export default function Feed() {
                 <footer className="2xl:h-48 bg-mainGreen">
                 </footer>
                 {userAccount != null ? <BaseDashboardAlert dashboardData={dashboardData} /> : null}
+                <p className="hidden">{alertChecker}</p>
                 <BasePostDisplay modalStatus={displayStatus} closeModal={closeDisplayModal} post={searchData} target={displayTarget} />
             </ThemeProvider>
         </div >
