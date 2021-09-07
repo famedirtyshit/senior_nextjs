@@ -148,7 +148,6 @@ export default function Account() {
 
   useEffect(() => {
     renderFoundPost();
-    console.log("postFoundData");
     console.log(postFoundData);
   }, [pageFoundPost, postFoundData]);
 
