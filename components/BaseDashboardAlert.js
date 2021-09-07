@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { makeStyles, createTheme, ThemeProvider } from '@material-ui/core/styles';
 import Popper from '@material-ui/core/Popper';
 import Fade from '@material-ui/core/Fade';
 import Fab from '@material-ui/core/Fab';
 import IconButton from '@material-ui/core/IconButton';
-import SvgIcon from '@material-ui/core/SvgIcon';
 import utilStyles from '@styles/Util.module.css';
 import Image from 'next/image';
-import IMAGES from '@constants/IMAGES';
+import ICONS from '@constants/ICONS';
 
 const theme = createTheme({
     palette: {
@@ -141,14 +140,16 @@ export default function BaseDashboardAlert(prop) {
                 </Popper>
                 <Fab onClick={handleClick('top-end')} color="primary" aria-label="noti-button">
                     <IconButton aria-label="noti-icon">
-                        <SvgIcon>
-                            {prop.dashboardData && prop.dashboardData.searchResult.length > 0 && prop.dashboardData.result == true
-                                ?
-                                <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z" /> //have
-                                :
-                                <path d="" /> //not have
-                            }
-                        </SvgIcon>
+                        {prop.dashboardData && prop.dashboardData.searchResult.length > 0 && prop.dashboardData.result == true
+                            ?
+                            <div className="w-2 h-2">
+                                <Image alt="bellAlert" src={ICONS.bellAlert} layout='fill' />
+                            </div>
+                            :
+                            <div className="w-2 h-2">
+                                <Image alt="bell" src={ICONS.bell} layout='fill' />
+                            </div>
+                        }
                     </IconButton>
                 </Fab>
             </ThemeProvider>

@@ -587,9 +587,14 @@ export default function Feed() {
                         </Link>
                     </header>
                     <section className="relative w-9/12 bg-mainCream mx-auto rounded-2xl shadow-lg 2xl:mt-20">
-                        <div onClick={() => { window.location.href = "/account" }} className={"absolute top-4 right-4 cursor-pointer"}>
-                            <Image alt={'account-link-img'} src={IMAGES.accountLink} width="30" height="30"></Image>
-                        </div>
+                        {
+                            userAccount != null
+                                ?
+                                <div onClick={() => { window.location.href = "/account" }} className={"absolute top-4 right-4 cursor-pointer"}>
+                                    <Image alt={'account-link-img'} src={IMAGES.accountLink} width="30" height="30"></Image>
+                                </div>
+                                : null
+                        }
                         <div className="2xl:flex 2xl:flex-wrap 2xl:py-16">
                             <div className="2xl:ml-16">
                                 <Image src={IMAGES.user} alt='default-user' width="112" height="112" />
