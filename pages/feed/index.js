@@ -31,6 +31,7 @@ import 'moment';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
+import Footer from '@components/Footer';
 
 const theme = createTheme({
     palette: {
@@ -756,8 +757,9 @@ export default function Feed() {
                         </div>
                     </section>
                 </main>
-                <footer className="2xl:h-48 bg-mainGreen">
-                </footer>
+                {/* <footer className="2xl:h-48 bg-mainGreen">
+                </footer> */}
+                <Footer />
                 {userAccount != null ? <BaseDashboardAlert dashboardData={dashboardData} /> : null}
                 <p className="hidden">{alertChecker}</p>
                 <BasePostDisplay modalStatus={displayStatus} closeModal={closeDisplayModal} post={searchData} target={displayTarget} />

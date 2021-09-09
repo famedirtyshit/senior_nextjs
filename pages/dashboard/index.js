@@ -16,6 +16,7 @@ import BasePostDisplay from "@components/BasePostDisplay";
 import cn from 'classnames';
 import { io } from 'socket.io-client';
 import BaseConfirmation from "@components/BaseConfirmation";
+import Footer from '@components/Footer';
 
 const mainStyles = makeStyles((theme) => ({
     style: {
@@ -557,6 +558,7 @@ export default function Dashboard() {
                     <p className="hidden">{alertChecker}</p>
                 </div>
             </main>
+            <Footer />
         </div>
     )
 }
