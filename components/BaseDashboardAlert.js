@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import utilStyles from '@styles/Util.module.css';
 import Image from 'next/image';
 import ICONS from '@constants/ICONS';
+import IMAGES from '@constants/IMAGES';
 
 const theme = createTheme({
     palette: {

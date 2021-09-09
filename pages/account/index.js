@@ -28,6 +28,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import utilStyles from "@styles/Util.module.css";
 import { Skeleton } from "@material-ui/lab";
 import TextField from '@material-ui/core/TextField';
+import BasePostEdit from "@components/BasePostEdit";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -96,6 +97,9 @@ export default function Account() {
   const [loading, setLoading] = useState(true);
   const [editActive, setEditActive] = useState(false);
   const [editValue, setEditValue] = useState("");
+  const [editPostStatus, setEditPostStatus] = useState(false);
+  const [editPostType, setEditPostType] = useState(null);
+  const [editPostTarget, setEditPostTarget] = useState(0);
 
   useEffect(() => {
     let res = initFirebase();
@@ -135,7 +139,9 @@ export default function Account() {
             console.log(myPost.data.searchResult.postFound);
             setPostLostData(myPost.data.searchResult.postLost);
           } else {
-            setMessage("No Post Result !!");
+            // setMessage("No Post Result !!");
+            setPostFoundData([null]);
+            setPostLostData([null]);
           }
         } else {
           setUserAccount(null);
@@ -158,9 +164,20 @@ export default function Account() {
   useEffect(() => {
     setMaxPageFoundPost(Math.ceil(postFoundData.length / 3));
     setMaxPageLostPost(Math.ceil(postLostData.length / 3));
-  }, []);
+  }, [postFoundData, postLostData, currentFoundPost, currentLostPost]);
 
   const classes = useStyles();
+
+  const convertDateFormat = (dateData) => {
+    let dateConvert = new Date(dateData);
+    let year;
+    let month;
+    let date;
+    year = dateConvert.getFullYear();
+    month = dateConvert.getMonth() + 1;
+    date = dateConvert.getDate();
+    return `${date}/${month}/${year}`;
+  }
 
   const handleClickListMyPost = () => {
     setOpenListMyPost(!openListMyPost);
@@ -177,6 +194,20 @@ export default function Account() {
   const handleClickListMyLost = () => {
     setOpenListMyLost(!openListMyLost);
   };
+
+  const closePostEditModal = () => {
+    setEditPostStatus(false);
+  }
+
+  const openEditPost = (type, index) => {
+    if (type == 'found') {
+      setEditPostType('found');
+    } else {
+      setEditPostType('lost');
+    }
+    setEditPostStatus(true);
+    setEditPostTarget(index);
+  }
 
   const renderFoundPost = () => {
     let store = [];
@@ -248,8 +279,23 @@ export default function Account() {
 
   const handleChangeEdit = (event) => {
     setEditValue(event.target.value);
-    
   };
+
+  const setEditDataInState = (data) => {
+    if (editPostType == 'found') {
+      postFoundData[((pageFoundPost - 1) * 3) + editPostTarget] = data;
+    } else if (editPostType == 'lost') {
+      postLostData[((pageLostPost - 1) * 3) + editPostTarget] = data;
+    }
+  }
+
+  const setDeleteDataInState = () => {
+    if (editPostType == 'found') {
+      postFoundData.splice(((pageFoundPost - 1) * 3) + editPostTarget, 1);
+    } else if (editPostType == 'lost') {
+      postLostData.splice(((pageLostPost - 1) * 3) + editPostTarget, 1);
+    }
+  }
 
   return (
     <div className={" mx-auto " + AccountStyle.bgImg}>
@@ -278,10 +324,11 @@ export default function Account() {
           style={{ height: "840px" }}
         >
           <div className="2xl:mt-11 2xl:absolute 2xl:ml-12">
-            <Link href="/">
+            <Link href="/feed">
               <a>
                 <ArrowBackIosIcon
                   style={{ color: "white", width: "40px", height: "40px" }}
+                  className="cursor-pointer"
                 />
               </a>
             </Link>
@@ -361,14 +408,14 @@ export default function Account() {
                       Number
                     </p>
                     {editActive == true ? (
-                     
+
                       <input
                         type="number"
                         className="2xl:mt-2 2xl:ml-4 2xl:font-bold"
                         value={editValue}
                         onChange={handleChangeEdit}
                       />
-                      
+
                     ) : (
                       <input
                         type="number"
@@ -494,35 +541,65 @@ export default function Account() {
                               height: "60px",
                             }}
                             onClick={() => backPage("found")}
+                            className="cursor-pointer"
                           />
                         )}
                       </div>
                       <div className="2xl:mx-auto 2xl:mt-5">
                         <section className="2xl:flex 2xl:flex-wrap 2xl:gap-20 flex-start">
-                          {currentFoundPost.map((item, i) => (
-                            <section key={i}>
-                              <Carousel navButtonsAlwaysVisible={true}>
-                                {item.urls.map((items, i) => (
-                                  <Image
-                                    key={i}
-                                    src={items.url}
-                                    alt={"previewImg-" + i}
-                                    width="300px"
-                                    height="300px"
-                                    layout="responsive"
-                                  />
+                          {
+                            currentFoundPost.length < 1
+                              ?
+                              <h1 className="text-2xl font-bold">No Post</h1>
+                              :
+                              currentFoundPost[0] == null
+                                ?
+                                <h1 className="text-2xl font-bold">Error please retry later</h1>
+                                :
+                                currentFoundPost.map((item, i) => (
+                                  <section
+                                    className="cursor-pointer"
+                                    onClick={function () {
+                                      setEditPostType('found');
+                                      setEditPostStatus(true);
+                                      setEditPostTarget(i);
+                                    }} key={i}>
+                                    <Carousel indicators={false} navButtonsAlwaysVisible={false}>
+                                      <div className="w-72 h-72">
+                                        {
+                                          item.urls.length > 0
+                                            ?
+                                            item.urls.map((items, i) => (
+                                              <Image
+                                                key={i}
+                                                src={items.url}
+                                                alt={"previewImg-" + i}
+                                                width="300px"
+                                                height="300px"
+                                                layout="responsive"
+                                              />
+                                            ))
+                                            :
+                                            <Image
+                                              src={IMAGES.defaultImg}
+                                              alt={"previewImg-default-found"}
+                                              width="300px"
+                                              height="300px"
+                                              layout="responsive"
+                                            />
+                                        }
+                                      </div>
+                                    </Carousel>
+                                    <ListItemText primary={"Date: " + convertDateFormat(item.date)} />
+                                    <ListItemText primary={item.sex == 'unknow' ? 'Sex : Unknow' : item.sex == 'true' ? 'Sex : Male' : 'Sex : Female'} />
+                                    <ListItemText
+                                      primary={item.collar == true ? 'Collar: Have' : 'Collar: Not Have'}
+                                    />
+                                    <ListItemText
+                                      primary={item.description ? item.description.length > 15 ? 'Description: ' + item.description.substring(0, 15) + '...' : 'Description: ' + item.description : 'Description: -'}
+                                    />
+                                  </section>
                                 ))}
-                              </Carousel>
-                              <ListItemText primary={"Date: " + item.date} />
-                              <ListItemText primary={"Sex: " + item.sex} />
-                              <ListItemText
-                                primary={"Collar: " + item.collar}
-                              />
-                              <ListItemText
-                                primary={"Description: " + item.description}
-                              />
-                            </section>
-                          ))}
                         </section>
                       </div>
                       {pageFoundPost >= maxPageFoundPost ? (
@@ -541,6 +618,7 @@ export default function Account() {
                             height: "60px",
                           }}
                           onClick={() => nextPage("found")}
+                          className="cursor-pointer"
                         />
                       )}
                     </ListItem>
@@ -577,34 +655,63 @@ export default function Account() {
                               height: "60px",
                             }}
                             onClick={() => backPage("lost")}
+                            className="cursor-pointer"
                           />
                         )}
                       </div>
                       <div className="2xl:mx-auto 2xl:mt-5">
                         <section className="2xl:flex 2xl:flex-wrap 2xl:gap-28 flex-start">
-                          {currentLostPost.map((item, i) => (
-                            <section key={i}>
-                              <Carousel navButtonsAlwaysVisible={true}>
-                                {item.urls.map((items, i) => (
-                                  <Image
-                                    key={i}
-                                    src={items.url}
-                                    alt={"previewImg-" + i}
-                                    width="300px"
-                                    height="300px"
-                                  />
+                          {
+                            currentLostPost.length < 1
+                              ?
+                              <h1 className="text-2xl font-bold">No Post</h1>
+                              :
+                              currentLostPost[0] == null
+                                ?
+                                <h1 className="text-2xl font-bold">Error please retry later</h1>
+                                :
+                                currentLostPost.map((item, i) => (
+                                  <section className="cursor-pointer" onClick={function () {
+                                    setEditPostType('lost');
+                                    setEditPostStatus(true);
+                                    setEditPostTarget(i);
+                                  }} key={i}>
+                                    <Carousel indicators={false} navButtonsAlwaysVisible={false}>
+                                      <div className="w-72 h-72">
+                                        {
+                                          item.urls.length > 0
+                                            ?
+                                            item.urls.map((items, i) => (
+                                              <Image
+                                                key={i}
+                                                src={items.url}
+                                                alt={"previewImg-" + i}
+                                                width="300px"
+                                                height="300px"
+                                                layout="responsive"
+                                              />
+                                            ))
+                                            :
+                                            <Image
+                                              src={IMAGES.defaultImg}
+                                              alt={"previewImg-default-lost"}
+                                              width="300px"
+                                              height="300px"
+                                              layout="responsive"
+                                            />
+                                        }
+                                      </div>
+                                    </Carousel>
+                                    <ListItemText primary={"Date: " + convertDateFormat(item.date)} />
+                                    <ListItemText primary={item.sex == 'unknow' ? 'Sex : Unknow' : item.sex == 'true' ? 'Sex : Male' : 'Sex : Female'} />
+                                    <ListItemText
+                                      primary={item.collar == true ? 'Collar: Have' : 'Collar: Not Have'}
+                                    />
+                                    <ListItemText
+                                      primary={item.description ? item.description.length > 15 ? 'Description: ' + item.description.substring(0, 15) + '...' : 'Description: ' + item.description : 'Description: -'}
+                                    />
+                                  </section>
                                 ))}
-                              </Carousel>
-                              <ListItemText primary={"Date: " + item.date} />
-                              <ListItemText primary={"Sex: " + item.sex} />
-                              <ListItemText
-                                primary={"Collar: " + item.collar}
-                              />
-                              <ListItemText
-                                primary={"Description: " + item.description}
-                              />
-                            </section>
-                          ))}
                         </section>
                       </div>
                       {pageLostPost >= maxPageLostPost ? (
@@ -623,6 +730,7 @@ export default function Account() {
                             height: "60px",
                           }}
                           onClick={() => nextPage("lost")}
+                          className="cursor-pointer"
                         />
                       )}
                     </ListItem>
@@ -637,16 +745,22 @@ export default function Account() {
           style={{ marginLeft: "238px" }}
         >
           <List className={classes.list}>
-            <ListItem button>
-              <ListItemText
-                primary="Monitoring my post"
-                style={{ color: "black", margin: "14px" }}
-              />
-            </ListItem>
+            <Link href="/dashboard">
+              <a>
+                <ListItem button>
+                  <ListItemText
+                    primary="Monitoring my post"
+                    style={{ color: "black", margin: "14px" }}
+                  />
+                </ListItem>
+              </a>
+            </Link>
           </List>
         </section>
+        <ThemeProvider theme={theme}>
+          <BasePostEdit pageFoundPost={pageFoundPost} pageLostPost={pageLostPost} setPageFoundPost={setPageFoundPost} setPageLostPost={setPageLostPost} renderFoundPost={renderFoundPost} renderLostPost={renderLostPost} setDeleteDataInState={setDeleteDataInState} setEditDataInState={setEditDataInState} setCurrentFoundPost={setCurrentFoundPost} setCurrentLostPost={setCurrentLostPost} modalStatus={editPostStatus} closeModal={closePostEditModal} post={editPostType == 'lost' ? currentLostPost : currentFoundPost} target={editPostTarget} userAccount={userAccount} editPostType={editPostType} />
+        </ThemeProvider>
       </main>
-
       <footer className="2xl:mt-32">
         <Footer />
       </footer>

@@ -26,9 +26,9 @@ const modalStyles = makeStyles((theme) => ({
 const theme = createTheme({
     palette: {
         primary: {
-            light: '#757ce8',
+            light: '#356053',
             main: '#356053',
-            dark: '#3f50b5',
+            dark: '#356053',
             contrastText: '#fff',
         },
         secondary: {
@@ -70,14 +70,14 @@ export default function BasePostResModal(prop) {
                                     prop.postRes.data.result == true
                                         ?
                                         <div className="relative h-full">
-                                            <p className="text-center text-2xl font-bold">post success</p>
+                                            <p className="text-center text-2xl font-bold">success</p>
                                             <div className={"absolute " + utilStyles.bottomCenterAbsolute} >
                                                 <Button onClick={prop.closePostResModal} variant="contained" color="primary" className={"2xl:max-h-9"}>Okay</Button>
                                             </div>
                                         </div>
                                         :
                                         <div className="relative h-full">
-                                            <p className="text-center text-2xl font-bold">post fail please retry later</p>
+                                            <p className="text-center text-2xl font-bold">fail please retry later</p>
                                             <div className={"absolute " + utilStyles.bottomCenterAbsolute} >
                                                 <Button onClick={prop.closePostResModal} variant="contained" color="primary" className={"2xl:max-h-9"}>Okay</Button>
                                             </div>

@@ -15,6 +15,7 @@ import ICONS from '@constants/ICONS';
 import BasePostDisplay from "@components/BasePostDisplay";
 import cn from 'classnames';
 import { io } from 'socket.io-client';
+import BaseConfirmation from "@components/BaseConfirmation";
 
 const mainStyles = makeStyles((theme) => ({
     style: {
@@ -60,6 +61,7 @@ export default function Dashboard() {
     const [selectedPost, setSelectedPost] = useState(null);
     const currentSelectedPost = useRef(null);
     const [nearPost, setNearPost] = useState(null);
+    const currentNearPost = useRef(null);
     const googleStatus = useRef(false);
     const [displayStatus, setDisplayStatus] = useState(false);
     const [foundPostDetail, setFoundPostDetail] = useState(null);
@@ -67,6 +69,9 @@ export default function Dashboard() {
     const [alertChecker, setAlertChecker] = useState(0);
     const currentAlertChecker = useRef(0);
     const markerPositions = useRef(new Map());
+    const [confirmationStatus, setConfirmationStatus] = useState(false);
+    const [confirmTitle, setConfirmTitle] = useState('');
+    const [confirmContent, setConfirmContent] = useState('');
 
     useEffect(() => {
         let res = initFirebase();
@@ -139,18 +144,29 @@ export default function Dashboard() {
         if (selectedPost != null) {
             if (selectedPost.page == -1) {
                 setNearPost({ result: 0, searchResult: [] });
+                currentNearPost.current = { result: 0, searchResult: [] };
             } else {
                 const fetchNearPost = async () => {
                     let nearPostRes = await postUtil.getNearPost(dashboardData.searchResult[selectedPost.page][selectedPost.post]._id)
                     if (nearPostRes.data.result == true) {
-                        setNearPost({ result: true, searchResult: nearPostRes.data.searchResult.nearFoundCat });
-                        dashboardData.searchResult[selectedPost.page][selectedPost.post] = nearPostRes.data.searchResult;
-                        currentDashboardData.current = dashboardData
-                        let newAlertCount = currentAlertChecker.current + 1
-                        setAlertChecker(newAlertCount);
-                        currentAlertChecker.current = newAlertCount;
+                        if (nearPostRes.data.searchResult == null) {
+                            setCheckPostLoading(false);
+                            setDisplayStatus(false);
+                            setConfirmTitle('Post Deleted');
+                            setConfirmContent('your post is deleted please refresh.');
+                            setConfirmationStatus(true);
+                        } else {
+                            setNearPost({ result: true, searchResult: nearPostRes.data.searchResult.nearFoundCat });
+                            currentNearPost.current = { result: true, searchResult: nearPostRes.data.searchResult.nearFoundCat };
+                            dashboardData.searchResult[selectedPost.page][selectedPost.post] = nearPostRes.data.searchResult;
+                            currentDashboardData.current = dashboardData
+                            let newAlertCount = currentAlertChecker.current + 1
+                            setAlertChecker(newAlertCount);
+                            currentAlertChecker.current = newAlertCount;
+                        }
                     } else {
                         setNearPost({ result: false });
+                        currentNearPost.current = { result: false };
                         // let newAlertCount = currentAlertChecker.current + 1
                         // setAlertChecker(newAlertCount);
                         // currentAlertChecker.current = newAlertCount;
@@ -178,6 +194,10 @@ export default function Dashboard() {
 
     const closeDisplayModal = () => {
         setDisplayStatus(false);
+    }
+
+    const closeConfirmation = () => {
+        setConfirmationStatus(false);
     }
 
     const convertDateFormat = (dateData) => {
@@ -220,69 +240,93 @@ export default function Dashboard() {
     }
 
     const createFoundMarkerRealtime = async (foundPost, lostPost, mapToPlace) => {
-        if (lostPost._id.toString() == currentDashboardData.current.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post]._id.toString() && mapToPlace != null) {
-            let markerPosition = { lat: 0, lng: 0 };
-            let offsetLatRandom = Math.random() * (0.0001 - 0.00004) + 0.00004;
-            let offsetLngRandom = Math.random() * (0.0001 - 0.00004) + 0.00004;
-            let Lat = foundPost.location.coordinates[1];
-            let Lng = foundPost.location.coordinates[0];
-            if (markerPositions.current.get(foundPost.location.coordinates[1].toString() + ',' + foundPost.location.coordinates[0].toString()) != true) {
-                markerPositions.current.forEach((value, key) => {
-                    let splitPosition = key.split(',');
-                    let oldMarkerLat = Number(splitPosition[0]);
-                    let oldMarkerLng = Number(splitPosition[1]);
-                    let latDistance = oldMarkerLat - Lat;
-                    let lngDistance = oldMarkerLng - Lng;
-                    if (Math.abs(latDistance) <= 0.000040 && Math.abs(lngDistance) <= 0.000040) {
-                        const offsetXAxis = isEven(Math.floor(Math.random() * 10) + 1);
-                        const offsetYAxis = isEven(Math.floor(Math.random() * 10) + 1);
-                        Lat = offsetXAxis == true ? Lat + offsetLatRandom : Lat - offsetLatRandom;
-                        Lng = offsetYAxis == true ? Lng + offsetLngRandom : Lng - offsetLngRandom;
+        if (currentSelectedPost.current != null && currentSelectedPost.current.page != -1) {
+            if (lostPost._id.toString() == currentDashboardData.current.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post]._id.toString() && mapToPlace != null) {
+                let markerPosition = { lat: 0, lng: 0 };
+                let offsetLatRandom = Math.random() * (0.0001 - 0.00004) + 0.00004;
+                let offsetLngRandom = Math.random() * (0.0001 - 0.00004) + 0.00004;
+                let Lat = foundPost.location.coordinates[1];
+                let Lng = foundPost.location.coordinates[0];
+                if (markerPositions.current.get(foundPost.location.coordinates[1].toString() + ',' + foundPost.location.coordinates[0].toString()) != true) {
+                    markerPositions.current.forEach((value, key) => {
+                        let splitPosition = key.split(',');
+                        let oldMarkerLat = Number(splitPosition[0]);
+                        let oldMarkerLng = Number(splitPosition[1]);
+                        let latDistance = oldMarkerLat - Lat;
+                        let lngDistance = oldMarkerLng - Lng;
+                        if (Math.abs(latDistance) <= 0.000040 && Math.abs(lngDistance) <= 0.000040) {
+                            const offsetXAxis = isEven(Math.floor(Math.random() * 10) + 1);
+                            const offsetYAxis = isEven(Math.floor(Math.random() * 10) + 1);
+                            Lat = offsetXAxis == true ? Lat + offsetLatRandom : Lat - offsetLatRandom;
+                            Lng = offsetYAxis == true ? Lng + offsetLngRandom : Lng - offsetLngRandom;
+                        }
+                    })
+                    markerPosition.lat = Lat;
+                    markerPosition.lng = Lng;
+                    markerPositions.current.set(`${Lat.toString()},${Lng.toString()}`, true)
+                } else {
+                    const randomOffsetXAxis = isEven(Math.floor(Math.random() * 10) + 1);
+                    const randomOffsetYAxis = isEven(Math.floor(Math.random() * 10) + 1);
+                    Lat = randomOffsetXAxis == true ? Lat + offsetLatRandom : Lat - offsetLatRandom;
+                    Lng = randomOffsetYAxis == true ? Lng + offsetLngRandom : Lng - offsetLngRandom;
+                    markerPosition.lat = Lat;
+                    markerPosition.lng = Lng;
+                    markerPositions.current.set(`${Lat.toString()},${Lng.toString()}`, true)
+                }
+                let markerObj = await new google.maps.Marker({
+                    position: markerPosition,
+                    map: mapToPlace,
+                    icon: { url: ICONS.foundMarker, scaledSize: new google.maps.Size(35, 35) },
+                    title: foundPost.description,
+                });
+                markerObj.addListener('click', async () => {
+                    setCheckPostLoading(true);
+                    setDisplayStatus(true);
+                    let foundPostDetail = await postUtil.checkNearPost(currentDashboardData.current.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post]._id, foundPost._id)
+                    if (foundPostDetail.data.result == true) {
+                        let updatedDashboardData = currentDashboardData.current;
+                        updatedDashboardData.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post].nearFoundCat.map((nearPostItem, nearPostIndex) => {
+                            if (nearPostItem._id == foundPost._id) {
+                                updatedDashboardData.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post].nearFoundCat[nearPostIndex].status = false;
+                                return;
+                            }
+                        });
+                        setDashboardData(updatedDashboardData);
+                        currentDashboardData.current = updatedDashboardData;
+                        if (foundPostDetail.data.updateResult != null) {
+                            markerObj.setIcon({ url: ICONS.foundCheckedMarker, scaledSize: new google.maps.Size(35, 35) })
+                            setFoundPostDetail({ data: { searchResult: [foundPostDetail.data.updateResult] } })
+                            setCheckPostLoading(false);
+                        } else {
+                            let newNearPostSet = [];
+                            currentNearPost.current.searchResult.map(item => {
+                                if (item._id._id) {
+                                    if (item._id._id.toString() != foundPost._id.toString()) {
+                                        newNearPostSet.push(item);
+                                    }
+                                } else {
+                                    if (item._id.toString() != foundPost._id.toString()) {
+                                        newNearPostSet.push(item);
+                                    }
+                                }
+                            })
+                            setNearPost({ result: true, searchResult: newNearPostSet });
+                            currentNearPost.current = { result: true, searchResult: newNearPostSet };
+                            setCheckPostLoading(false);
+                            setDisplayStatus(false);
+                            setConfirmTitle('Post Deleted');
+                            setConfirmContent('this post is deleted.');
+                            setConfirmationStatus(true);
+                        }
+                    } else {
+                        setCheckPostLoading(false);
+                        setDisplayStatus(false);
+                        setConfirmTitle('Error');
+                        setConfirmContent('failed retry later.');
+                        setConfirmationStatus(true);
                     }
                 })
-                markerPosition.lat = Lat;
-                markerPosition.lng = Lng;
-                markerPositions.current.set(`${Lat.toString()},${Lng.toString()}`, true)
-            } else {
-                const randomOffsetXAxis = isEven(Math.floor(Math.random() * 10) + 1);
-                const randomOffsetYAxis = isEven(Math.floor(Math.random() * 10) + 1);
-                Lat = randomOffsetXAxis == true ? Lat + offsetLatRandom : Lat - offsetLatRandom;
-                Lng = randomOffsetYAxis == true ? Lng + offsetLngRandom : Lng - offsetLngRandom;
-                markerPosition.lat = Lat;
-                markerPosition.lng = Lng;
-                markerPositions.current.set(`${Lat.toString()},${Lng.toString()}`, true)
             }
-            let markerObj = await new google.maps.Marker({
-                position: markerPosition,
-                map: mapToPlace,
-                icon: { url: ICONS.foundMarker, scaledSize: new google.maps.Size(35, 35) },
-                title: foundPost.description,
-            });
-            markerObj.addListener('click', async () => {
-                setCheckPostLoading(true);
-                setDisplayStatus(true);
-                let foundPostDetail = await postUtil.checkNearPost(currentDashboardData.current.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post]._id, foundPost._id)
-                if (foundPostDetail.data.result == true) {
-                    let updatedDashboardData = currentDashboardData.current;
-                    updatedDashboardData.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post].nearFoundCat.map((nearPostItem, nearPostIndex) => {
-                        if (nearPostItem._id == foundPost._id) {
-                            updatedDashboardData.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post].nearFoundCat[nearPostIndex].status = false;
-                            return;
-                        }
-                    });
-                    setDashboardData(updatedDashboardData);
-                    currentDashboardData.current = updatedDashboardData;
-                    if (foundPostDetail.data.updateResult != null) {
-                        markerObj.setIcon({ url: ICONS.foundCheckedMarker, scaledSize: new google.maps.Size(35, 35) })
-                        setFoundPostDetail({ data: { searchResult: [foundPostDetail.data.updateResult] } })
-                        setCheckPostLoading(false);
-                    } else {
-                        console.log('post deleted') //later
-                    }
-                } else {
-                    console.log('error') //later
-                }
-            })
         }
     }
 
@@ -348,10 +392,28 @@ export default function Dashboard() {
                         setFoundPostDetail({ data: { searchResult: [foundPostDetail.data.updateResult] } })
                         setCheckPostLoading(false);
                     } else {
-                        console.log('post deleted') //later
+                        let newNearPostSet = [];
+                        currentNearPost.current.searchResult.map(oldItem => {
+                            if (oldItem._id._id) {
+                                if (oldItem._id._id != item._id._id) {
+                                    newNearPostSet.push(oldItem);
+                                }
+                            }
+                        })
+                        setNearPost({ result: true, searchResult: newNearPostSet });
+                        currentNearPost.current = { result: true, searchResult: newNearPostSet };
+                        setCheckPostLoading(false);
+                        setDisplayStatus(false);
+                        setConfirmTitle('Post Deleted');
+                        setConfirmContent('this post is deleted.');
+                        setConfirmationStatus(true);
                     }
                 } else {
-                    console.log('error') //later
+                    setCheckPostLoading(false);
+                    setDisplayStatus(false);
+                    setConfirmTitle('Error');
+                    setConfirmContent('failed retry later.');
+                    setConfirmationStatus(true);
                 }
             })
         })
@@ -475,7 +537,7 @@ export default function Dashboard() {
                                                                         <p className="text-lg font-medium"><span className="text-lg font-medium">Date: </span>{convertDateFormat(pageItem.date)}</p>
                                                                         <p className="text-lg font-medium"><span className="text-lg font-medium">Sex: </span>{pageItem.sex != "unknow" ? pageItem.sex == "true" ? "Male" : "Female" : 'Unknow'}</p>
                                                                         <p className="text-lg font-medium"><span className="text-lg font-medium">Collar: </span>{pageItem.collar ? 'Have' : 'Not Have'}</p>
-                                                                        <p className="text-lg font-medium"><span className="text-lg font-medium">Description: </span>{pageItem.description.length > 15 ? pageItem.description.substring(0, 15) + '...' : pageItem.description}</p>
+                                                                        <p className="text-lg font-medium"><span className="text-lg font-medium">Description: </span>{pageItem.description ? pageItem.description.length > 15 ? pageItem.description.substring(0, 15) + '...' : pageItem.description : '-'}</p>
                                                                     </div>
                                                                 </div>
                                                             )
@@ -491,6 +553,7 @@ export default function Dashboard() {
                                 <h1 className={"text-4xl font-bold absolute " + utilStyles.centerAbsolute}>error please retry later :(</h1>
                     }
                     <BasePostDisplay loading={checkPostLoading} modalStatus={displayStatus} closeModal={closeDisplayModal} post={foundPostDetail} target={0} />
+                    <BaseConfirmation confirmOnly={true} confirmationStatus={confirmationStatus} closeConfirmation={closeConfirmation} title={confirmTitle} content={confirmContent} confirmAction={() => { console.log('confirm') }} />
                     <p className="hidden">{alertChecker}</p>
                 </div>
             </main>

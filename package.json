@@ -31,6 +31,7 @@
     "postcss-preset-env": "^6.7.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-draggable": "^4.4.4",
     "react-material-ui-carousel": "^2.3.1",
     "socket.io-client": "^4.2.0",
     "tailwindcss": "^2.2.7"
