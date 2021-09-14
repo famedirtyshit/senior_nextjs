@@ -1,5 +1,6 @@
 import IMAGES from '@constants/IMAGES';
 import Image from 'next/image';
+import moment from 'moment';
 
 export default function BasePostItem(prop) {
 
@@ -33,6 +34,7 @@ export default function BasePostItem(prop) {
 
     return (
         <div onClick={emitPostData} className="post-item cursor-pointer">
+            <p className="text-right px-2 text-textGray text-sm font-medium">{prop.data.post != undefined ? moment(new Date(prop.data.post.createdAt)).fromNow() : moment(new Date(prop.data.createdAt)).fromNow()}</p>
             <Image src={prop.data.post != undefined ? prop.data.post.urls.length > 0 ? prop.data.post.urls[0].url : IMAGES.defaultImg : prop.data.urls.length > 0 ? prop.data.urls[0].url : IMAGES.defaultImg} alt='item-thumbnail' width="326" height="326" />
             <div className="post-item-desc 2xl:ml-4">
                 <p className="2xl:text-lg 2xl:font-medium">Date: {convertDateFormat(prop.data.post != undefined ? prop.data.post.date : prop.data.date)}</p>

@@ -199,11 +199,7 @@ export default function Feed() {
         }
     }, [locationConfirmStatus, locationConfirm, radius])
 
-    useEffect(() => {
-        if (searchData != null) {
-            // console.log(searchData.data);
-        }
-    }, [searchData])
+  
 
     useEffect(() => {
         if (locationConfirm == null && sortType == 'radius') {
@@ -245,7 +241,7 @@ export default function Feed() {
                         setMyPostData({ result: true, searchResult: formatData });
                         setSearchMyPostLoading(false);
                     } else {
-                        let postWithTargetType = searchType == 'lost' ? myPostRes.data.searchResult.postLost : myPostRes.data.searchResult.postFound;
+                        let postWithTargetType = searchType == 'lost' ? myPostRes.data.searchResult.postFound : myPostRes.data.searchResult.postLost;
                         postWithTargetType.map((item, index) => {
                             dataPerPage.push(item);
                             if ((index + 1) % 3 == 0 || index == postWithTargetType.length - 1) {
@@ -666,7 +662,7 @@ export default function Feed() {
                                 userAccount != null ?
                                     <div>
                                         <p onClick={() => { setSearchMyPostStatus(true) }} className="text-white 2xl:px-6 py-2 bg-darkCream rounded-3xl shadow-lg cursor-pointer 2xl:mt-10 text-center">ค้นหาด้วยข้อมูล Post ของฉัน</p>
-                                        <BaseSearchMyPostModal setMyPostSelected={setMyPostSelected} myPostData={myPostData} searchMyPostLoading={searchMyPostLoading} closeSearchByMyPostModal={closeSearchByMyPostModal} searchMyPostStatus={searchMyPostStatus} />
+                                        <BaseSearchMyPostModal searchType={searchType} setMyPostSelected={setMyPostSelected} myPostData={myPostData} searchMyPostLoading={searchMyPostLoading} closeSearchByMyPostModal={closeSearchByMyPostModal} searchMyPostStatus={searchMyPostStatus} />
                                     </div>
                                     :
                                     null
