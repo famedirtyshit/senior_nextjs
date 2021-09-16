@@ -40,6 +40,21 @@ const allAccountUtil = {
         } catch (e) {
             return e.response;
         } 
+    },editContact:async(id,cipherCredential ,firstname, lastname ,phone ,facebook, instagram) => {
+        try{
+            let res = await axios.put(process.env.API_KEY + "/account/edit" ,{
+               id:id,
+               cipherCredential:cipherCredential,
+               firstname:firstname,
+               lastname:lastname,
+               phone:phone ,
+               facebook:facebook,
+               instagram:instagram
+            });
+                return res;}
+            catch(e){
+                return e.response;
+            }      
     }
 }
 

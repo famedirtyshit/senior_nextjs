@@ -28,6 +28,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import utilStyles from "@styles/Util.module.css";
 import { Skeleton } from "@material-ui/lab";
 import TextField from "@material-ui/core/TextField";
+import BaseModalChangePassword from "@components/BaseModalChangePassword";
+
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -56,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   list: {
     border: "#e5e5e5 1px solid",
     boxShadow: "1px 2px #c4c4c4",
-  },
+  }
 }));
 
 const theme = createTheme({
@@ -114,6 +116,10 @@ export default function Account() {
   const [errorInputFacebook, setErrorInputFacebook] = useState(false);
   const [errorInputInstagram, setErrorInputInstagram] = useState(false);
   const [errorInputEmail, setErrorInputEmail] = useState(false);
+  const [openModalChangePassword, setOpenModalChangePassword] = useState(false);
+  
+
+  const CryptoJS = require("crypto-js");
 
   useEffect(() => {
     let res = initFirebase();
@@ -155,6 +161,7 @@ export default function Account() {
           }
         } else {
           setUserAccount(null);
+          window.location.href = "/authen";
         }
       });
     } else {
@@ -262,7 +269,7 @@ export default function Account() {
     }
   };
 
-  const pressEditSection1 = () => {
+  const pressEditSection1 = async () => {
     let newFirstName = document.getElementById("newFirstNameID").value;
     let newLastName = document.getElementById("newLastNameID").value;
     let newNumber = document.getElementById("newNumberID").value;
@@ -334,8 +341,30 @@ export default function Account() {
       console.log("something true");
     } else {
       setEditSection1Active(false);
-      console.log("all false");
+      let cipherCredential = CryptoJS.AES.encrypt(
+        userAccount._id,
+        process.env.PASS_HASH
+      ).toString();
+
+      let res = await accountUtil.editContact(
+        userAccount._id,
+        cipherCredential,
+        newFirstName,
+        newLastName,
+        newNumber,
+        newFacbook,
+        newInstagram
+      );
+      console.log(res.data);
+      console.log(userAccount);
+
+      if(res.data.result==true){
+        let accountObject = userAccount;
+        setUserAccount(res.data.updateResult);
+      }
     }
+
+    console.log("all false");
   };
 
   const pressEditSection2 = () => {
@@ -360,9 +389,20 @@ export default function Account() {
       console.log("all false");
     }
   };
+  
+
+  const handleOpenModalChangePassword = () => {
+    setOpenModalChangePassword(true);
+  };
+
+  const handleCloseModalChangePassword = () => {
+    setOpenModalChangePassword(false);
+  };
 
   return (
     <div className={" mx-auto " + AccountStyle.bgImg}>
+      <BaseModalChangePassword handleClose={handleCloseModalChangePassword} openModalChangePassword={openModalChangePassword} />
+
       <Head>
         <title>CatUs</title>
         <meta name="description" content="CatUs Service" />
@@ -380,6 +420,7 @@ export default function Account() {
           className="w-9/12 bg-mainYellow mx-auto  rounded-t-2xl shadow-lg 2xl:mt-20"
           style={{ height: "880px" }}
         >
+        {/* {editSection3Active==true ? <BaseModalChangePassword open={editSection3Active}/> : null} */}
           <div className="2xl:mt-11 2xl:absolute 2xl:ml-12">
             <Link href="/">
               <a>
@@ -683,7 +724,7 @@ export default function Account() {
                           color="primary"
                           size="large"
                           style={{ width: "112px", height: "33px" }}
-                          onClick={() => setEditSection3Active(true)}
+                          onClick={handleOpenModalChangePassword}
                         >
                           Edit
                         </Button>
