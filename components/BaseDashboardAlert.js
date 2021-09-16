@@ -80,13 +80,23 @@ export default function BaseDashboardAlert(prop) {
         return `${date}/${month}/${year}`;
     }
 
+    const close = () => {
+        setOpen(false);
+    }
+
     return (
         <div className={alertClasses.style}>
             <ThemeProvider theme={theme}>
                 <Popper open={open} anchorEl={anchorEl} placement={placement} transition>
                     {({ TransitionProps }) => (
                         <Fade {...TransitionProps} timeout={350}>
-                            <div className={contentClasses.style}>
+                            <div className={contentClasses.style + '  ' + 'relative'}>
+                                <div onClick={close} className="absolute right-5 top-4 cursor-pointer">
+                                    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <ellipse cx="9.5" cy="9.04762" rx="9.5" ry="9.04762" fill="#EBEBEB" />
+                                        <rect x="3.61914" y="8.14258" width="11.7619" height="1.80952" rx="0.904762" fill="#505050" />
+                                    </svg>
+                                </div>
                                 <p className="text-sm font-bold 2xl:pl-8 2xl:pt-5">Notifications</p>
                                 {prop.dashboardData && prop.dashboardData.result == true
                                     ?

@@ -66,12 +66,12 @@ export default function BaseImageUpload(prop) {
 
     return (
         <div>
-            <div className="2xl:w-5/6 2xl:mx-auto 2xl:mt-3 rounded-lg h-80 bg-textGray relative">
+            <div className="w-80 2xl:mx-auto 2xl:mt-3 rounded-lg h-80 bg-textGray relative">
                 {
                     imageCropFile.length > 0 ?
                         <Carousel navButtonsAlwaysVisible={true} className="block h-full">
                             {
-                                imageCropFile.map((item, i) => <Image key={i} src={item} alt={'previewImg-' + i} layout="fill"  />)
+                                imageCropFile.map((item, i) => <Image key={i} src={item} alt={'previewImg-' + i} layout="fill" />)
                             }
                         </Carousel>
                         :
@@ -81,7 +81,9 @@ export default function BaseImageUpload(prop) {
                 }
             </div>
             <input style={{ display: 'none' }} type="file" name='file-image' multiple accept="image/png,image/jpeg" id='file-upload' onChange={inputImageHandle} />
-            <BaseButton onClickFunction={chooseImage} fill={true} fillColor={'mainOrange'} textColor={'white'} round={true} roundSize={'lg'} value={'Upload an Image'} customClass={'2xl:mt-6 2xl:w-full bg-opacity-75'}></BaseButton>
+            <div className="flex justify-center">
+                <BaseButton onClickFunction={chooseImage} fill={true} fillColor={'mainOrange'} textColor={'white'} round={true} roundSize={'lg'} value={'Upload an Image'} customClass={'2xl:mt-6 2xl:w-80 bg-opacity-75'}></BaseButton>
+            </div>
             <BaseCropModal setImage={prop.setImage} cropModalStatus={cropModalStatus} closeCropModal={closeCropModal} imageRawFile={imageRawFile} />
         </div>
     )

@@ -1,6 +1,8 @@
 import TextField from '@material-ui/core/TextField';
 import { makeStyles, createTheme, ThemeProvider } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import BaseRecoverPassword from '@components/BaseRecoverPassword';
+import { useState } from 'react';
 
 const buttonStyles = makeStyles((theme) => ({
     style: {
@@ -41,6 +43,16 @@ const theme = createTheme({
 
 
 export default function BaseSignIn(prop) {
+    const [recoverModalStatus,setRecoverModalStatus] = useState(false);
+
+    const closeRecoverModal = () => {
+        setRecoverModalStatus(false);
+    }
+
+    const openRecoverModal = () => {
+        setRecoverModalStatus(true);
+    }
+
     const buttonClasses = buttonStyles();
     return (
         <div className="bg-white rounded-3xl rounded-3xl 2xl:grid 2xl:grid-cols-10">
@@ -52,7 +64,8 @@ export default function BaseSignIn(prop) {
                         <TextField error={prop.validType == 'sipassword' ? true : false} id="signin-password" label="Password" variant="outlined" type="password" className="w-3/6" />
                     </div>
                     <div className="grid grid-cols-1 justify-items-center">
-                        <p className="my-6 text-textGray cursor-pointer inline-block font-normal">Forgot your password?</p>
+                        <p onClick={openRecoverModal} className="my-6 text-textGray cursor-pointer inline-block font-normal">Forgot your password?</p>
+                        <BaseRecoverPassword recoverModalStatus={recoverModalStatus} closeRecoverModal={closeRecoverModal} />
                         <Button onClick={prop.signIn} variant="contained" color="primary" className={buttonClasses.style}>
                             <span className="text-xl font-semibold">
                                 SIGN IN

@@ -9,6 +9,7 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from
 import BaseAuthenResModal from '@components/BaseAuthenResModal';
 let passwordValidator = require('password-validator');
 import accountUtil from '@utils/accountUtil';
+import { useRouter } from 'next/router';
 
 const sectionStyles = makeStyles((theme) => ({
     style: {
@@ -16,7 +17,8 @@ const sectionStyles = makeStyles((theme) => ({
     },
 }));
 export default function Authen() {
-    const [authenType, setAuthenType] = useState('signin');
+    const router = useRouter();
+    const [authenType, setAuthenType] = useState(router.query.type == 'signup' ? 'signup' : 'signin');
     const [validMsg, setValidMsg] = useState('');
     const [validStatus, setValidStatus] = useState(false);
     const [validType, setValidType] = useState('pass');
@@ -79,7 +81,7 @@ export default function Authen() {
                 setValidMsg('please verify your email before singin')
                 setResAlertType(true)
                 logOut();
-            }else{
+            } else {
                 window.location.href = '/feed';
             }
         }
@@ -128,7 +130,7 @@ export default function Authen() {
         }
         // let passwordChecker = /^(?=.\d)(?=.[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
         let passwordSchema = new passwordValidator();
-        passwordSchema.is().min(6).is().max(20).has().uppercase().has().lowercase().has().digits(1).has().not().spaces()
+        passwordSchema.is().min(6)
         if (passwordSchema.validate(password) == false) {
             return { status: false, msg: 'password must between 6 to 20 characters which contain at least one numeric digit, uppercase, lowercase and not have spaces', type: 'password' };
         }

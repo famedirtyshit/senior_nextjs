@@ -17,6 +17,8 @@ import cn from 'classnames';
 import { io } from 'socket.io-client';
 import BaseConfirmation from "@components/BaseConfirmation";
 import Footer from '@components/Footer';
+import Link from 'next/link';
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
 const mainStyles = makeStyles((theme) => ({
     style: {
@@ -462,9 +464,25 @@ export default function Dashboard() {
             </Head>
             <Script async defer src={`https://maps.googleapis.com/maps/api/js?v=3.44&key=${process.env.GMAPKEY}&libraries=places&region=TH&language=th`} strategy="beforeInteractive" onLoad={() => { googleStatus.current = true }} />
             <Script src="https://unpkg.com/@googlemaps/markerclustererplus/dist/index.min.js" strategy="beforeInteractive"></Script>
-            <h1 className="text-6xl font-bold text-white pt-10 ml-72 ">Catus</h1>
+            <Link href='/'>
+                <a>
+                    <h1 className="text-5xl font-bold text-white pt-10 ml-72 inline-block ">Catus</h1>
+                </a>
+            </Link>
             <main className={"2xl:mt-28 2xl:mb-48 mx-auto border border-solid border-gray-300 " + mainClasses.style}>
-                <h1 className="text-4xl font-bold text-center mt-8 mb-4">Dashboard</h1>
+                <div className="relative">
+                    <div className="absolute left-12 top-0">
+                        <Link href="/account">
+                            <a>
+                                <ArrowBackIosIcon
+                                    style={{ color: "black", width: "40px", height: "40px" }}
+                                    className="cursor-pointer"
+                                />
+                            </a>
+                        </Link>
+                    </div>
+                    <h1 className="text-4xl font-bold text-center mt-8 mb-4">Dashboard</h1>
+                </div>
                 {
                     nearPost != null
                         ?
