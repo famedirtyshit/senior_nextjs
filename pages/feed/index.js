@@ -91,6 +91,8 @@ export default function Feed() {
     const [alertChecker, setAlertChecker] = useState(0);
     const currentAlertChecker = useRef(0);
 
+    const [accountMenu, setAccountMenu] = useState(null);
+
     useEffect(() => {
         let res = initFirebase();
         if (res != false) {
@@ -199,11 +201,7 @@ export default function Feed() {
         }
     }, [locationConfirmStatus, locationConfirm, radius])
 
-    useEffect(() => {
-        if (searchData != null) {
-            // console.log(searchData.data);
-        }
-    }, [searchData])
+
 
     useEffect(() => {
         if (locationConfirm == null && sortType == 'radius') {
@@ -245,7 +243,7 @@ export default function Feed() {
                         setMyPostData({ result: true, searchResult: formatData });
                         setSearchMyPostLoading(false);
                     } else {
-                        let postWithTargetType = searchType == 'lost' ? myPostRes.data.searchResult.postLost : myPostRes.data.searchResult.postFound;
+                        let postWithTargetType = searchType == 'lost' ? myPostRes.data.searchResult.postFound : myPostRes.data.searchResult.postLost;
                         postWithTargetType.map((item, index) => {
                             dataPerPage.push(item);
                             if ((index + 1) % 3 == 0 || index == postWithTargetType.length - 1) {
@@ -570,6 +568,23 @@ export default function Feed() {
         return true;
     }
 
+    const handleCloseAccountMenu = () => {
+        setAccountMenu(null);
+      };
+    
+      const handleOpenAccountMenu = (event) => {
+        setAccountMenu(event.currentTarget);
+      }
+    
+      const logout = () => {
+        const auth = getAuth();
+        signOut(auth).then(() => {
+          setUserAccount(null);
+        }).catch((error) => {
+          alert('fail please retry later');
+        });
+      }
+
     return (
         <div className={"2xl:container mx-auto " + FeedStyle.bgImg}>
             <Head>
@@ -587,6 +602,35 @@ export default function Feed() {
                                 <h1 className="2xl:text-5xl 2xl:font-black text-white">Catus</h1>
                             </a>
                         </Link>
+                        {
+                            userAccount != null
+                                ?
+                                <div className="account-action">
+                                    <div onClick={handleOpenAccountMenu} className='flex flex-wrap cursor-pointer'>
+                                        <p className="text-lg text-white">
+                                            {userAccount.firstname ? userAccount.firstname.length > 15 ? userAccount.firstname.substring(0, 15) + '... ' : userAccount.firstname + ' ' : null}
+                                            {userAccount.lastname ? userAccount.lastname.length > 15 ? userAccount.lastname.substring(0, 15) + '... ' : userAccount.lastname + ' ' : null}
+                                        </p>
+                                        <div className="pt-3 ml-3">
+                                            <svg width="12" height="6" viewBox="0 0 18 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M7.62878 7.74068C7.53883 7.67259 7.46291 7.59722 7.39688 7.51892L0.504162 2.26459C-0.167948 1.75178 -0.168267 0.920687 0.504481 0.407648C1.17691 -0.105147 2.26753 -0.105132 2.9406 0.407681L8.87667 4.93303L14.844 0.384986C15.5161 -0.128052 16.6071 -0.128037 17.2801 0.385019C17.616 0.641547 17.7841 0.97734 17.7841 1.31313C17.7841 1.64892 17.616 1.98544 17.2795 2.24123L10.3565 7.51896C10.2904 7.59725 10.2148 7.67239 10.1246 7.74071C9.78005 8.00331 9.32772 8.12925 8.87667 8.12341C8.4253 8.12948 7.97233 8.00328 7.62878 7.74068Z" fill="white" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <Menu
+                                        id="account-menu"
+                                        anchorEl={accountMenu}
+                                        keepMounted
+                                        open={Boolean(accountMenu)}
+                                        onClose={handleCloseAccountMenu}
+                                    >
+                                        <MenuItem onClick={() => { window.location.href = '/account' }}>My Account</MenuItem>
+                                        <MenuItem onClick={logout}>Logout</MenuItem>
+                                    </Menu>
+                                </div>
+                                :
+                                null
+                        }
                     </header>
                     <section className="relative w-9/12 bg-mainCream mx-auto rounded-2xl shadow-lg 2xl:mt-20">
                         {
@@ -631,14 +675,14 @@ export default function Feed() {
                         </div>
                         {userAccount != null ?
                             <div className="2xl:grid 2xl:grid-cols-2 bg-white rounded-2xl 2xl:relative">
-                                <p onClick={setPostFoundType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium cursor-pointer " + cn({
-                                    'bg-mainGreen text-white rounded-bl-2xl': postType === "found",
-                                    'text-mainGreen': postType !== "found",
+                                <p onClick={setPostFoundType} className={"2xl:text-center 2xl:py-4 text-2xl cursor-pointer border-r border-solid border-gray-400 " + cn({
+                                    'bg-mainGreen text-white rounded-bl-2xl bg-opacity-80 font-bold': postType === "found",
+                                    'text-mainGreen font-medium': postType !== "found",
                                 })
                                 }>Post Found</p>
-                                <p onClick={setPostLostType} className={"2xl:text-center 2xl:py-4 text-2xl font-medium cursor-pointer " + cn({
-                                    'bg-mainGreen text-white rounded-br-2xl': postType === "lost",
-                                    'text-mainGreen': postType !== "lost",
+                                <p onClick={setPostLostType} className={"2xl:text-center 2xl:py-4 text-2xl cursor-pointer border-l border-solid border-gray-400 " + cn({
+                                    'bg-mainGreen text-white rounded-br-2xl bg-opacity-80 font-bold': postType === "lost",
+                                    'text-mainGreen font-medium': postType !== "lost",
                                 })
                                 }>Post Lost</p>
                                 {postType != null ? <BasePostModal user={userAccount} cancelFunction={togglePostType} type={postType} closeBasePostModal={togglePostType} /> : null}
@@ -647,26 +691,29 @@ export default function Feed() {
                         }
                     </section>
                     <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-3 2xl:mx-56 text-center">
-                        <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
-                            'text-mainGreen border-b-4 border-mainGreen': searchType === 'all',
+                        <p className={"cursor-pointer text-2xl font-medium 2xl:pb-2 " + cn({
+                            'text-mainGreen font-semibold border-b-4 border-mainGreen': searchType === 'all',
+                            'text-textGray': searchType != 'all'
                         })} onClick={setSearchAllType}>All</p>
-                        <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
-                            'text-mainGreen border-b-4 border-mainGreen': searchType === 'found',
+                        <p className={"cursor-pointer text-2xl font-medium 2xl:pb-2 " + cn({
+                            'text-mainGreen font-semibold border-b-4 border-mainGreen': searchType === 'found',
+                            'text-textGray': searchType != 'found'
                         })} onClick={setSearchFoundType}>Found</p>
-                        <p className={"cursor-pointer text-2xl font-bold 2xl:pb-2 " + cn({
-                            'text-mainGreen border-b-4 border-mainGreen': searchType === 'lost',
+                        <p className={"cursor-pointer text-2xl font-medium 2xl:pb-2 " + cn({
+                            'text-mainGreen font-semibold border-b-4 border-mainGreen': searchType === 'lost',
+                            'text-textGray': searchType != 'lost'
                         })} onClick={setSearchLostType}>Lost</p>
                     </section>
                 </div >
                 <main>
                     <section className="2xl:mt-32 2xl:grid 2xl:grid-cols-4 2xl:mx-56">
                         <div>
-                            <p className="text-xl font-medium">ITEM ({searchData != null && searchData != undefined && searchData.data.result == true ? searchData.data.count : 0})</p>
+                            <p className="text-xl font-bold">ITEM ({searchData != null && searchData != undefined && searchData.data.result == true ? searchData.data.count : 0})</p>
                             {
                                 userAccount != null ?
                                     <div>
                                         <p onClick={() => { setSearchMyPostStatus(true) }} className="text-white 2xl:px-6 py-2 bg-darkCream rounded-3xl shadow-lg cursor-pointer 2xl:mt-10 text-center">ค้นหาด้วยข้อมูล Post ของฉัน</p>
-                                        <BaseSearchMyPostModal setMyPostSelected={setMyPostSelected} myPostData={myPostData} searchMyPostLoading={searchMyPostLoading} closeSearchByMyPostModal={closeSearchByMyPostModal} searchMyPostStatus={searchMyPostStatus} />
+                                        <BaseSearchMyPostModal searchType={searchType} setMyPostSelected={setMyPostSelected} myPostData={myPostData} searchMyPostLoading={searchMyPostLoading} closeSearchByMyPostModal={closeSearchByMyPostModal} searchMyPostStatus={searchMyPostStatus} />
                                     </div>
                                     :
                                     null
@@ -757,8 +804,6 @@ export default function Feed() {
                         </div>
                     </section>
                 </main>
-                {/* <footer className="2xl:h-48 bg-mainGreen">
-                </footer> */}
                 <Footer />
                 {userAccount != null ? <BaseDashboardAlert dashboardData={dashboardData} /> : null}
                 <p className="hidden">{alertChecker}</p>

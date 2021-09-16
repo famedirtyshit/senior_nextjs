@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
         width: '1366px',
@@ -88,10 +87,16 @@ export default function BaseSearchMyPostModal(prop) {
                                         prop.myPostData != null
                                             ?
                                             <div className="block h-full mx-4">
+                                                {prop.searchType
+                                                    ?
+                                                    <p className="font-bold text-lg -mt-2">Search From My{prop.searchType != 'all' ? prop.searchType == 'lost' ? ' Found' : ' Lost' : ''} Post</p>
+                                                    :
+                                                    null
+                                                }
                                                 <Carousel animation="slide" autoPlay={false} navButtonsAlwaysVisible={prop.myPostData.searchResult.length > 1 ? true : false} className="h-full">
                                                     {prop.myPostData.searchResult.map((item, i) => {
                                                         return (
-                                                            <div className={"grid 2xl:grid-cols-3 px-4 justify-items-center mt-6 " + postDataClasses.itemStyle} key={'dashboard-page-' + (i + 1)}>
+                                                            <div className={"grid 2xl:grid-cols-3 px-4 justify-items-center mt-4 " + postDataClasses.itemStyle} key={'dashboard-page-' + (i + 1)}>
                                                                 {item.map((pageItem, pageItemIndex) => {
                                                                     return (
                                                                         <div className={`cursor-pointer `} onClick={() => { prop.setMyPostSelected({ page: i, post: pageItemIndex }); prop.closeSearchByMyPostModal() }} key={'dashboard-item-' + (i + 1) + '-' + (pageItemIndex + 1)}>
@@ -114,7 +119,7 @@ export default function BaseSearchMyPostModal(prop) {
                                                                                 <p className="text-lg font-medium"><span className="text-lg font-medium">Date: </span>{convertDateFormat(pageItem.date)}</p>
                                                                                 <p className="text-lg font-medium"><span className="text-lg font-medium">Sex: </span>{pageItem.sex != "unknow" ? pageItem.sex == "true" ? "Male" : "Female" : 'Unknow'}</p>
                                                                                 <p className="text-lg font-medium"><span className="text-lg font-medium">Collar: </span>{pageItem.collar ? 'Have' : 'Not Have'}</p>
-                                                                                <p className="text-lg font-medium"><span className="text-lg font-medium">Description: </span>{pageItem.description.length > 15 ? pageItem.description.substring(0, 15) + '...' : pageItem.description}</p>
+                                                                                <p className="text-lg font-medium"><span className="text-lg font-medium">Description: </span>{pageItem.description ? pageItem.description.length > 15 ? pageItem.description.substring(0, 15) + '...' : pageItem.description : '-'}</p>
                                                                             </div>
                                                                         </div>
                                                                     )

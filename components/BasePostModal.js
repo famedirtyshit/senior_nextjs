@@ -364,7 +364,7 @@ export default function BasePostModal(prop) {
     }
 
     return (
-        <div className={"2xl:absolute bg-white shadow-lg rounded-lg border border-gray-300 border-solid " + BasePostModalStyles.modal}>
+        <div style={{filter: 'drop-shadow(0px 4px 4px rgba(0,0,0,0.3))'}} className={"2xl:absolute bg-white rounded-lg border border-gray-300 border-solid " + BasePostModalStyles.modal}>
             <div className="2xl:grid 2xl:grid-cols-3">
                 <div className="2xl:mt-8 2xl:mb-6 2xl:ml-12">
                     <p className={"text-2xl font-medium " + cn({ 'text-red-500': validateMsg.type === "location", 'text-postTitle': validateMsg.type !== "location" })}>Google Map *</p>
@@ -375,7 +375,7 @@ export default function BasePostModal(prop) {
                             :
                             <div id="map-preview-default" onClick={openMapModal} className="2xl:mt-3 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '100%', height: '400px' }}>
                                 <Image src={IMAGES.map} alt='default-map' layout="fill" className="2xl:absolute cursor-pointer 2xl:top-1/3 2xl:left-16 " />
-                                <p className={"2xl:absolute text-white 2xl:px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + UtilStyles.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
+                                <p className={"2xl:absolute text-white 2xl:px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-80 " + UtilStyles.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
                             </div>
                     }
                     <BaseModalMap handleClose={closeMapModal} modalMap={modalMap} searchPlace={searchPlace} map={mapObj} location={location} confirmStatusLocation={confirmStatusLocation} cancelLocation={cancelLocation} type={'post'} />
@@ -464,7 +464,7 @@ export default function BasePostModal(prop) {
             <div className="2xl:flex flex-wrap 2xl:justify-end">
                 <p className={'2xl:my-auto 2xl:mr-16 text-red-500'}>{validateMsg.msg != "" ? validateMsg.msg : ''}</p>
                 <BaseButton onClickFunction={closePostModal} value={'Cancel'} customClass={'2xl:my-6 2xl:mr-8'}></BaseButton>
-                <BaseButton onClickFunction={submitPost} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Submit'} customClass={'2xl:my-6 2xl:mr-28'}></BaseButton>
+                <BaseButton onClickFunction={submitPost} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Submit'} customClass={'2xl:my-6 2xl:mr-28 bg-opacity-80'}></BaseButton>
             </div>
             <BasePostResModal closePostResModal={closePostResModal} postResStatus={postResStatus} postRes={postRes} />
         </div>

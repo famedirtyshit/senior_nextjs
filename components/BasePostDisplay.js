@@ -8,6 +8,7 @@ import IMAGES from '@constants/IMAGES';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import utilStyles from '@styles/Util.module.css';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -17,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
         borderRadius: '49px',
         boxShadow: theme.shadows[5],
         width: '1600px',
@@ -177,7 +177,7 @@ export default function BasePostDisplay(prop) {
                                     </div>
                                     <div className="2xl:col-span-3 2xl:grid 2xl:grid-cols-1">
                                         <div className="bg-gray-100 rounded-2xl py-8 px-10">
-                                            <p className='text-base mb-2'><span className="text-base font-bold">Date: </span>{checkProp ? convertDateFormat(prop.post.data.searchResult[prop.target].date) : null}</p>
+                                            <p className='text-base mb-2'><span className="text-base font-bold">Date: </span>{checkProp ? convertDateFormat(prop.post.data.searchResult[prop.target].date) + ' ' + moment(prop.post.data.searchResult[prop.target].createdAt).format("h:mm a") : null}</p>
                                             <p className="text-base mb-2"><span className="text-base font-bold">Sex: </span>{checkProp ? prop.post.data.searchResult[prop.target].sex == true ? 'Male' : 'Female' : null}</p>
                                             <p className="text-base mb-2"><span className="text-base font-bold">Collar: </span>{checkProp ? prop.post.data.searchResult[prop.target].collar == true ? 'Have' : 'Not Have' : null}</p>
                                             <p className="text-base font-bold mb-2">Description: </p>

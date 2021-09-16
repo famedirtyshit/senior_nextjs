@@ -31,6 +31,7 @@ import TextField from '@material-ui/core/TextField';
 import BasePostEdit from "@components/BasePostEdit";
 
 
+
 const useStyles = makeStyles((theme) => ({
   nested: {
     paddingLeft: theme.spacing(4),
@@ -145,6 +146,7 @@ export default function Account() {
           }
         } else {
           setUserAccount(null);
+          window.location.href = '/authen';
         }
       });
     } else {
@@ -334,7 +336,7 @@ export default function Account() {
             </Link>
           </div>
           <div className="2xl:flex 2xl:flex-wrap 2xl:justify-center">
-            <p className="2xl:text-4xl 2xl:font-bold 2xl:mt-11 ">My Account</p>
+            <p className="2xl:text-4xl font-black 2xl:mt-11 ">My Account</p>
           </div>
 
           <section className="contact-detail-part1 2xl:flex 2xl:flex-wrap 2xl:justify-center ">
@@ -528,7 +530,7 @@ export default function Account() {
                         {pageFoundPost <= 1 ? (
                           <ArrowBackIosIcon
                             style={{
-                              color: "#828282",
+                              color: "#ffff",
                               width: "60px",
                               height: "60px",
                             }}
@@ -605,7 +607,7 @@ export default function Account() {
                       {pageFoundPost >= maxPageFoundPost ? (
                         <ArrowForwardIosIcon
                           style={{
-                            color: "#828282",
+                            color: "#fff",
                             width: "60px",
                             height: "60px",
                           }}
@@ -642,7 +644,7 @@ export default function Account() {
                         {pageLostPost <= 1 ? (
                           <ArrowBackIosIcon
                             style={{
-                              color: "#828282",
+                              color: "#fff",
                               width: "60px",
                               height: "60px",
                             }}
@@ -717,7 +719,7 @@ export default function Account() {
                       {pageLostPost >= maxPageLostPost ? (
                         <ArrowForwardIosIcon
                           style={{
-                            color: "#828282",
+                            color: "#fff",
                             width: "60px",
                             height: "60px",
                           }}
