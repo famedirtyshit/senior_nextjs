@@ -102,7 +102,7 @@ export default function BaseModalChangePassword(props) {
         setAlert(true);
         setErrorMessage("your current password is not correct !!");
         console.log(e);
-        console.log("-----------");
+        
       });
   }
 
