@@ -456,7 +456,7 @@ export default function Dashboard() {
     }
 
     return (
-        <div className={"2xl:container mx-auto " + bgClasses.style}>
+        <div style={{fontFamily: 'Prompt'}} className={"2xl:container mx-auto " + bgClasses.style}>
             <Head>
                 <title>CatUs</title>
                 <meta name="description" content="CatUs Service" />

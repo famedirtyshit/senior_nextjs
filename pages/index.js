@@ -79,8 +79,17 @@ export default function Home() {
     });
   }
 
+  useEffect(() => {
+    let dateRangeEle = document.getElementsByClassName("daterangepicker");
+    if (dateRangeEle.length > 0) {
+      for (let i = 0; i < dateRangeEle.length; i++) {
+        dateRangeEle[i].remove();
+      }
+    }
+  })
+
   return (
-    <div className={" mx-auto " + HomeStyle.bgImg}>
+    <div style={{ fontFamily: 'Prompt' }} className={" mx-auto " + HomeStyle.bgImg}>
       <Head>
         <title>CatUs</title>
         <meta name="description" content="CatUs Service" />

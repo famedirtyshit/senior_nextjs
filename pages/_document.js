@@ -11,8 +11,6 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <link rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Prompt&display=optional"></link>
         </Head>
         <body>
           <Main />

@@ -300,7 +300,7 @@ export default function Account() {
   }
 
   return (
-    <div className={" mx-auto " + AccountStyle.bgImg}>
+    <div style={{fontFamily: 'Prompt'}} className={" mx-auto " + AccountStyle.bgImg}>
       <Head>
         <title>CatUs</title>
         <meta name="description" content="CatUs Service" />

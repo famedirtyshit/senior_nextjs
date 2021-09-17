@@ -586,7 +586,7 @@ export default function Feed() {
       }
 
     return (
-        <div className={"2xl:container mx-auto " + FeedStyle.bgImg}>
+        <div style={{fontFamily: 'Prompt'}} className={"2xl:container mx-auto " + FeedStyle.bgImg}>
             <Head>
                 <title>CatUs</title>
                 <meta name="description" content="CatUs Service" />

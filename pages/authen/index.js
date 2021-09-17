@@ -183,7 +183,7 @@ export default function Authen() {
     }
 
     return (
-        <div className={"2xl:container mx-auto"}>
+        <div style={{fontFamily: 'Prompt'}} className={"2xl:container mx-auto"}>
             <Head>
                 <title>CatUs</title>
                 <meta name="description" content="CatUs Service" />
