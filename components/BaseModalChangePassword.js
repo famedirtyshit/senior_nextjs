@@ -83,7 +83,7 @@ export default function BaseModalChangePassword(props) {
     );
     reauthenticateWithCredential(auth.currentUser, credential)
       .then(() => {
-        console.log("reauthen");
+        console.log("re-authen");
         updatePassword(auth.currentUser, newPassword)
           .then(() => {
             console.log("update success");
@@ -98,7 +98,7 @@ export default function BaseModalChangePassword(props) {
           });
       })
       .catch((e) => {
-        console.log("reauthen fail");
+        console.log("re-authen fail");
         setAlert(true);
         setErrorMessage("your current password is not correct !!");
         console.log(e);

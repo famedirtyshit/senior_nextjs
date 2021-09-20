@@ -29,7 +29,7 @@ import utilStyles from "@styles/Util.module.css";
 import { Skeleton } from "@material-ui/lab";
 import TextField from "@material-ui/core/TextField";
 import BaseModalChangePassword from "@components/BaseModalChangePassword";
-
+import BaseModalChangeEmail from "@components/BaseModalChangeEmail";
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   list: {
     border: "#e5e5e5 1px solid",
     boxShadow: "1px 2px #c4c4c4",
-  }
+  },
 }));
 
 const theme = createTheme({
@@ -117,7 +117,7 @@ export default function Account() {
   const [errorInputInstagram, setErrorInputInstagram] = useState(false);
   const [errorInputEmail, setErrorInputEmail] = useState(false);
   const [openModalChangePassword, setOpenModalChangePassword] = useState(false);
-  
+  const [openModalChangeEmail, setOpenModalChangeEmail] = useState(false);
 
   const CryptoJS = require("crypto-js");
 
@@ -283,14 +283,11 @@ export default function Account() {
 
     if (newFirstName == "" || newFirstName.length > 50) {
       setErrorInputFirstName(true);
-      console.log(errorInputFirstName);
       errorFirstName = true;
-      console.log("errorFirstName =" + errorFirstName);
     } else {
       setEditFirstname(newFirstName);
       setErrorInputFirstName(false);
       errorFirstName = false;
-      console.log(errorInputFirstName);
     }
     if (newLastName == "" || newLastName.length > 50) {
       setErrorInputLastName(true);
@@ -358,7 +355,7 @@ export default function Account() {
       console.log(res.data);
       console.log(userAccount);
 
-      if(res.data.result==true){
+      if (res.data.result == true) {
         let accountObject = userAccount;
         setUserAccount(res.data.updateResult);
       }
@@ -389,7 +386,6 @@ export default function Account() {
       console.log("all false");
     }
   };
-  
 
   const handleOpenModalChangePassword = () => {
     setOpenModalChangePassword(true);
@@ -399,10 +395,24 @@ export default function Account() {
     setOpenModalChangePassword(false);
   };
 
+  const handleOpenModalChangeEmail = () => {
+    setOpenModalChangeEmail(true);
+  };
+
+  const handleCloseModalChangeEmail = () => {
+    setOpenModalChangeEmail(false);
+  };
+
   return (
     <div className={" mx-auto " + AccountStyle.bgImg}>
-      <BaseModalChangePassword handleClose={handleCloseModalChangePassword} openModalChangePassword={openModalChangePassword} />
-
+      <BaseModalChangePassword
+        handleClose={handleCloseModalChangePassword}
+        openModalChangePassword={openModalChangePassword}
+      />
+      <BaseModalChangeEmail
+        handleClose={handleCloseModalChangeEmail}
+        openModalChangeEmail={openModalChangeEmail}
+      />
       <Head>
         <title>CatUs</title>
         <meta name="description" content="CatUs Service" />
@@ -420,7 +430,7 @@ export default function Account() {
           className="w-9/12 bg-mainYellow mx-auto  rounded-t-2xl shadow-lg 2xl:mt-20"
           style={{ height: "880px" }}
         >
-        {/* {editSection3Active==true ? <BaseModalChangePassword open={editSection3Active}/> : null} */}
+          {/* {editSection3Active==true ? <BaseModalChangePassword open={editSection3Active}/> : null} */}
           <div className="2xl:mt-11 2xl:absolute 2xl:ml-12">
             <Link href="/">
               <a>
@@ -694,27 +704,15 @@ export default function Account() {
                   <div className="2xl:relative">
                     <div className="2xl:absolute 2xl:top-16 2xl:inset-y-0 2xl:right-16 ">
                       <ThemeProvider theme={theme}>
-                        {editSection2Active ? (
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            size="large"
-                            style={{ width: "112px", height: "33px" }}
-                            onClick={() => pressEditSection2(true)}
-                          >
-                            OK
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            size="large"
-                            style={{ width: "112px", height: "33px" }}
-                            onClick={() => setEditSection2Active(true)}
-                          >
-                            Edit
-                          </Button>
-                        )}
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="large"
+                          style={{ width: "112px", height: "33px" }}
+                          onClick={() => handleOpenModalChangeEmail()}
+                        >
+                          Edit
+                        </Button>
                       </ThemeProvider>
                     </div>
                     <div className="2xl:absolute 2xl:top-32 2xl:inset-y-0 2xl:right-16 ">
