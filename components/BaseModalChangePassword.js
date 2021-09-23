@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
     width: "513px",
     height: "430px",
-  },  
+  },
   subModal: {
     display: "flex",
     alignItems: "center",
@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
     width: "513px",
     height: "430px",
   },
- 
 }));
 
 export default function BaseModalChangePassword(props) {
@@ -66,14 +65,14 @@ export default function BaseModalChangePassword(props) {
     useState(false);
   const [alert, setAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [openSubModal , setOpenSubModal]=useState(true);
+  const [openSubModal, setOpenSubModal] = useState(true);
 
   const handleOpenSubModal = () => {
     setOpenSubModal(true);
-  }
+  };
   const handleCloseSubmodal = () => {
     setOpenSubModal(false);
-  }
+  };
 
   function resetPassword(currentPassword, newPassword) {
     const auth = getAuth();
@@ -102,7 +101,6 @@ export default function BaseModalChangePassword(props) {
         setAlert(true);
         setErrorMessage("your current password is not correct !!");
         console.log(e);
-        
       });
   }
 
@@ -130,35 +128,38 @@ export default function BaseModalChangePassword(props) {
     if (currentPassword == "" || currentPassword.length < 6) {
       setErrorInputCurrentPassword(true);
       errorCurrentPassword = true;
-      // setAlert(true);
-      // setErrorMessage("password must be at least 6 characters");
+      setAlert(true);
+      setErrorMessage("password must be at least 6 characters");
+      return;
     } else {
       setErrorInputCurrentPassword(false);
       errorCurrentPassword = false;
-      // setAlert(false);
-      // setErrorMessage("");
+      setAlert(false);
+      setErrorMessage("");
     }
     if (newPassword == "" || newPassword.length < 6) {
       setErrorInputNewPassword(true);
       errorNewPassword = true;
-      // setAlert(true);
-      // setErrorMessage("new password must be at least 6 characters");
+      setAlert(true);
+      setErrorMessage("new password must be at least 6 characters");
+      return;
     } else {
       setErrorInputNewPassword(false);
       errorNewPassword = false;
-      // setAlert(false);
-      // setErrorMessage("");
+      setAlert(false);
+      setErrorMessage("");
     }
     if (confirmNewPassword == "" || confirmNewPassword.length < 6) {
       setErrorInputConfirmNewPassword(true);
       errorConfirmNewPassword = true;
-      // setAlert(true);
-      // setErrorMessage("new password must be at least 6 characters");
+      setAlert(true);
+      setErrorMessage("new password must be at least 6 characters");
+      return;
     } else {
       setErrorInputConfirmNewPassword(false);
       errorConfirmNewPassword = false;
-      // setAlert(false);
-      // setErrorMessage("");
+      setAlert(false);
+      setErrorMessage("");
     }
     if (
       newPassword == "" ||
@@ -169,15 +170,16 @@ export default function BaseModalChangePassword(props) {
       errorNewPassword = true;
       setErrorInputConfirmNewPassword(true);
       errorConfirmNewPassword = true;
-      // setAlert(true);
-      // setErrorMessage("new password and confirm password must be the same");
+      setAlert(true);
+      setErrorMessage("new password and confirm password must be the same");
+      return;
     } else {
       setErrorInputNewPassword(false);
       errorNewPassword = false;
       setErrorInputConfirmNewPassword(false);
       errorConfirmNewPassword = false;
-      // setAlert(false);
-      // setErrorMessage("");
+      setAlert(false);
+      setErrorMessage("");
     }
     if (
       errorCurrentPassword == true ||
@@ -302,7 +304,6 @@ export default function BaseModalChangePassword(props) {
           </div>
         </Fade>
 
-
         {/* <div>
         
           <Modal
@@ -327,8 +328,6 @@ export default function BaseModalChangePassword(props) {
             </Fade>
           </Modal>
         </div> */}
-
-
       </Modal>
     </div>
   );

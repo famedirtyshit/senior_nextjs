@@ -66,25 +66,35 @@ export default function BaseModalChangeEmail(props) {
 
   function resetEmail(newEmail, currentPassword) {
     const auth = getAuth();
-    let credential = EmailAuthProvider.credential(auth.currentUser.email, currentPassword);
-    reauthenticateWithCredential(auth.currentUser, credential).then(() => {
-        console.log('reauthen')
-        verifyBeforeUpdateEmail(auth.currentUser, newEmail, null).then((res) => {
-            console.log('send verify email.')
-            console.log(res)
+    let credential = EmailAuthProvider.credential(
+      auth.currentUser.email,
+      currentPassword
+    );
+    reauthenticateWithCredential(auth.currentUser, credential)
+      .then(() => {
+        console.log("reauthen");
+        verifyBeforeUpdateEmail(auth.currentUser, newEmail, null)
+          .then((res) => {
+            console.log("send verify email.");
+            console.log(res);
             clearAllState();
             props.handleClose();
-        }).catch(e => {
-            console.log('error')
-            console.log(e)
-        })
-    }).catch(e => {
+          })
+          .catch((e) => {
+            console.log("error");
+            setAlert(true);
+            setErrorMessage(e.message);
+            console.log(e.message);
+            console.log(e);
+          });
+      })
+      .catch((e) => {
         setAlert(true);
-        setErrorMessage("wrong password or email already");
-        console.log('reauthen fail')
-        console.log(e)
-        console.log('-----------')
-    })
+        setErrorMessage(e.message);
+        console.log("reauthen fail");
+        console.log(e);
+        console.log("-----------");
+      });
   }
 
   const clearAllState = () => {
@@ -122,109 +132,108 @@ export default function BaseModalChangeEmail(props) {
       if (errorCurrentPassword == true || errorNewEmail == true) {
         console.log("something error");
       } else {
-          resetEmail(newEmail, currentPassword);
-          console.log(currentPassword);
-          console.log(newEmail);
+        resetEmail(newEmail, currentPassword);
+        console.log(currentPassword);
+        console.log(newEmail);
       }
     }
-}
-
-    return (
-      <div>
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          className={classes.modal}
-          open={props.openModalChangeEmail}
-          onClose={props.handleClose}
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{
-            timeout: 500,
-          }}
-        >
-          <Fade in={props.openModalChangeEmail}>
-            <div className={classes.paper}>
-              {alert ? (
-                <Alert severity="error">{errorMessage}</Alert>
-              ) : (
-                <div className="2xl:h-12"></div>
-              )}
-
-              <div className="2xl:absolute" style={{ right: "710px" }}></div>
-              <p className="2xl:text-center 2xl:text-2xl 2xl:mt-2">
-                เปลี่ยน Email address ของคุณ
-              </p>
-              <div className="2xl:flex 2xl:flex-wrap 2xl:justify-center">
-                <div className="2xl:mt-6 ">
-                  <input
-                    className={
-                      errorInputNewEmail
-                        ? "shadow appearance-none border border-red-500 rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        : "shadow appearance-none border rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    }
-                    id="newEmail"
-                    type="text"
-                    placeholder="New E-mail่"
-                    style={{
-                      width: "419px",
-                      height: "55px",
-                      fontSize: "20px",
-                      padding: "20px",
-                    }}
-                  />
-                </div>
-                <div className="2xl:mt-4">
-                  <input
-                    className={
-                      errorInputCurrentPassword
-                        ? "shadow appearance-none border border-red-500 rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        : "shadow appearance-none border rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    }
-                    id="currentPassword"
-                    type="text"
-                    placeholder="รหัสผ่าน"
-                    style={{
-                      width: "419px",
-                      height: "55px",
-                      fontSize: "20px",
-                      padding: "20px",
-                    }}
-                  />
-                </div>
-
-                <div className="2xl:absolute 2xl:ml-28 2xl:mt-48">
-                  <Button
-                    // variant="contained"
-                    color="error"
-                    size="large"
-                    style={{ width: "112px", height: "33px" }}
-                    onClick={() => pressCancel()}
-                  >
-                    CENCEL
-                  </Button>
-                </div>
-                <div
-                  className="2xl:absolute 2xl:ml-80 2xl:mt-48"
-                  // style={{ marginLeft: "220px" }}
-                >
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    style={{ width: "112px", height: "33px" }}
-                    onClick={() => {
-                      pressSave();
-                    }}
-                  >
-                    SAVE
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </Fade>
-        </Modal>
-      </div>
-    );
   };
 
+  return (
+    <div>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={props.openModalChangeEmail}
+        onClose={props.handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={props.openModalChangeEmail}>
+          <div className={classes.paper}>
+            {alert ? (
+              <Alert severity="error">{errorMessage}</Alert>
+            ) : (
+              <div className="2xl:h-12"></div>
+            )}
+
+            <div className="2xl:absolute" style={{ right: "710px" }}></div>
+            <p className="2xl:text-center 2xl:text-2xl 2xl:mt-2">
+              เปลี่ยน Email address ของคุณ
+            </p>
+            <div className="2xl:flex 2xl:flex-wrap 2xl:justify-center">
+              <div className="2xl:mt-6 ">
+                <input
+                  className={
+                    errorInputNewEmail
+                      ? "shadow appearance-none border border-red-500 rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      : "shadow appearance-none border rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  }
+                  id="newEmail"
+                  type="text"
+                  placeholder="New E-mail่"
+                  style={{
+                    width: "419px",
+                    height: "55px",
+                    fontSize: "20px",
+                    padding: "20px",
+                  }}
+                />
+              </div>
+              <div className="2xl:mt-4">
+                <input
+                  className={
+                    errorInputCurrentPassword
+                      ? "shadow appearance-none border border-red-500 rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      : "shadow appearance-none border rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  }
+                  id="currentPassword"
+                  type="text"
+                  placeholder="รหัสผ่าน"
+                  style={{
+                    width: "419px",
+                    height: "55px",
+                    fontSize: "20px",
+                    padding: "20px",
+                  }}
+                />
+              </div>
+
+              <div className="2xl:absolute 2xl:ml-28 2xl:mt-48">
+                <Button
+                  // variant="contained"
+                  color="error"
+                  size="large"
+                  style={{ width: "112px", height: "33px" }}
+                  onClick={() => pressCancel()}
+                >
+                  CENCEL
+                </Button>
+              </div>
+              <div
+                className="2xl:absolute 2xl:ml-80 2xl:mt-48"
+                // style={{ marginLeft: "220px" }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  style={{ width: "112px", height: "33px" }}
+                  onClick={() => {
+                    pressSave();
+                  }}
+                >
+                  SAVE
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Fade>
+      </Modal>
+    </div>
+  );
+}
