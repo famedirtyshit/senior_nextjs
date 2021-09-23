@@ -175,7 +175,7 @@ export default function BaseModalChangeEmail(props) {
                   }
                   id="newEmail"
                   type="text"
-                  placeholder="New E-mail่"
+                  placeholder="อีเมลใหม่"
                   style={{
                     width: "419px",
                     height: "55px",
@@ -192,7 +192,7 @@ export default function BaseModalChangeEmail(props) {
                       : "shadow appearance-none border rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   }
                   id="currentPassword"
-                  type="text"
+                  type="password"
                   placeholder="รหัสผ่าน"
                   style={{
                     width: "419px",

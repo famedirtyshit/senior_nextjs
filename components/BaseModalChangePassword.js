@@ -227,7 +227,7 @@ export default function BaseModalChangePassword(props) {
                       : "shadow appearance-none border rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   }
                   id="currentPassword"
-                  type="text"
+                  type="password"
                   placeholder="รหัสผ่านปัจจุบัน"
                   style={{
                     width: "419px",
@@ -245,7 +245,7 @@ export default function BaseModalChangePassword(props) {
                       : "shadow appearance-none border rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   }
                   id="newPassword"
-                  type="text"
+                  type="password"
                   placeholder="รหัสผ่านใหม่"
                   style={{
                     width: "419px",
@@ -263,7 +263,7 @@ export default function BaseModalChangePassword(props) {
                       : "shadow appearance-none border rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   }
                   id="confirmNewPassword"
-                  type="text"
+                  type="password"
                   placeholder="ยืนยันรหัสผ่านใหม่"
                   style={{
                     width: "419px",
