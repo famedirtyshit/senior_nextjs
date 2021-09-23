@@ -75,7 +75,7 @@ export default function BaseSignIn(prop) {
                 </div>
                 <div className="2xl:col-span-4 bg-mainOrange rounded-tr-3xl rounded-br-3xl">
                     <h1 className="text-white text-4xl font-bold text-center mt-40">Welcome to Catus</h1>
-                    <p className="text-white mt-12 font-normal text-lg px-20">Lorem Ipsum is simply dummy text of the printing and typesetting to make a try</p>
+                    <p className="text-white mt-12 font-normal text-center text-lg px-20">Enter your personal details and start journey with us</p>
                     <div className="grid grid-cols-1 justify-items-center mt-12">
                         <Button onClick={prop.goSignUp} variant="contained" color="primary" className={buttonClasses.otherStyle}>
                             <span className="text-xl font-semibold">

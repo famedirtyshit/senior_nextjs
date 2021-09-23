@@ -2,6 +2,7 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles, createTheme, ThemeProvider } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { useState, useEffect } from 'react';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const buttonStyles = makeStyles((theme) => ({
     style: {
@@ -116,8 +117,8 @@ export default function BaseSignIn(prop) {
         <div className="bg-white rounded-3xl rounded-3xl 2xl:grid 2xl:grid-cols-10">
             <ThemeProvider theme={theme}>
                 <div className="2xl:col-span-4 bg-mainOrange rounded-tl-3xl rounded-bl-3xl">
-                    <h1 className="text-white text-4xl font-bold text-center mt-40">Welcome to Catus</h1>
-                    <p className="text-white mt-12 font-normal text-lg px-20">Lorem Ipsum is simply dummy text of the printing and typesetting to make a try</p>
+                    <h1 className="text-white text-4xl font-bold text-center mt-40">Welcome Back!</h1>
+                    <p className="text-white mt-12 font-normal text-center text-lg px-20">To keep connected with us please sign in with your personal info</p>
                     <div className="grid grid-cols-1 justify-items-center mt-12">
                         <Button onClick={prop.goSignIn} variant="contained" color="primary" className={buttonClasses.otherStyle}>
                             <span className="text-xl font-semibold">
@@ -131,7 +132,9 @@ export default function BaseSignIn(prop) {
                         <h1 className="text-mainOrange text-4xl font-bold text-center pb-10">Sign up to Catus</h1>
                         <div className="grid grid-cols-1 gap-7 justify-items-center">
                             <TextField required defaultValue={email} error={prop.validType == 'email' ? true : false} id="signup-email" label="Email" variant="outlined" className="w-full" />
+                        <Tooltip title="At least 6 characters" arrow>
                             <TextField required defaultValue={password} error={prop.validType == 'password' ? true : false} id="signup-password" label="Password" variant="outlined" type="password" className="w-full" />
+                        </Tooltip>
                             <TextField required defaultValue={password} error={prop.validType == 'confirmPassword' ? true : false} id="signup-confirm-password" label="Confirm Password" variant="outlined" type="password" className="w-full" />
                         </div>
                         <div className="grid grid-cols-1 justify-items-center mt-14">
