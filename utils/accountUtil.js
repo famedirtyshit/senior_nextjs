@@ -10,15 +10,7 @@ const encryptPassword = (password) => {
 };
 
 const allAccountUtil = {
-  signup: async (
-    email,
-    password,
-    firstname,
-    lastname,
-    phone,
-    facebook,
-    instagram
-  ) => {
+  signup: async (email, password, firstname, lastname, phone, facebook, instagram) => {
     try {
       let facebookValue = !facebook ? null : facebook;
       let instagramValue = !instagram ? null : instagram;
@@ -30,10 +22,41 @@ const allAccountUtil = {
         lastname: lastname,
         phone: phone,
         facebook: facebookValue,
-        instagram: instagramValue,
-      });
+        instagram: instagramValue
+      })
       return res;
     } catch (e) {
+      return e.response;
+    }
+  },
+  getUser: async (id) => {
+    try {
+      let res = await axios.get(process.env.API_KEY + `/account/getUser/${id}`);
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  }, getMyPost: async (id) => {
+    try {
+      let res = await axios.get(process.env.API_KEY + `/account/getMyPost/${id}`);
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  }, editContact: async (id, cipherCredential, firstname, lastname, phone, facebook, instagram) => {
+    try {
+      let res = await axios.put(process.env.API_KEY + "/account/edit", {
+        id: id,
+        cipherCredential: cipherCredential,
+        firstname: firstname,
+        lastname: lastname,
+        phone: phone,
+        facebook: facebook,
+        instagram: instagram
+      });
+      return res;
+    }
+    catch (e) {
       return e.response;
     }
   },

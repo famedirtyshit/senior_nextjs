@@ -27,10 +27,10 @@ import accountUtil from "@utils/accountUtil";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import utilStyles from "@styles/Util.module.css";
 import { Skeleton } from "@material-ui/lab";
-import TextField from '@material-ui/core/TextField';
 import BasePostEdit from "@components/BasePostEdit";
-
-
+import TextField from "@material-ui/core/TextField";
+import BaseModalChangePassword from "@components/BaseModalChangePassword";
+import BaseModalChangeEmail from "@components/BaseModalChangeEmail";
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -41,9 +41,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   rootInput: {
-    '& .MuiTextField-root': {
+    "& .MuiTextField-root": {
       margin: theme.spacing(1),
-      width: '25ch',
+      width: "25ch",
     },
   },
   carousel: {
@@ -76,6 +76,12 @@ const theme = createTheme({
       dark: "#E17F11",
       contrastText: "#fff",
     },
+    error: {
+      light: "#e57373",
+      main: "#f44336",
+      dark: "#d32f2f",
+      contrastText: "#fff",
+    },
   },
 });
 
@@ -97,10 +103,29 @@ export default function Account() {
   const [userAccount, setUserAccount] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editActive, setEditActive] = useState(false);
-  const [editValue, setEditValue] = useState("");
+  // const [editValue, setEditValue] = useState("");
   const [editPostStatus, setEditPostStatus] = useState(false);
   const [editPostType, setEditPostType] = useState(null);
   const [editPostTarget, setEditPostTarget] = useState(0);
+  const [editSection1Active, setEditSection1Active] = useState(false);
+  const [editSection2Active, setEditSection2Active] = useState(false);
+  const [editSection3Active, setEditSection3Active] = useState(false);
+  const [editFirstname, setEditFirstname] = useState(null);
+  const [editLastname, setEditLastname] = useState(null);
+  const [editNumber, setEditNumber] = useState(null);
+  const [editFacebook, setEditFacebook] = useState(null);
+  const [editInstagram, setEditInstagram] = useState(null);
+  const [editEmail, setEditEmail] = useState(null);
+  const [errorInputFirstName, setErrorInputFirstName] = useState(false);
+  const [errorInputLastName, setErrorInputLastName] = useState(false);
+  const [errorInputNumber, setErrorInputNumber] = useState(false);
+  const [errorInputFacebook, setErrorInputFacebook] = useState(false);
+  const [errorInputInstagram, setErrorInputInstagram] = useState(false);
+  const [errorInputEmail, setErrorInputEmail] = useState(false);
+  const [openModalChangePassword, setOpenModalChangePassword] = useState(false);
+  const [openModalChangeEmail, setOpenModalChangeEmail] = useState(false);
+
+  const CryptoJS = require("crypto-js");
 
   useEffect(() => {
     let res = initFirebase();
@@ -119,8 +144,6 @@ export default function Account() {
           if (account.data.result === true) {
             setUserAccount(account.data.searchResult[0]);
             setLoading(false);
-            // console.log(userAccount.firstname)
-            // console.log(account.data.searchResult[0].firstname)
           } else {
             setUserAccount(null);
             alert("user not found");
@@ -146,7 +169,7 @@ export default function Account() {
           }
         } else {
           setUserAccount(null);
-          window.location.href = '/authen';
+          window.location.href = "/authen";
         }
       });
     } else {
@@ -279,8 +302,142 @@ export default function Account() {
     }
   };
 
-  const handleChangeEdit = (event) => {
-    setEditValue(event.target.value);
+  // const handleChangeEdit = (event) => {
+  //   setEditValue(event.target.value);
+  // }
+
+  const pressEditSection1 = async () => {
+    let newFirstName = document.getElementById("newFirstNameID").value;
+    let newLastName = document.getElementById("newLastNameID").value;
+    let newNumber = document.getElementById("newNumberID").value;
+    let newFacbook = document.getElementById("newFacebookID").value;
+    let newInstagram = document.getElementById("newInstagramID").value;
+    let errorFirstName = false;
+    let errorLastName = false;
+    let errorNumber = false;
+    let errorFacebook = false;
+    let errorInstagram = false;
+
+    if (newFirstName == "" || newFirstName.length > 50) {
+      setErrorInputFirstName(true);
+      errorFirstName = true;
+    } else {
+      setEditFirstname(newFirstName);
+      setErrorInputFirstName(false);
+      errorFirstName = false;
+    }
+    if (newLastName == "" || newLastName.length > 50) {
+      setErrorInputLastName(true);
+      errorLastName = true;
+    } else {
+      setEditLastname(newLastName);
+      setErrorInputLastName(false);
+      errorLastName = false;
+      console.log(errorInputLastName);
+    }
+    if (newNumber == "" || newNumber.length != 10) {
+      setErrorInputNumber(true);
+      errorNumber = true;
+    } else {
+      setEditNumber(newNumber);
+      setErrorInputNumber(false);
+      errorNumber = false;
+      console.log(errorInputNumber);
+    }
+
+    if (newFacbook.length > 100) {
+      setErrorInputFacebook(true);
+      errorFacebook = true;
+    } else {
+      setEditFacebook(newFacbook);
+      setErrorInputFacebook(false);
+      errorFacebook = false;
+      console.log(errorInputFacebook);
+    }
+
+    if (newInstagram.length > 30) {
+      setErrorInputInstagram(true);
+      errorInstagram = true;
+    } else {
+      setEditInstagram(newInstagram);
+      setErrorInputInstagram(false);
+      errorInstagram = false;
+      console.log(errorInputInstagram);
+    }
+
+    if (
+      errorFirstName == true ||
+      errorLastName == true ||
+      errorNumber == true ||
+      errorFacebook == true ||
+      errorInstagram == true
+    ) {
+      console.log("something true");
+    } else {
+      setEditSection1Active(false);
+      let cipherCredential = CryptoJS.AES.encrypt(
+        userAccount._id,
+        process.env.PASS_HASH
+      ).toString();
+
+      let res = await accountUtil.editContact(
+        userAccount._id,
+        cipherCredential,
+        newFirstName,
+        newLastName,
+        newNumber,
+        newFacbook,
+        newInstagram
+      );
+      console.log(res.data);
+      console.log(userAccount);
+
+      if (res.data.result == true) {
+        let accountObject = userAccount;
+        setUserAccount(res.data.updateResult);
+      }
+    }
+
+    console.log("all false");
+  };
+
+  const pressEditSection2 = () => {
+    let newEmail = document.getElementById("newEmailID").value;
+    let errorEmail = false;
+
+    if (newEmail == "" || newEmail.length > 50) {
+      setErrorInputEmail(true);
+      console.log(errorInputFirstName);
+      errorEmail = true;
+    } else {
+      setEditEmail(newEmail);
+      setErrorInputEmail(false);
+      errorEmail = false;
+      console.log(errorInputEmail);
+    }
+
+    if (errorEmail == true) {
+      console.log("something true");
+    } else {
+      setEditSection2Active(false);
+      console.log("all false");
+    }
+  };
+
+  const handleOpenModalChangePassword = () => {
+    setOpenModalChangePassword(true);
+  };
+
+  const handleCloseModalChangePassword = () => {
+    setOpenModalChangePassword(false);
+  };
+
+  const handleOpenModalChangeEmail = () => {
+    setOpenModalChangeEmail(true);
+  };
+
+  const handleCloseModalChangeEmail = () => {
+    setOpenModalChangeEmail(false);
   };
 
   const setEditDataInState = (data) => {
@@ -300,7 +457,15 @@ export default function Account() {
   }
 
   return (
-    <div style={{fontFamily: 'Prompt'}} className={" mx-auto " + AccountStyle.bgImg}>
+    <div style={{ fontFamily: 'Prompt' }} className={" mx-auto " + AccountStyle.bgImg}>
+      <BaseModalChangePassword
+        handleClose={handleCloseModalChangePassword}
+        openModalChangePassword={openModalChangePassword}
+      />
+      <BaseModalChangeEmail
+        handleClose={handleCloseModalChangeEmail}
+        openModalChangeEmail={openModalChangeEmail}
+      />
       <Head>
         <title>CatUs</title>
         <meta name="description" content="CatUs Service" />
@@ -313,18 +478,12 @@ export default function Account() {
           </a>
         </Link>
       </header>
-      {/* {loading == true ? (
-          <div className="relative">
-            <div className={"absolute " + utilStyles.centerAbsolute}>
-              <CircularProgress />
-            </div>
-          </div>    
-        ) : ( */}
       <main>
         <section
           className="w-9/12 bg-mainYellow mx-auto  rounded-t-2xl shadow-lg 2xl:mt-20"
-          style={{ height: "840px" }}
+          style={{ height: "880px" }}
         >
+          {/* {editSection3Active==true ? <BaseModalChangePassword open={editSection3Active}/> : null} */}
           <div className="2xl:mt-11 2xl:absolute 2xl:ml-12">
             <Link href="/feed">
               <a>
@@ -346,12 +505,23 @@ export default function Account() {
                   <Skeleton variant="circle" width={119} height={119} />
                 ) : (
                   <div>
-                    <Image
-                      src={IMAGES.user}
-                      alt="default-user"
-                      width="119"
-                      height="119"
-                    />
+                    {editSection1Active ? (
+                      <div style={{ marginLeft: "3.6rem" }}>
+                        <Image
+                          src={IMAGES.user}
+                          alt="default-user"
+                          width="119"
+                          height="119"
+                        />
+                      </div>
+                    ) : (
+                      <Image
+                        src={IMAGES.user}
+                        alt="default-user"
+                        width="119"
+                        height="119"
+                      />
+                    )}
                   </div>
                 )}
 
@@ -361,12 +531,51 @@ export default function Account() {
                       <Skeleton variant="text" width={350} height={35} />
                     ) : (
                       <p className="2xl:text-3xl 2xl:font-bold">
-                        {userAccount.firstname != null
-                          ? userAccount.firstname
-                          : "-"}{" "}
-                        {userAccount.lastname != null
-                          ? userAccount.lastname
-                          : "-"}
+                        {editSection1Active ? (
+                          // <TextField
+                          //   error={errorInputFirstName}
+                          //   label="New firstname"
+                          //   id="newFirstNameID"
+                          //   size="small"
+                          //   required
+                          //   defaultValue={userAccount.firstname}
+                          // />
+
+                          <input
+                            className={
+                              errorInputFirstName
+                                ? "shadow appearance-none border border-red-500 rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                : "shadow appearance-none border rounded w-56  py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            }
+                            id="newFirstNameID"
+                            type="text"
+                            defaultValue={userAccount.firstname}
+                          />
+                        ) : (
+                          userAccount.firstname
+                        )}{" "}
+                        {editSection1Active ? (
+                          // <TextField
+                          //   error={errorInputLastName}
+                          //   label="New lastname"
+                          //   id="newLastNameID"
+                          //   size="small"
+                          //   required
+                          //   defaultValue={userAccount.lastname}
+                          // />
+                          <input
+                            className={
+                              errorInputLastName
+                                ? "shadow appearance-none border border-red-500 rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                : "shadow appearance-none border rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            }
+                            id="newLastNameID"
+                            type="text"
+                            defaultValue={userAccount.lastname}
+                          />
+                        ) : (
+                          userAccount.lastname
+                        )}
                       </p>
                     )}
                   </div>
@@ -376,17 +585,21 @@ export default function Account() {
                     <Skeleton animation="rect" height={30} width={112} />
                   ) : (
                     <ThemeProvider theme={theme}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                        style={{ width: "112px", height: "33px" }}
-                        onClick={() => {
-                          setEditActive(true);
-                        }}
-                      >
-                        Edit
-                      </Button>
+                      {editSection1Active == true ? (
+                        <div style={{ width: "112px", height: "33px" }}></div>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="large"
+                          style={{ width: "112px", height: "33px" }}
+                          onClick={() => {
+                            setEditSection1Active(true);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                      )}
                     </ThemeProvider>
                   )}
                 </div>
@@ -406,10 +619,11 @@ export default function Account() {
                     <p className="" style={{ color: "#6E6E6E" }}>
                       แก้ไขข้อมูลผู้ติดต่อ
                     </p>
+
                     <p className="2xl:mt-2 " style={{ color: "#6E6E6E" }}>
                       Number
                     </p>
-                    {editActive == true ? (
+                    {/* {editActive == true ? (
 
                       <input
                         type="number"
@@ -417,25 +631,122 @@ export default function Account() {
                         value={editValue}
                         onChange={handleChangeEdit}
                       />
-
+                    )
+                      : null} */}
+                    {editSection1Active == true ? (
+                      <div className="2xl:mt-1 2xl:ml-3">
+                        {/* <TextField
+                          error={errorInputNumber}
+                          id="newNumberID"
+                          label="New Number"
+                          type="number"
+                          size="small"
+                          defaultValue={userAccount.phone}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                        /> */}
+                        <input
+                          className={
+                            errorInputNumber
+                              ? "shadow appearance-none border border-red-500 rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                              : "shadow appearance-none border rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          }
+                          id="newNumberID"
+                          type="text"
+                          defaultValue={userAccount.phone}
+                        />
+                      </div>
                     ) : (
-                      <input
-                        type="number"
-                        className="2xl:mt-2 2xl:ml-4 2xl:font-bold"
-                        value={userAccount.phone}
-                        disabled
-                      />
+                      userAccount.phone
                     )}
-
                     <p className="2xl:mt-2" style={{ color: "#6E6E6E" }}>
                       Contact
                     </p>
-                    <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
-                      Facebook: {userAccount.facebook}
-                    </p>
-                    <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
-                      Instagram: {userAccount.instagram}
-                    </p>
+
+                    {editSection1Active ? (
+                      <div className="2xl:grid 2xl:grid-cols-2">
+                        <div className="ml-3">
+                          {/* <TextField
+                            error={errorInputFacebook}
+                            label="New Facebook"
+                            id="newFacebookID"
+                            size="small"
+                            defaultValue={userAccount.facebook}
+                          /> */}
+                          <input
+                            className={
+                              errorInputFacebook
+                                ? "shadow appearance-none border border-red-500 rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                : "shadow appearance-none border rounded w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            }
+                            id="newFacebookID"
+                            type="text"
+                            defaultValue={userAccount.facebook}
+                          />
+
+                          {/* <TextField
+                            error={errorInputInstagram}
+                            label="New Instagram"
+                            id="newInstagramID"
+                            size="small"
+                            defaultValue={userAccount.instagram}
+                          /> */}
+                          <input
+                            className={
+                              errorInputInstagram
+                                ? "shadow appearance-none border border-red-500 rounded mt-2 w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                : "shadow appearance-none border rounded mt-2 w-56 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            }
+                            id="newInstagramID"
+                            type="text"
+                            defaultValue={userAccount.instagram}
+                          />
+                        </div>
+                        <ThemeProvider theme={theme}>
+                          <div>
+                            <div className="2xl:absolute 2xl:ml-24 2xl:mt-10">
+                              <Button
+                                variant="contained"
+                                color="error"
+                                size="large"
+                                style={{ width: "112px", height: "33px" }}
+                                onClick={() => {
+                                  setEditSection1Active(false);
+                                }}
+                              >
+                                cencel
+                              </Button>
+                            </div>
+                            <div
+                              className="2xl:absolute 2xl:ml-56 2xl:mt-10"
+                            // style={{ marginLeft: "220px" }}
+                            >
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                style={{ width: "112px", height: "33px" }}
+                                onClick={() => {
+                                  pressEditSection1();
+                                }}
+                              >
+                                OK
+                              </Button>
+                            </div>
+                          </div>
+                        </ThemeProvider>
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
+                          Facebook: {userAccount.facebook}
+                        </p>
+                        <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
+                          Instagram: {userAccount.instagram}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </section>
@@ -461,6 +772,7 @@ export default function Account() {
                           color="primary"
                           size="large"
                           style={{ width: "112px", height: "33px" }}
+                          onClick={() => handleOpenModalChangeEmail()}
                         >
                           Edit
                         </Button>
@@ -473,6 +785,7 @@ export default function Account() {
                           color="primary"
                           size="large"
                           style={{ width: "112px", height: "33px" }}
+                          onClick={handleOpenModalChangePassword}
                         >
                           Edit
                         </Button>
@@ -484,9 +797,24 @@ export default function Account() {
                     <p className="2xl:mt-2 " style={{ color: "#6E6E6E" }}>
                       E-mail
                     </p>
-                    <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
-                      {userEmail}
-                    </p>
+                    {editSection2Active ? (
+                      <div className="2xl:mt-2 2xl:ml-4">
+                        <input
+                          className={
+                            errorInputEmail
+                              ? "shadow appearance-none border border-red-500 rounded w-80 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                              : "shadow appearance-none border rounded w-80 py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          }
+                          id="newEmailID"
+                          type="text"
+                          defaultValue={userEmail}
+                        />
+                      </div>
+                    ) : (
+                      <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
+                        {userEmail}
+                      </p>
+                    )}
 
                     <p className="2xl:mt-2" style={{ color: "#6E6E6E" }}>
                       รหัสผ่านและการยืนยันตัวตน
@@ -766,6 +1094,6 @@ export default function Account() {
       <footer className="2xl:mt-32">
         <Footer />
       </footer>
-    </div>
+    </div >
   );
 }
