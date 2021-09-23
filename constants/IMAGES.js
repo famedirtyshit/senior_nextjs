@@ -1,6 +1,6 @@
 const IMAGES = {
     // Logo 
-    catModalHomePage: '/images/catModalHomePage.png',
+    catModalHomePage: '/images/catModalHomePageNew.png',
     bgDownBt:'/images/bg-downBt.png',
     downBt:'/images/downBt.png',
     crop:'/images/crop.png',
@@ -26,10 +26,12 @@ const IMAGES = {
     step5:'/images/step5.png',
     deviceRightfor4step:'/images/deviceRightfor4step.png',
     deviceLeftfor4step:'/images/deviceLeftfor4step.png',
-    scrollDown:'/images/scrollDown.png',
+    scrollDown:'/images/NewScrollDown.png',
     bgAccountHeader:'/images/bgAccountHeader.png',
     greenBg: '/images/greenBg.png',
     accountLink: '/images/accountLink.png',
+    whyUse1: '/images/whyUse1.png',
+    whyUse2: '/images/whyUse2.png'
 
 };
 export default IMAGES;
