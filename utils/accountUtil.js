@@ -36,7 +36,25 @@ const allAccountUtil = {
     } catch (e) {
       return e.response;
     }
-  }, getMyPost: async (id) => {
+  },
+  changeThumbnail: async (owner, cipherCredential, blob) => {
+    try {
+      let formData = new FormData();
+      formData.append(`userThumbnail`, blob[0]);
+      formData.append('owner', owner);
+      formData.append('cipherCredential', cipherCredential);
+      let res = await axios({
+        method: "put",
+        url: process.env.API_KEY + `/account/changeThumbnail`,
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  },
+  getMyPost: async (id) => {
     try {
       let res = await axios.get(process.env.API_KEY + `/account/getMyPost/${id}`);
       return res;

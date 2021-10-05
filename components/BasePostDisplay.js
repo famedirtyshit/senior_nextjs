@@ -200,7 +200,47 @@ export default function BasePostDisplay(prop) {
                                             <div className="text-center mb-6">
                                                 <p className="text-lg font-normal">Post Owner</p>
                                                 <div className="mx-auto mt-6">
-                                                    <Image src={IMAGES.user} alt='default-user' width="100" height="100" />
+                                                    {checkProp
+                                                        ?
+                                                        prop.post.data.searchResult[prop.target].owner.thumbnail ?
+                                                            prop.post.data.searchResult[prop.target].owner.thumbnail.url
+                                                                ?
+                                                                prop.post.data.searchResult[prop.target].owner.thumbnail.url == 'default'
+                                                                    ?
+                                                                    <Image
+                                                                        src={IMAGES.user}
+                                                                        alt="default-user"
+                                                                        width="119"
+                                                                        height="119"
+                                                                    />
+                                                                    :
+                                                                    <Image
+                                                                        src={prop.post.data.searchResult[prop.target].owner.thumbnail.url}
+                                                                        alt="default-user"
+                                                                        width="119"
+                                                                        height="119"
+                                                                    />
+                                                                :
+                                                                <Image
+                                                                    src={IMAGES.user}
+                                                                    alt="default-user"
+                                                                    width="119"
+                                                                    height="119"
+                                                                />
+                                                            :
+                                                            <Image
+                                                                src={IMAGES.user}
+                                                                alt="default-user"
+                                                                width="119"
+                                                                height="119"
+                                                            />
+                                                        :
+                                                        <Image
+                                                            src={IMAGES.user}
+                                                            alt="default-user"
+                                                            width="119"
+                                                            height="119" />
+                                                    }
                                                 </div>
                                             </div>
                                             <p className="text-textGray text-lg font-normal mb-4">Name</p>

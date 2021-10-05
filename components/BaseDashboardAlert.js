@@ -130,7 +130,7 @@ export default function BaseDashboardAlert(prop) {
                                                                     <p className="mx-1">Date:{convertDateFormat(post.date)}</p>
                                                                     <p className="mx-1">Sex:{post.sex == 'unknow' ? 'Unknow' : post.sex == true ? "Male" : "Female"}</p>
                                                                     <p className="mx-1">Male:{post.collar == true ? "Have" : "Not Have"}</p>
-                                                                    <p className="mx-1">Description:{post.description.length > 15 ? post.description + '...' : post.description}</p>
+                                                                    <p className="mx-1">Description:{post.description ? post.description.length > 15 ? post.description + '...' : post.description : ' -'}</p>
                                                                 </div>
                                                             </div>
                                                         )

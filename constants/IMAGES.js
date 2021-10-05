@@ -31,7 +31,7 @@ const IMAGES = {
     greenBg: '/images/greenBg.png',
     accountLink: '/images/accountLink.png',
     whyUse1: '/images/whyUse1.png',
-    whyUse2: '/images/whyUse2.png'
-
+    whyUse2: '/images/whyUse2.png',
+    userThumbnailEdit: '/images/pencil.png'
 };
 export default IMAGES;
