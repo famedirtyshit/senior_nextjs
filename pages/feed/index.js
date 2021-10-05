@@ -570,23 +570,23 @@ export default function Feed() {
 
     const handleCloseAccountMenu = () => {
         setAccountMenu(null);
-      };
-    
-      const handleOpenAccountMenu = (event) => {
+    };
+
+    const handleOpenAccountMenu = (event) => {
         setAccountMenu(event.currentTarget);
-      }
-    
-      const logout = () => {
+    }
+
+    const logout = () => {
         const auth = getAuth();
         signOut(auth).then(() => {
-          setUserAccount(null);
+            setUserAccount(null);
         }).catch((error) => {
-          alert('fail please retry later');
+            alert('fail please retry later');
         });
-      }
+    }
 
     return (
-        <div style={{fontFamily: 'Prompt'}} className={"2xl:container mx-auto " + FeedStyle.bgImg}>
+        <div style={{ fontFamily: 'Prompt' }} className={"2xl:container mx-auto " + FeedStyle.bgImg}>
             <Head>
                 <title>CatUs</title>
                 <meta name="description" content="CatUs Service" />
@@ -643,7 +643,49 @@ export default function Feed() {
                         }
                         <div className="2xl:flex 2xl:flex-wrap 2xl:py-16">
                             <div className="2xl:ml-16">
-                                <Image src={IMAGES.user} alt='default-user' width="112" height="112" />
+                                {
+                                    userAccount
+                                        ?
+                                        userAccount.thumbnail ?
+                                            userAccount.thumbnail.url
+                                                ?
+                                                userAccount.thumbnail.url == 'default'
+                                                    ?
+                                                    <Image
+                                                        src={IMAGES.user}
+                                                        alt="default-user"
+                                                        width="119"
+                                                        height="119"
+                                                    />
+                                                    :
+                                                    <Image
+                                                        src={userAccount.thumbnail.url}
+                                                        alt="default-user"
+                                                        width="119"
+                                                        height="119"
+                                                    />
+                                                :
+                                                <Image
+                                                    src={IMAGES.user}
+                                                    alt="default-user"
+                                                    width="119"
+                                                    height="119"
+                                                />
+                                            :
+                                            <Image
+                                                src={IMAGES.user}
+                                                alt="default-user"
+                                                width="119"
+                                                height="119"
+                                            />
+                                        :
+                                        <Image
+                                            src={IMAGES.user}
+                                            alt="default-user"
+                                            width="119"
+                                            height="119"
+                                        />
+                                }
                             </div>
                             <div className="2xl:ml-12 text-xl font-normal">
                                 {userAccount == null

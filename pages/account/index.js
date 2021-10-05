@@ -31,6 +31,9 @@ import BasePostEdit from "@components/BasePostEdit";
 import TextField from "@material-ui/core/TextField";
 import BaseModalChangePassword from "@components/BaseModalChangePassword";
 import BaseModalChangeEmail from "@components/BaseModalChangeEmail";
+import BaseCropModal from "@components/BaseCropModal";
+const CryptoJS = require("crypto-js");
+import BasePostResModal from "@components/BasePostResModal";
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -125,6 +128,13 @@ export default function Account() {
   const [openModalChangePassword, setOpenModalChangePassword] = useState(false);
   const [openModalChangeEmail, setOpenModalChangeEmail] = useState(false);
 
+  const [thumbnailCropStatus, setThumbnailCropStatus] = useState(false);
+  const [thumbnailRawFile, setThumbnailRawFile] = useState([]);
+  const [thumbnailCropFile, setThumbnailCropFile] = useState([]);
+  const [thumbnailDataUrl, setThumbnailDataUrl] = useState([]);
+  const [thumbnailResStatus, setThumbnailResStatus] = useState(false);
+  const [thumbnailRes, setThumbnailRes] = useState(null);
+
   const CryptoJS = require("crypto-js");
 
   useEffect(() => {
@@ -191,7 +201,69 @@ export default function Account() {
     setMaxPageLostPost(Math.ceil(postLostData.length / 3));
   }, [postFoundData, postLostData, currentFoundPost, currentLostPost]);
 
+  useEffect(() => {
+    if (thumbnailRawFile.length > 0) {
+      setThumbnailCropStatus(true);
+    } else {
+      setThumbnailCropStatus(false);
+    }
+  }, [thumbnailRawFile])
+
+  useEffect(() => {
+    setThumbnailDataUrl([]);
+    for (let i = 0; i < thumbnailCropFile.length; i++) {
+      blobToDataURL(thumbnailCropFile[i], function (dataUrl) {
+        setThumbnailDataUrl(imageCropFile => [...imageCropFile, dataUrl]);
+      });
+    }
+  }, [thumbnailCropFile])
+
+  useEffect(() => {
+    if (thumbnailDataUrl.length > 0) {
+      async function changeThumbnail() {
+        setThumbnailResStatus(true);
+        let cipherCredential = CryptoJS.AES.encrypt(userAccount._id, process.env.PASS_HASH).toString();
+        let res = await accountUtil.changeThumbnail(userAccount._id, cipherCredential, thumbnailCropFile);
+        setThumbnailRes(res);
+        setThumbnailRawFile([]);
+        setThumbnailCropFile([]);
+        if (res.data.result == true) {
+          let userObj = userAccount;
+          userObj['thumbnail'] = { url: res.data.updateResult.thumbnail.url };
+          setUserAccount(userObj);
+        }
+      }
+      changeThumbnail();
+    }
+  }, [thumbnailDataUrl])
+
   const classes = useStyles();
+
+  const closeThumbnailCropStatus = () => {
+    setThumbnailCropStatus(false);
+  }
+
+  const inputThumbnailHandle = (event) => {
+    let files = event.target.files;
+    setThumbnailRawFile(files);
+  }
+
+  const emitCroppedImage = (file) => {
+    setThumbnailCropFile(file);
+  }
+
+  const blobToDataURL = (blob, callback) => {
+    let fr = new FileReader();
+    fr.onload = function (e) { callback(e.target.result); }
+    fr.readAsDataURL(blob);
+  }
+
+  const closeThumbnailResModal = () => {
+    if (thumbnailRes != null) {
+      setThumbnailResStatus(false);
+      setThumbnailRes(null);
+    }
+  }
 
   const convertDateFormat = (dateData) => {
     let dateConvert = new Date(dateData);
@@ -504,23 +576,95 @@ export default function Account() {
                 {loading == true ? (
                   <Skeleton variant="circle" width={119} height={119} />
                 ) : (
-                  <div>
+                  <div className="cursor-pointer relative" onClick={() => {
+                    let inputEle = document.getElementById('thumbnail-upload');
+                    if (thumbnailCropStatus == false && thumbnailResStatus == false) {
+                      inputEle.click();
+                    }
+                  }}>
+                    <input style={{ display: 'none' }} type="file" name='file-thumbnail' accept="image/png,image/jpeg" id='thumbnail-upload' onChange={inputThumbnailHandle} />
+                    <div className={"absolute z-50 " + utilStyles.centerAbsolute}>
+                      <Image src={IMAGES.userThumbnailEdit}
+                        alt="user-thumbnail-edit"
+                        width="40"
+                        height="40" />
+                    </div>
+                    <BaseCropModal setImage={emitCroppedImage} cropModalStatus={thumbnailCropStatus} closeCropModal={closeThumbnailCropStatus} imageRawFile={thumbnailRawFile} />
+                    <BasePostResModal closePostResModal={closeThumbnailResModal} postResStatus={thumbnailResStatus} postRes={thumbnailRes} />
                     {editSection1Active ? (
-                      <div style={{ marginLeft: "3.6rem" }}>
-                        <Image
-                          src={IMAGES.user}
-                          alt="default-user"
-                          width="119"
-                          height="119"
-                        />
+                      <div>
+                        {
+                          userAccount.thumbnail ?
+                            userAccount.thumbnail.url
+                              ?
+                              userAccount.thumbnail.url == 'default'
+                                ?
+                                <Image
+                                  src={IMAGES.user}
+                                  alt="default-user"
+                                  width="119"
+                                  height="119"
+                                />
+                                :
+                                <Image
+                                  src={userAccount.thumbnail.url}
+                                  alt="default-user"
+                                  width="119"
+                                  height="119"
+                                />
+                              :
+                              <Image
+                                src={IMAGES.user}
+                                alt="default-user"
+                                width="119"
+                                height="119"
+                              />
+                            :
+                            <Image
+                              src={IMAGES.user}
+                              alt="default-user"
+                              width="119"
+                              height="119"
+                            />
+                        }
                       </div>
                     ) : (
-                      <Image
-                        src={IMAGES.user}
-                        alt="default-user"
-                        width="119"
-                        height="119"
-                      />
+                      <div>
+                        {
+                          userAccount.thumbnail ?
+                            userAccount.thumbnail.url
+                              ?
+                              userAccount.thumbnail.url == 'default'
+                                ?
+                                <Image
+                                  src={IMAGES.user}
+                                  alt="default-user"
+                                  width="119"
+                                  height="119"
+                                />
+                                :
+                                <Image
+                                  src={userAccount.thumbnail.url}
+                                  alt="default-user"
+                                  width="119"
+                                  height="119"
+                                />
+                              :
+                              <Image
+                                src={IMAGES.user}
+                                alt="default-user"
+                                width="119"
+                                height="119"
+                              />
+                            :
+                            <Image
+                              src={IMAGES.user}
+                              alt="default-user"
+                              width="119"
+                              height="119"
+                            />
+                        }
+                      </div>
                     )}
                   </div>
                 )}
