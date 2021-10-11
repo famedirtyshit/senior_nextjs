@@ -280,7 +280,6 @@ export default function BasePostEdit(prop) {
     let map;
 
     const initPreviewMap = () => {
-        console.log('initmap')
         map = new google.maps.Map(document.getElementById("map-preview-edit"), {
             center: { lat: prop.post[prop.target].location.coordinates[1], lng: prop.post[prop.target].location.coordinates[0] },
             zoom: 15,
@@ -375,14 +374,14 @@ export default function BasePostEdit(prop) {
                 setDeleteAction(false);
                 if (prop.editPostType == 'found') {
                     prop.renderFoundPost();
-                    if(prop.post.length < 1 && prop.pageFoundPost > 1){
+                    if (prop.post.length < 1 && prop.pageFoundPost > 1) {
                         prop.setPageFoundPost(prop.pageFoundPost - 1);
                     }
                 } else if (prop.editPostType == 'lost') {
                     prop.renderLostPost();
-                    if(prop.post.length < 1 && prop.pageLostPost > 1){
+                    if (prop.post.length < 1 && prop.pageLostPost > 1) {
                         prop.setPageLostPost(prop.pageLostPost - 1);
-                    } 
+                    }
                 }
             }
         }
