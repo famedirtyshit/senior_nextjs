@@ -274,6 +274,10 @@ export default function Account() {
 
   const closeThumbnailCropStatus = () => {
     setThumbnailCropStatus(false);
+    let inputField = document.getElementById('thumbnail-upload');
+    if (inputField) {
+      inputField.value = '';
+    }
   }
 
   const inputThumbnailHandle = (event) => {
