@@ -100,6 +100,8 @@ export default function BasePostEdit(prop) {
 
     const [deleteAction, setDeleteAction] = useState(false);
     const [confirmationStatus, setConfirmationStatus] = useState(false);
+    const [extendAction, setExtendAction] = useState(false);
+    const [extendConfirmationStatus, setExtendConfirmationStatus] = useState(false);
 
     useEffect(() => {
         initMapStatus.current = false;
@@ -118,6 +120,8 @@ export default function BasePostEdit(prop) {
             if (checkProp) {
                 if (prop.post[prop.target].urls.length > 0) {
                     setImageSet(prop.post[prop.target].urls);
+                } else {
+                    setImageSet([{ url: IMAGES.defaultImg, default: true }]);
                 }
             }
         }
@@ -145,6 +149,10 @@ export default function BasePostEdit(prop) {
 
     const closeConfirmation = async () => {
         setConfirmationStatus(false);
+    }
+
+    const closeExtendConfirmation = async () => {
+        setExtendConfirmationStatus(false);
     }
 
     const addNewImage = async (cropData) => {
@@ -273,6 +281,36 @@ export default function BasePostEdit(prop) {
         }
     }
 
+    const extendPost = async () => {
+        if (prop.type == 'inactive') {
+            setExtendAction(true);
+        }
+        setEditResStatus(true);
+        let cipherCredential = CryptoJS.AES.encrypt(prop.userAccount._id, process.env.PASS_HASH).toString();
+        let res = await postUtil.extendPost(prop.post[prop.target]._id, cipherCredential, prop.editPostType);
+        setEditRes(res);
+        if (res.data.result == true) {
+            if (prop.type == 'inactive') {
+                let targetPost = res.data.updateResult;
+                prop.post.splice(prop.target, 1);
+                if (prop.editPostType == 'found') {
+                    let newActiveFoundSet = prop.activeFoundPost.push(targetPost);
+                    prop.setActiveFoundPost(prop.activeFoundPost);
+                    prop.setCurrentFoundPost(prop.post);
+                } else if (prop.editPostType == 'lost') {
+                    let newActiveLostSet = prop.activeLostPost.push(targetPost);
+                    prop.setActiveLostPost(prop.activeLostPost);
+                    prop.setCurrentLostPost(prop.post);
+                }
+                prop.setDeleteDataInState();
+            } else {
+                let oldPostSet = prop.post;
+                oldPostSet[prop.target].idle = res.data.updateResult.idle;
+                prop.setEditDataInState(oldPostSet[prop.target]);
+            }
+        }
+    }
+
     const openDestination = () => {
         window.open(`https://www.google.com/maps/dir/?api=1&destination=${prop.post[prop.target].location.coordinates[1]},${prop.post[prop.target].location.coordinates[0]}`);
     }
@@ -369,19 +407,24 @@ export default function BasePostEdit(prop) {
         if (editRes != null) {
             setEditResStatus(false);
             setEditRes(null)
-            if (deleteAction == true) {
+            if (deleteAction == true || extendAction == true) {
                 prop.closeModal();
                 setDeleteAction(false);
+                setExtendAction(false);
                 if (prop.editPostType == 'found') {
                     prop.renderFoundPost();
                     if (prop.post.length < 1 && prop.pageFoundPost > 1) {
                         prop.setPageFoundPost(prop.pageFoundPost - 1);
                     }
+                    let updateTriggerCount = prop.updateTrigger + 1;
+                    prop.setUpdateTrigger(updateTriggerCount);
                 } else if (prop.editPostType == 'lost') {
                     prop.renderLostPost();
                     if (prop.post.length < 1 && prop.pageLostPost > 1) {
                         prop.setPageLostPost(prop.pageLostPost - 1);
                     }
+                    let updateTriggerCount = prop.updateTrigger + 1;
+                    prop.setUpdateTrigger(updateTriggerCount);
                 }
             }
         }
@@ -585,16 +628,52 @@ export default function BasePostEdit(prop) {
                                 </div>
                             </div>
                             <ThemeProvider theme={editTheme}>
-                                <div className="mt-8 flex flex-wrap justify-end pr-8">
-                                    <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
-                                        Delete Post
-                                    </Button>
+                                <div>
+                                    {checkProp ? prop.post[prop.target].idle == true || prop.post[prop.target].status == 'inactive'
+                                        ?
+                                        prop.post[prop.target].status == 'inactive'
+                                            ?
+                                            <div className="mt-8 flex flex-wrap justify-between px-8">
+                                                <Button onClick={() => { setExtendConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
+                                                    Republish
+                                                </Button>
+                                                <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
+                                                    Delete Post
+                                                </Button>
+                                            </div>
+                                            :
+                                            prop.post[prop.target].idle == true
+                                                ?
+                                                <div className="mt-8 flex flex-wrap justify-between px-8">
+                                                    <Button onClick={() => { setExtendConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
+                                                        Extend 30 Day
+                                                    </Button>
+                                                    <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
+                                                        Delete Post
+                                                    </Button>
+                                                </div>
+                                                :
+                                                <div className="mt-8 flex flex-wrap justify-between px-8">
+                                                    <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
+                                                        Delete Post
+                                                    </Button>
+                                                </div>
+                                        :
+                                        <div className="mt-8 flex flex-wrap justify-end px-8">
+                                            <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
+                                                Delete Post
+                                            </Button>
+                                        </div>
+                                        :
+                                        null
+                                    }
                                 </div>
                             </ThemeProvider>
                             <p className="hidden">{alertChecker}</p>
                             <BaseCropModal setImage={addNewImage} cropModalStatus={cropModalStatus} closeCropModal={closeCropModal} imageRawFile={imageRawFile} />
                             <BasePostResModal closePostResModal={closeEditResModal} postResStatus={editResStatus} postRes={editRes} />
                             <BaseConfirmation confirmationStatus={confirmationStatus} closeConfirmation={closeConfirmation} title={'Delete Post'} content={'confirm to delete your post'} confirmAction={deletePost} />
+                            <BaseConfirmation confirmationStatus={extendConfirmationStatus} closeConfirmation={closeExtendConfirmation} title={'Extend Post'} content={'confirm to extend your post for 30 days'} confirmAction={extendPost} />
                         </div>
                     }
                 </Fade>

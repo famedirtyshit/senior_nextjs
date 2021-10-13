@@ -198,6 +198,23 @@ const allPostUtil = {
         } catch (e) {
             return e.response;
         }
+    },
+    extendPost: async (postId, credential, type) => {
+        try {
+            let endpoint = '';
+            if (type == 'lost') {
+                endpoint = 'postLostCat'
+            } else {
+                endpoint = 'postFoundCat'
+            }
+            let res = await axios.put(process.env.API_KEY + `/${endpoint}/extendPost`, {
+                credential: credential,
+                postId: postId
+            });
+            return res;
+        } catch (e) {
+            return e.response;
+        }
     }
 }
 

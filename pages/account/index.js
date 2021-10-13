@@ -150,6 +150,8 @@ export default function Account() {
   const [thumbnailResStatus, setThumbnailResStatus] = useState(false);
   const [thumbnailRes, setThumbnailRes] = useState(null);
 
+  const [updateTrigger, setUpdateTrigger] = useState(0);
+
   const CryptoJS = require("crypto-js");
 
   useEffect(() => {
@@ -210,19 +212,19 @@ export default function Account() {
 
   useEffect(() => {
     renderFoundPost();
-  }, [pageFoundPost, postFoundData]);
+  }, [pageFoundPost, postFoundData, updateTrigger]);
 
   useEffect(() => {
     renderLostPost();
-  }, [pageLostPost, postLostData]);
+  }, [pageLostPost, postLostData, updateTrigger]);
 
   useEffect(() => {
     renderInactiveFoundPost();
-  }, [pageFoundInactivePost, postFoundInactiveData]);
+  }, [pageFoundInactivePost, postFoundInactiveData, updateTrigger]);
 
   useEffect(() => {
     renderInactiveLostPost();
-  }, [pageLostInactivePost, postLostInactiveData]);
+  }, [pageLostInactivePost, postLostInactiveData, updateTrigger]);
 
   useEffect(() => {
     setMaxPageFoundPost(Math.ceil(postFoundData.length / 3));
@@ -1611,8 +1613,9 @@ export default function Account() {
           </List>
         </section>
         <ThemeProvider theme={theme}>
-          <BasePostEdit pageFoundPost={pageFoundPost} pageLostPost={pageLostPost} setPageFoundPost={setPageFoundPost} setPageLostPost={setPageLostPost} renderFoundPost={renderFoundPost} renderLostPost={renderLostPost} setDeleteDataInState={setDeleteDataInState} setEditDataInState={setEditDataInState} setCurrentFoundPost={setCurrentFoundPost} setCurrentLostPost={setCurrentLostPost} modalStatus={editPostStatus} closeModal={closePostEditModal} post={editPostType == 'lost' ? currentLostPost : currentFoundPost} target={editPostTarget} userAccount={userAccount} editPostType={editPostType} />
-          <BasePostEdit pageFoundPost={pageFoundInactivePost} pageLostPost={pageLostInactivePost} setPageFoundPost={setPageFoundInactivePost} setPageLostPost={setPageLostInactivePost} renderFoundPost={renderInactiveFoundPost} renderLostPost={renderInactiveLostPost} setDeleteDataInState={setDeleteInactiveDataInState} setEditDataInState={setEditInactiveDataInState} setCurrentFoundPost={setCurrentFoundInactivePost} setCurrentLostPost={setCurrentLostInactivePost} modalStatus={editInactivePostStatus} closeModal={closeInactivePostEditModal} post={editInactivePostType == 'lost' ? currentLostInactivePost : currentFoundInactivePost} target={editInactivePostTarget} userAccount={userAccount} editPostType={editInactivePostType} />
+          <BasePostEdit pageFoundPost={pageFoundPost} pageLostPost={pageLostPost} setPageFoundPost={setPageFoundPost} setPageLostPost={setPageLostPost} renderFoundPost={renderFoundPost} renderLostPost={renderLostPost} setDeleteDataInState={setDeleteDataInState} setEditDataInState={setEditDataInState} setCurrentFoundPost={setCurrentFoundPost} setCurrentLostPost={setCurrentLostPost} modalStatus={editPostStatus} closeModal={closePostEditModal} post={editPostType == 'lost' ? currentLostPost : currentFoundPost} target={editPostTarget} userAccount={userAccount} editPostType={editPostType} updateTrigger={updateTrigger} setUpdateTrigger={setUpdateTrigger} />
+          <BasePostEdit type='inactive' pageFoundPost={pageFoundInactivePost} pageLostPost={pageLostInactivePost} setPageFoundPost={setPageFoundInactivePost} setPageLostPost={setPageLostInactivePost} renderFoundPost={renderInactiveFoundPost} renderLostPost={renderInactiveLostPost} setDeleteDataInState={setDeleteInactiveDataInState} setEditDataInState={setEditInactiveDataInState} setCurrentFoundPost={setCurrentFoundInactivePost} setCurrentLostPost={setCurrentLostInactivePost} modalStatus={editInactivePostStatus} closeModal={closeInactivePostEditModal} post={editInactivePostType == 'lost' ? currentLostInactivePost : currentFoundInactivePost} target={editInactivePostTarget} userAccount={userAccount} editPostType={editInactivePostType} setActiveFoundPost={setPostFoundData} setActiveLostPost={setPostLostData} activeLostPost={postLostData} activeFoundPost={postFoundData} updateTrigger={updateTrigger} setUpdateTrigger={setUpdateTrigger} />
+          <div className='hidden'>{updateTrigger}</div>
         </ThemeProvider>
       </main>
       <footer className="2xl:mt-32">
