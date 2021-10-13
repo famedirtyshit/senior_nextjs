@@ -219,7 +219,7 @@ export default function Dashboard() {
         updatedDashboardData.searchResult.map((page, pageIndex) => {
             page.map((lostPost) => {
                 if (lostPostTarget._id.toString() == lostPost._id.toString()) {
-                    lostPost.nearFoundCat.push({ _id: newFoundPost._id.toString(), status: true })
+                    lostPost.nearFoundCat.push({ _id: newFoundPost, status: true })
                 }
             })
         });
@@ -286,7 +286,9 @@ export default function Dashboard() {
                     setCheckPostLoading(true);
                     setDisplayStatus(true);
                     let foundPostDetail = await postUtil.checkNearPost(currentDashboardData.current.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post]._id, foundPost._id)
+                    console.log(foundPostDetail);
                     if (foundPostDetail.data.result == true) {
+                        console.log('true')
                         let updatedDashboardData = currentDashboardData.current;
                         updatedDashboardData.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post].nearFoundCat.map((nearPostItem, nearPostIndex) => {
                             if (nearPostItem._id == foundPost._id) {
@@ -296,13 +298,27 @@ export default function Dashboard() {
                         });
                         setDashboardData(updatedDashboardData);
                         currentDashboardData.current = updatedDashboardData;
+                        console.log(updatedDashboardData);
                         if (foundPostDetail.data.updateResult != null) {
+                            console.log('case != null');
                             markerObj.setIcon({ url: ICONS.foundCheckedMarker, scaledSize: new google.maps.Size(35, 35) })
                             setFoundPostDetail({ data: { searchResult: [foundPostDetail.data.updateResult] } })
                             setCheckPostLoading(false);
                         } else {
+                            console.log('==null')
                             let newNearPostSet = [];
+                            console.log(currentNearPost.current)
+                            let updatedDashboardData = currentDashboardData.current;
+                            updatedDashboardData.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post].nearFoundCat.map((nearPostItem, nearPostIndex) => {
+                                if (nearPostItem._id._id == foundPost._id) {
+                                    updatedDashboardData.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post].nearFoundCat.splice(nearPostIndex, 1);
+                                    return;
+                                }
+                            });
+                            setDashboardData(updatedDashboardData);
+                            currentDashboardData.current = updatedDashboardData;
                             currentNearPost.current.searchResult.map(item => {
+                                console.log(item)
                                 if (item._id._id) {
                                     if (item._id._id.toString() != foundPost._id.toString()) {
                                         newNearPostSet.push(item);
@@ -313,6 +329,8 @@ export default function Dashboard() {
                                     }
                                 }
                             })
+                            console.log('------------')
+                            console.log(newNearPostSet)
                             setNearPost({ result: true, searchResult: newNearPostSet });
                             currentNearPost.current = { result: true, searchResult: newNearPostSet };
                             setCheckPostLoading(false);
@@ -395,14 +413,30 @@ export default function Dashboard() {
                         setFoundPostDetail({ data: { searchResult: [foundPostDetail.data.updateResult] } })
                         setCheckPostLoading(false);
                     } else {
+                        let updatedDashboardData = currentDashboardData.current;
                         let newNearPostSet = [];
-                        currentNearPost.current.searchResult.map(oldItem => {
-                            if (oldItem._id._id) {
-                                if (oldItem._id._id != item._id._id) {
-                                    newNearPostSet.push(oldItem);
+                        updatedDashboardData.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post].nearFoundCat.map((nearPostItem, nearPostIndex) => {
+                            if (nearPostItem._id._id == item._id._id) {
+                                updatedDashboardData.searchResult[currentSelectedPost.current.page][currentSelectedPost.current.post].nearFoundCat.splice(nearPostIndex, 1);
+                                return;
+                            }
+                        });
+                        setDashboardData(updatedDashboardData);
+                        currentDashboardData.current = updatedDashboardData;
+                        currentNearPost.current.searchResult.map(nearPostItem => {
+                            console.log(nearPostItem)
+                            if (nearPostItem._id._id) {
+                                if (nearPostItem._id._id.toString() != item._id._id.toString()) {
+                                    newNearPostSet.push(nearPostItem);
+                                }
+                            } else {
+                                if (nearPostItem._id.toString() != item._id._id.toString()) {
+                                    newNearPostSet.push(nearPostItem);
                                 }
                             }
                         })
+                        console.log('------------')
+                        console.log(newNearPostSet)
                         setNearPost({ result: true, searchResult: newNearPostSet });
                         currentNearPost.current = { result: true, searchResult: newNearPostSet };
                         setCheckPostLoading(false);
@@ -456,7 +490,7 @@ export default function Dashboard() {
     }
 
     return (
-        <div style={{fontFamily: 'Prompt'}} className={"2xl:container mx-auto " + bgClasses.style}>
+        <div style={{ fontFamily: 'Prompt' }} className={"2xl:container mx-auto " + bgClasses.style}>
             <Head>
                 <title>CatUs</title>
                 <meta name="description" content="CatUs Service" />
