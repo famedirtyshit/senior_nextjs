@@ -60,7 +60,18 @@ const editTheme = createTheme({
             main: "#F94848",
             dark: "#F94848",
             contrastText: "#fff",
-        },
+        }
+    },
+})
+
+const completeTheme = createTheme({
+    palette: {
+        primary: {
+            light: "#29b6f6",
+            main: "#29b6f6",
+            dark: "#29b6f6",
+            contrastText: "#fff",
+        }
     },
 })
 
@@ -102,6 +113,7 @@ export default function BasePostEdit(prop) {
     const [confirmationStatus, setConfirmationStatus] = useState(false);
     const [extendAction, setExtendAction] = useState(false);
     const [extendConfirmationStatus, setExtendConfirmationStatus] = useState(false);
+    const [completeConfirmationStatus, setCompleteConfirmationStatus] = useState(false);
 
     useEffect(() => {
         initMapStatus.current = false;
@@ -153,6 +165,10 @@ export default function BasePostEdit(prop) {
 
     const closeExtendConfirmation = async () => {
         setExtendConfirmationStatus(false);
+    }
+
+    const closeCompleteConfirmation = async () => {
+        setCompleteConfirmationStatus(false);
     }
 
     const addNewImage = async (cropData) => {
@@ -308,6 +324,23 @@ export default function BasePostEdit(prop) {
                 oldPostSet[prop.target].idle = res.data.updateResult.idle;
                 prop.setEditDataInState(oldPostSet[prop.target]);
             }
+        }
+    }
+
+    const completePost = async () => {
+        setDeleteAction(true);
+        setEditResStatus(true);
+        let cipherCredential = CryptoJS.AES.encrypt(prop.userAccount._id, process.env.PASS_HASH).toString();
+        let res = await postUtil.completePost(prop.post[prop.target]._id, cipherCredential, prop.editPostType);
+        setEditRes(res);
+        if (res.data.result == true) {
+            prop.post.splice(prop.target, 1);
+            if (prop.editPostType == 'found') {
+                prop.setCurrentFoundPost(prop.post);
+            } else if (prop.editPostType == 'lost') {
+                prop.setCurrentLostPost(prop.post);
+            }
+            prop.setDeleteDataInState();
         }
     }
 
@@ -637,9 +670,16 @@ export default function BasePostEdit(prop) {
                                                 <Button onClick={() => { setExtendConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
                                                     Republish
                                                 </Button>
-                                                <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
-                                                    Delete Post
-                                                </Button>
+                                                <div className="w-3/12 flex flex-wrap justify-between">
+                                                    <ThemeProvider theme={completeTheme}>
+                                                        <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
+                                                            Complete Post
+                                                        </Button>
+                                                    </ThemeProvider>
+                                                    <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
+                                                        Delete Post
+                                                    </Button>
+                                                </div>
                                             </div>
                                             :
                                             prop.post[prop.target].idle == true
@@ -648,21 +688,42 @@ export default function BasePostEdit(prop) {
                                                     <Button onClick={() => { setExtendConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
                                                         Extend 30 Day
                                                     </Button>
-                                                    <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
-                                                        Delete Post
-                                                    </Button>
+                                                    <div className="w-3/12 flex flex-wrap justify-between">
+                                                        <ThemeProvider theme={completeTheme}>
+                                                            <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
+                                                                Complete Post
+                                                            </Button>
+                                                        </ThemeProvider>
+                                                        <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
+                                                            Delete Post
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                                 :
                                                 <div className="mt-8 flex flex-wrap justify-between px-8">
-                                                    <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
-                                                        Delete Post
-                                                    </Button>
+                                                    <div className="w-3/12 flex flex-wrap justify-between">
+                                                        <ThemeProvider theme={completeTheme}>
+                                                            <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
+                                                                Complete Post
+                                                            </Button>
+                                                        </ThemeProvider>
+                                                        <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
+                                                            Delete Post
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                         :
                                         <div className="mt-8 flex flex-wrap justify-end px-8">
-                                            <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
-                                                Delete Post
-                                            </Button>
+                                            <div className="w-3/12 flex flex-wrap justify-between">
+                                                <ThemeProvider theme={completeTheme}>
+                                                    <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
+                                                        Complete Post
+                                                    </Button>
+                                                </ThemeProvider>
+                                                <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
+                                                    Delete Post
+                                                </Button>
+                                            </div>
                                         </div>
                                         :
                                         null
@@ -674,6 +735,7 @@ export default function BasePostEdit(prop) {
                             <BasePostResModal closePostResModal={closeEditResModal} postResStatus={editResStatus} postRes={editRes} />
                             <BaseConfirmation confirmationStatus={confirmationStatus} closeConfirmation={closeConfirmation} title={'Delete Post'} content={'confirm to delete your post'} confirmAction={deletePost} />
                             <BaseConfirmation confirmationStatus={extendConfirmationStatus} closeConfirmation={closeExtendConfirmation} title={'Extend Post'} content={'confirm to extend your post for 30 days'} confirmAction={extendPost} />
+                            <BaseConfirmation confirmationStatus={completeConfirmationStatus} closeConfirmation={closeCompleteConfirmation} title={'Complete Post'} content={'confirm to complete your post'} confirmAction={completePost} />
                         </div>
                     }
                 </Fade>

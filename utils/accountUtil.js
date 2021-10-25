@@ -61,7 +61,7 @@ const allAccountUtil = {
     } catch (e) {
       return e.response;
     }
-  }, editContact: async (id, cipherCredential, firstname, lastname, phone, facebook, instagram) => {
+  }, editContact: async (id, cipherCredential, firstname, lastname, phone, facebook, instagram, mailSubEdit) => {
     try {
       let res = await axios.put(process.env.API_KEY + "/account/edit", {
         id: id,
@@ -70,7 +70,8 @@ const allAccountUtil = {
         lastname: lastname,
         phone: phone,
         facebook: facebook,
-        instagram: instagram
+        instagram: instagram,
+        mailSubscribe: mailSubEdit
       });
       return res;
     }

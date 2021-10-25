@@ -34,6 +34,7 @@ import BaseModalChangeEmail from "@components/BaseModalChangeEmail";
 import BaseCropModal from "@components/BaseCropModal";
 const CryptoJS = require("crypto-js");
 import BasePostResModal from "@components/BasePostResModal";
+import Switch from '@material-ui/core/Switch';
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -150,6 +151,8 @@ export default function Account() {
   const [thumbnailResStatus, setThumbnailResStatus] = useState(false);
   const [thumbnailRes, setThumbnailRes] = useState(null);
 
+  const [mailSubEdit, setMailSubEdit] = useState(false);
+
   const [updateTrigger, setUpdateTrigger] = useState(0);
 
   const CryptoJS = require("crypto-js");
@@ -173,6 +176,7 @@ export default function Account() {
           setUserEmail(user.email);
           if (account.data.result === true) {
             setUserAccount(account.data.searchResult[0]);
+            setMailSubEdit(account.data.searchResult[0].mailSubscribe);
             setLoading(false);
           } else {
             setUserAccount(null);
@@ -272,7 +276,17 @@ export default function Account() {
     }
   }, [thumbnailDataUrl])
 
+  useEffect(() => {
+    if (userAccount) {
+      setMailSubEdit(userAccount.mailSubscribe);
+    }
+  }, [editSection1Active])
+
   const classes = useStyles();
+
+  const mailSubChange = (e) => {
+    setMailSubEdit(!mailSubEdit);
+  }
 
   const closeThumbnailCropStatus = () => {
     setThumbnailCropStatus(false);
@@ -580,10 +594,11 @@ export default function Account() {
         newLastName,
         newNumber,
         newFacbook,
-        newInstagram
+        newInstagram,
+        mailSubEdit
       );
-      console.log(res.data);
-      console.log(userAccount);
+      // console.log(res.data);
+      // console.log(userAccount);
 
       if (res.data.result == true) {
         let accountObject = userAccount;
@@ -591,7 +606,7 @@ export default function Account() {
       }
     }
 
-    console.log("all false");
+    // console.log("all false");
   };
 
   const pressEditSection2 = () => {
@@ -690,7 +705,7 @@ export default function Account() {
       <main>
         <section
           className="w-9/12 bg-mainYellow mx-auto  rounded-t-2xl shadow-lg 2xl:mt-20"
-          style={{ height: "880px" }}
+          style={{ height: "950px" }}
         >
           {/* {editSection3Active==true ? <BaseModalChangePassword open={editSection3Active}/> : null} */}
           <div className="2xl:mt-11 2xl:absolute 2xl:ml-12">
@@ -983,10 +998,26 @@ export default function Account() {
                             type="text"
                             defaultValue={userAccount.instagram}
                           />
+                          <p className="2xl:mt-3" style={{ color: "#6E6E6E" }}>
+                            Mail Subscribe
+                          </p>
+                          <div className="flex flex-wrap ">
+                            <p className="2xl:mt-1 2xl:font-bold">
+                              off
+                            </p>
+                            <Switch
+                              checked={mailSubEdit}
+                              onChange={mailSubChange}
+                              inputProps={{ 'aria-label': 'mailSubscribe-edit' }}
+                            />
+                            <p className="2xl:mt-1 2xl:font-bold">
+                              on
+                            </p>
+                          </div>
                         </div>
                         <ThemeProvider theme={theme}>
                           <div>
-                            <div className="2xl:absolute 2xl:ml-24 2xl:mt-10">
+                            <div className="2xl:absolute 2xl:ml-24 2xl:mt-28">
                               <Button
                                 variant="contained"
                                 color="error"
@@ -996,11 +1027,11 @@ export default function Account() {
                                   setEditSection1Active(false);
                                 }}
                               >
-                                cencel
+                                cancel
                               </Button>
                             </div>
                             <div
-                              className="2xl:absolute 2xl:ml-56 2xl:mt-10"
+                              className="2xl:absolute 2xl:ml-56 2xl:mt-28"
                             // style={{ marginLeft: "220px" }}
                             >
                               <Button
@@ -1026,6 +1057,22 @@ export default function Account() {
                         <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
                           Instagram: {userAccount.instagram}
                         </p>
+                        <p className="2xl:mt-3" style={{ color: "#6E6E6E" }}>
+                          Mail Subscribe
+                        </p>
+                        <div className="flex flex-wrap ">
+                          <p className="2xl:mt-1 2xl:font-bold">
+                            off
+                          </p>
+                          <Switch
+                            checked={userAccount.mailSubscribe}
+                            disabled
+                            inputProps={{ 'aria-label': 'mailSubscribe-default' }}
+                          />
+                          <p className="2xl:mt-1 2xl:font-bold">
+                            on
+                          </p>
+                        </div>
                       </div>
                     )}
                   </div>
