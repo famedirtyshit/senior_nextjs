@@ -117,6 +117,16 @@ const allAccountUtil = {
       return e.response;
     }
   },
+  getMyHistory: async (id) => {
+    try {
+      let res = await axios.get(
+        process.env.API_KEY + `/account/getMyHistory/${id}`
+      );
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  }
 };
 
 export default allAccountUtil;

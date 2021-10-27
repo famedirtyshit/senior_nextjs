@@ -1659,6 +1659,23 @@ export default function Account() {
             </Link>
           </List>
         </section>
+        <section
+          className="2xl:w-9/12 2xl:mt-3"
+          style={{ marginLeft: "238px" }}
+        >
+          <List className={classes.list}>
+            <Link href="/history">
+              <a>
+                <ListItem button>
+                  <ListItemText
+                    primary="My following post"
+                    style={{ color: "black", margin: "14px" }}
+                  />
+                </ListItem>
+              </a>
+            </Link>
+          </List>
+        </section>
         <ThemeProvider theme={theme}>
           <BasePostEdit pageFoundPost={pageFoundPost} pageLostPost={pageLostPost} setPageFoundPost={setPageFoundPost} setPageLostPost={setPageLostPost} renderFoundPost={renderFoundPost} renderLostPost={renderLostPost} setDeleteDataInState={setDeleteDataInState} setEditDataInState={setEditDataInState} setCurrentFoundPost={setCurrentFoundPost} setCurrentLostPost={setCurrentLostPost} modalStatus={editPostStatus} closeModal={closePostEditModal} post={editPostType == 'lost' ? currentLostPost : currentFoundPost} target={editPostTarget} userAccount={userAccount} editPostType={editPostType} updateTrigger={updateTrigger} setUpdateTrigger={setUpdateTrigger} />
           <BasePostEdit type='inactive' pageFoundPost={pageFoundInactivePost} pageLostPost={pageLostInactivePost} setPageFoundPost={setPageFoundInactivePost} setPageLostPost={setPageLostInactivePost} renderFoundPost={renderInactiveFoundPost} renderLostPost={renderInactiveLostPost} setDeleteDataInState={setDeleteInactiveDataInState} setEditDataInState={setEditInactiveDataInState} setCurrentFoundPost={setCurrentFoundInactivePost} setCurrentLostPost={setCurrentLostInactivePost} modalStatus={editInactivePostStatus} closeModal={closeInactivePostEditModal} post={editInactivePostType == 'lost' ? currentLostInactivePost : currentFoundInactivePost} target={editInactivePostTarget} userAccount={userAccount} editPostType={editInactivePostType} setActiveFoundPost={setPostFoundData} setActiveLostPost={setPostLostData} activeLostPost={postLostData} activeFoundPost={postFoundData} updateTrigger={updateTrigger} setUpdateTrigger={setUpdateTrigger} />
