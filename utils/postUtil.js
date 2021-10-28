@@ -232,6 +232,18 @@ const allPostUtil = {
         } catch (e) {
             return e.response;
         }
+    },
+    reportPost: async (postId, reason, type) => {
+        try {
+            let res = await axios.post(process.env.API_KEY + `/reportPost/report`, {
+                postId: postId,
+                reason: reason,
+                type: type
+            });
+            return res;
+        } catch (e) {
+            return e.response;
+        }
     }
 }
 
