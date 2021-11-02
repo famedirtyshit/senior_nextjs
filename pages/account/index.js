@@ -34,6 +34,7 @@ import BaseModalChangeEmail from "@components/BaseModalChangeEmail";
 import BaseCropModal from "@components/BaseCropModal";
 const CryptoJS = require("crypto-js");
 import BasePostResModal from "@components/BasePostResModal";
+import Switch from '@material-ui/core/Switch';
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -91,18 +92,30 @@ const theme = createTheme({
 export default function Account() {
   const [userEmail, setUserEmail] = useState("-");
   const [openListMyPost, setOpenListMyPost] = useState(false);
+  const [openListMyInactivePost, setOpenListMyInactivePost] = useState(false);
   const [openListSubMyPost1, setOpenListSubMyPost1] = useState(false);
+  const [openListSubMyInactivePost1, setOpenListSubMyInactivePost1] = useState(false);
   const [openListSubMyPost2, setOpenListSubMyPost2] = useState(false);
+  const [openListSubMyInactivePost2, setOpenListSubMyInactivePost2] = useState(false);
   const [openListMyLost, setOpenListMyLost] = useState(false);
   const [pageFoundPost, setPageFoundPost] = useState(1);
+  const [pageFoundInactivePost, setPageFoundInactivePost] = useState(1);
   const [pageLostPost, setPageLostPost] = useState(1);
+  const [pageLostInactivePost, setPageLostInactivePost] = useState(1);
   const [currentFoundPost, setCurrentFoundPost] = useState([]);
   const [currentLostPost, setCurrentLostPost] = useState([]);
+  const [currentFoundInactivePost, setCurrentFoundInactivePost] = useState([]);
+  const [currentLostInactivePost, setCurrentLostInactivePost] = useState([]);
   const [maxPageFoundPost, setMaxPageFoundPost] = useState(4);
   const [maxPageLostPost, setMaxPageLostPost] = useState(4);
+  const [maxPageFoundInactivePost, setMaxPageFoundInactivePost] = useState(4);
+  const [maxPageLostInactivePost, setMaxPageLostInactivePost] = useState(4);
   const [postFoundData, setPostFoundData] = useState([]);
   const [postLostData, setPostLostData] = useState([]);
+  const [postFoundInactiveData, setPostFoundInactiveData] = useState([]);
+  const [postLostInactiveData, setPostLostInactiveData] = useState([]);
   const [message, setMessage] = useState("");
+  const [inactiveMessage, setInactiveMessage] = useState("");
   const [userAccount, setUserAccount] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editActive, setEditActive] = useState(false);
@@ -110,6 +123,9 @@ export default function Account() {
   const [editPostStatus, setEditPostStatus] = useState(false);
   const [editPostType, setEditPostType] = useState(null);
   const [editPostTarget, setEditPostTarget] = useState(0);
+  const [editInactivePostStatus, setEditInactivePostStatus] = useState(false);
+  const [editInactivePostType, setEditInactivePostType] = useState(null);
+  const [editInactivePostTarget, setEditInactivePostTarget] = useState(0);
   const [editSection1Active, setEditSection1Active] = useState(false);
   const [editSection2Active, setEditSection2Active] = useState(false);
   const [editSection3Active, setEditSection3Active] = useState(false);
@@ -135,6 +151,10 @@ export default function Account() {
   const [thumbnailResStatus, setThumbnailResStatus] = useState(false);
   const [thumbnailRes, setThumbnailRes] = useState(null);
 
+  const [mailSubEdit, setMailSubEdit] = useState(false);
+
+  const [updateTrigger, setUpdateTrigger] = useState(0);
+
   const CryptoJS = require("crypto-js");
 
   useEffect(() => {
@@ -150,9 +170,13 @@ export default function Account() {
           let myPost = await accountUtil.getMyPost(
             account.data.searchResult[0]._id
           );
+          let myInactivePost = await accountUtil.getMyInactivePost(
+            account.data.searchResult[0]._id
+          );
           setUserEmail(user.email);
           if (account.data.result === true) {
             setUserAccount(account.data.searchResult[0]);
+            setMailSubEdit(account.data.searchResult[0].mailSubscribe);
             setLoading(false);
           } else {
             setUserAccount(null);
@@ -166,16 +190,19 @@ export default function Account() {
                 console.log(error);
               });
           }
-          if (myPost.data.result === true) {
+          if (myPost.data.result === true && myInactivePost.data.result === true) {
             setPostFoundData(myPost.data.searchResult.postFound);
-
-            console.log("----------------");
-            console.log(myPost.data.searchResult.postFound);
             setPostLostData(myPost.data.searchResult.postLost);
+            setPostFoundInactiveData(myInactivePost.data.searchResult.postFound);
+            setPostLostInactiveData(myInactivePost.data.searchResult.postLost);
+            // console.log("----------------");
+            // console.log(myPost.data.searchResult.postFound);
           } else {
             // setMessage("No Post Result !!");
             setPostFoundData([null]);
             setPostLostData([null]);
+            setPostFoundInactiveData([null]);
+            setPostLostInactiveData([null]);
           }
         } else {
           setUserAccount(null);
@@ -189,17 +216,29 @@ export default function Account() {
 
   useEffect(() => {
     renderFoundPost();
-    console.log(postFoundData);
-  }, [pageFoundPost, postFoundData]);
+  }, [pageFoundPost, postFoundData, updateTrigger]);
 
   useEffect(() => {
     renderLostPost();
-  }, [pageLostPost, postLostData]);
+  }, [pageLostPost, postLostData, updateTrigger]);
+
+  useEffect(() => {
+    renderInactiveFoundPost();
+  }, [pageFoundInactivePost, postFoundInactiveData, updateTrigger]);
+
+  useEffect(() => {
+    renderInactiveLostPost();
+  }, [pageLostInactivePost, postLostInactiveData, updateTrigger]);
 
   useEffect(() => {
     setMaxPageFoundPost(Math.ceil(postFoundData.length / 3));
     setMaxPageLostPost(Math.ceil(postLostData.length / 3));
   }, [postFoundData, postLostData, currentFoundPost, currentLostPost]);
+
+  useEffect(() => {
+    setMaxPageFoundInactivePost(Math.ceil(postFoundInactiveData.length / 3));
+    setMaxPageLostInactivePost(Math.ceil(postLostInactiveData.length / 3));
+  }, [postFoundInactiveData, postLostInactiveData, currentFoundInactivePost, currentLostInactivePost]);
 
   useEffect(() => {
     if (thumbnailRawFile.length > 0) {
@@ -237,10 +276,24 @@ export default function Account() {
     }
   }, [thumbnailDataUrl])
 
+  useEffect(() => {
+    if (userAccount) {
+      setMailSubEdit(userAccount.mailSubscribe);
+    }
+  }, [editSection1Active])
+
   const classes = useStyles();
+
+  const mailSubChange = (e) => {
+    setMailSubEdit(!mailSubEdit);
+  }
 
   const closeThumbnailCropStatus = () => {
     setThumbnailCropStatus(false);
+    let inputField = document.getElementById('thumbnail-upload');
+    if (inputField) {
+      inputField.value = '';
+    }
   }
 
   const inputThumbnailHandle = (event) => {
@@ -280,12 +333,24 @@ export default function Account() {
     setOpenListMyPost(!openListMyPost);
   };
 
+  const handleClickListMyInactivePost = () => {
+    setOpenListMyInactivePost(!openListMyInactivePost);
+  };
+
   const handleClickListSubMyPost1 = () => {
     setOpenListSubMyPost1(!openListSubMyPost1);
   };
 
+  const handleClickListSubMyInactivePost1 = () => {
+    setOpenListSubMyInactivePost1(!openListSubMyInactivePost1);
+  };
+
   const handleClickListSubMyPost2 = () => {
     setOpenListSubMyPost2(!openListSubMyPost2);
+  };
+
+  const handleClickListSubMyInactivePost2 = () => {
+    setOpenListSubMyInactivePost2(!openListSubMyInactivePost2);
   };
 
   const handleClickListMyLost = () => {
@@ -294,6 +359,10 @@ export default function Account() {
 
   const closePostEditModal = () => {
     setEditPostStatus(false);
+  }
+
+  const closeInactivePostEditModal = () => {
+    setEditInactivePostStatus(false);
   }
 
   const openEditPost = (type, index) => {
@@ -324,6 +393,23 @@ export default function Account() {
     console.log(store);
   };
 
+  const renderInactiveFoundPost = () => {
+    let store = [];
+    let initIndex = (pageFoundInactivePost - 1) * 3;
+    if (postFoundInactiveData.length < 1) {
+      setInactiveMessage("not found");
+      return;
+    }
+    for (
+      let i = initIndex;
+      i < initIndex + 3 && i < postFoundInactiveData.length;
+      i++
+    ) {
+      store.push(postFoundInactiveData[i]);
+    }
+    setCurrentFoundInactivePost(store);
+  };
+
   const renderLostPost = () => {
     let store = [];
     let initIndex = (pageLostPost - 1) * 3;
@@ -336,6 +422,19 @@ export default function Account() {
     }
     setCurrentLostPost(store);
     console.log(store);
+  };
+
+  const renderInactiveLostPost = () => {
+    let store = [];
+    let initIndex = (pageLostInactivePost - 1) * 3;
+    if (postLostInactiveData.length < 1) {
+      setInactiveMessage("not found");
+      return;
+    }
+    for (let i = initIndex; i < initIndex + 3 && i < postLostInactiveData.length; i++) {
+      store.push(postLostInactiveData[i]);
+    }
+    setCurrentLostInactivePost(store);
   };
 
   const nextPage = (pageType) => {
@@ -356,6 +455,24 @@ export default function Account() {
     }
   };
 
+  const nextInactivePage = (pageType) => {
+    let countFound = pageFoundInactivePost;
+    let countLost = pageLostInactivePost;
+    if (pageType == "found") {
+      if (pageFoundInactivePost >= maxPageFoundInactivePost) {
+        return;
+      } else {
+        setPageFoundInactivePost(++countFound);
+      }
+    } else if (pageType == "lost") {
+      if (pageLostInactivePost >= maxPageLostInactivePost) {
+        return;
+      } else {
+        setPageLostInactivePost(++countLost);
+      }
+    }
+  };
+
   const backPage = (pageType) => {
     let countFound = pageFoundPost;
     let countLost = pageLostPost;
@@ -370,6 +487,24 @@ export default function Account() {
         return;
       } else {
         setPageLostPost(--countLost);
+      }
+    }
+  };
+
+  const backInactivePage = (pageType) => {
+    let countFound = pageFoundInactivePost;
+    let countLost = pageLostInactivePost;
+    if (pageType == "found") {
+      if (pageFoundInactivePost <= 1) {
+        return;
+      } else {
+        setPageFoundInactivePost(--countFound);
+      }
+    } else if (pageType == "lost") {
+      if (pageLostInactivePost <= 1) {
+        return;
+      } else {
+        setPageLostInactivePost(--countLost);
       }
     }
   };
@@ -459,10 +594,11 @@ export default function Account() {
         newLastName,
         newNumber,
         newFacbook,
-        newInstagram
+        newInstagram,
+        mailSubEdit
       );
-      console.log(res.data);
-      console.log(userAccount);
+      // console.log(res.data);
+      // console.log(userAccount);
 
       if (res.data.result == true) {
         let accountObject = userAccount;
@@ -470,7 +606,7 @@ export default function Account() {
       }
     }
 
-    console.log("all false");
+    // console.log("all false");
   };
 
   const pressEditSection2 = () => {
@@ -520,11 +656,27 @@ export default function Account() {
     }
   }
 
+  const setEditInactiveDataInState = (data) => {
+    if (editInactivePostType == 'found') {
+      postFoundInactiveData[((pageFoundInactivePost - 1) * 3) + editInactivePostTarget] = data;
+    } else if (editInactivePostType == 'lost') {
+      postLostInactiveData[((pageLostInactivePost - 1) * 3) + editInactivePostTarget] = data;
+    }
+  }
+
   const setDeleteDataInState = () => {
     if (editPostType == 'found') {
       postFoundData.splice(((pageFoundPost - 1) * 3) + editPostTarget, 1);
     } else if (editPostType == 'lost') {
       postLostData.splice(((pageLostPost - 1) * 3) + editPostTarget, 1);
+    }
+  }
+
+  const setDeleteInactiveDataInState = () => {
+    if (editInactivePostType == 'found') {
+      postFoundInactiveData.splice(((pageFoundInactivePost - 1) * 3) + editInactivePostTarget, 1);
+    } else if (editInactivePostType == 'lost') {
+      postLostInactiveData.splice(((pageLostInactivePost - 1) * 3) + editInactivePostTarget, 1);
     }
   }
 
@@ -553,7 +705,7 @@ export default function Account() {
       <main>
         <section
           className="w-9/12 bg-mainYellow mx-auto  rounded-t-2xl shadow-lg 2xl:mt-20"
-          style={{ height: "880px" }}
+          style={{ height: "950px" }}
         >
           {/* {editSection3Active==true ? <BaseModalChangePassword open={editSection3Active}/> : null} */}
           <div className="2xl:mt-11 2xl:absolute 2xl:ml-12">
@@ -846,10 +998,26 @@ export default function Account() {
                             type="text"
                             defaultValue={userAccount.instagram}
                           />
+                          <p className="2xl:mt-3" style={{ color: "#6E6E6E" }}>
+                            Mail Subscribe
+                          </p>
+                          <div className="flex flex-wrap ">
+                            <p className="2xl:mt-1 2xl:font-bold">
+                              off
+                            </p>
+                            <Switch
+                              checked={mailSubEdit}
+                              onChange={mailSubChange}
+                              inputProps={{ 'aria-label': 'mailSubscribe-edit' }}
+                            />
+                            <p className="2xl:mt-1 2xl:font-bold">
+                              on
+                            </p>
+                          </div>
                         </div>
                         <ThemeProvider theme={theme}>
                           <div>
-                            <div className="2xl:absolute 2xl:ml-24 2xl:mt-10">
+                            <div className="2xl:absolute 2xl:ml-24 2xl:mt-28">
                               <Button
                                 variant="contained"
                                 color="error"
@@ -859,11 +1027,11 @@ export default function Account() {
                                   setEditSection1Active(false);
                                 }}
                               >
-                                cencel
+                                cancel
                               </Button>
                             </div>
                             <div
-                              className="2xl:absolute 2xl:ml-56 2xl:mt-10"
+                              className="2xl:absolute 2xl:ml-56 2xl:mt-28"
                             // style={{ marginLeft: "220px" }}
                             >
                               <Button
@@ -889,6 +1057,22 @@ export default function Account() {
                         <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
                           Instagram: {userAccount.instagram}
                         </p>
+                        <p className="2xl:mt-3" style={{ color: "#6E6E6E" }}>
+                          Mail Subscribe
+                        </p>
+                        <div className="flex flex-wrap ">
+                          <p className="2xl:mt-1 2xl:font-bold">
+                            off
+                          </p>
+                          <Switch
+                            checked={userAccount.mailSubscribe}
+                            disabled
+                            inputProps={{ 'aria-label': 'mailSubscribe-default' }}
+                          />
+                          <p className="2xl:mt-1 2xl:font-bold">
+                            on
+                          </p>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -976,7 +1160,7 @@ export default function Account() {
           <List className={classes.list}>
             <ListItem button onClick={handleClickListMyPost}>
               <ListItemText
-                primary="My Post"
+                primary="My Active Post"
                 style={{ color: "black", margin: "14px" }}
               />
               {openListMyPost ? <ExpandLess /> : <ExpandMore />}
@@ -1214,6 +1398,250 @@ export default function Account() {
             </Collapse>
           </List>
         </section>
+
+        <section className="2xl:w-9/12" style={{ marginLeft: "238px" }}>
+          <List className={classes.list}>
+            <ListItem button onClick={handleClickListMyInactivePost}>
+              <ListItemText
+                primary="My Inactive Post"
+                style={{ color: "black", margin: "14px" }}
+              />
+              {openListMyInactivePost ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={openListMyInactivePost} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem
+                  button
+                  className={classes.nested}
+                  onClick={handleClickListSubMyInactivePost1}
+                >
+                  <ListItemText
+                    primary="My found post"
+                    style={{ color: "black", margin: "14px" }}
+                  />
+                  {openListSubMyInactivePost1 ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+
+                <Collapse in={openListSubMyInactivePost1} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    <ListItem className={classes.nested}>
+                      <div className="">
+                        {pageFoundInactivePost <= 1 ? (
+                          <ArrowBackIosIcon
+                            style={{
+                              color: "#ffff",
+                              width: "60px",
+                              height: "60px",
+                            }}
+                          />
+                        ) : (
+                          <ArrowBackIosIcon
+                            style={{
+                              color: "#356053",
+                              width: "60px",
+                              height: "60px",
+                            }}
+                            onClick={() => backInactivePage("found")}
+                            className="cursor-pointer"
+                          />
+                        )}
+                      </div>
+                      <div className="2xl:mx-auto 2xl:mt-5">
+                        <section className="2xl:flex 2xl:flex-wrap 2xl:gap-20 flex-start">
+                          {
+                            currentFoundInactivePost.length < 1
+                              ?
+                              <h1 className="text-2xl font-bold">No Post</h1>
+                              :
+                              currentFoundInactivePost[0] == null
+                                ?
+                                <h1 className="text-2xl font-bold">Error please retry later</h1>
+                                :
+                                currentFoundInactivePost.map((item, i) => (
+                                  <section
+                                    className="cursor-pointer"
+                                    onClick={function () {
+                                      setEditInactivePostType('found');
+                                      setEditInactivePostStatus(true);
+                                      setEditInactivePostTarget(i);
+                                    }} key={i}>
+                                    <Carousel indicators={false} navButtonsAlwaysVisible={false}>
+                                      <div className="w-72 h-72">
+                                        {
+                                          item.urls.length > 0
+                                            ?
+                                            item.urls.map((items, i) => (
+                                              <Image
+                                                key={i}
+                                                src={items.url}
+                                                alt={"previewImg-" + i}
+                                                width="300px"
+                                                height="300px"
+                                                layout="responsive"
+                                              />
+                                            ))
+                                            :
+                                            <Image
+                                              src={IMAGES.defaultImg}
+                                              alt={"previewImg-default-found"}
+                                              width="300px"
+                                              height="300px"
+                                              layout="responsive"
+                                            />
+                                        }
+                                      </div>
+                                    </Carousel>
+                                    <ListItemText primary={"Date: " + convertDateFormat(item.date)} />
+                                    <ListItemText primary={item.sex == 'unknow' ? 'Sex : Unknow' : item.sex == 'true' ? 'Sex : Male' : 'Sex : Female'} />
+                                    <ListItemText
+                                      primary={item.collar == true ? 'Collar: Have' : 'Collar: Not Have'}
+                                    />
+                                    <ListItemText
+                                      primary={item.description ? item.description.length > 15 ? 'Description: ' + item.description.substring(0, 15) + '...' : 'Description: ' + item.description : 'Description: -'}
+                                    />
+                                  </section>
+                                ))}
+                        </section>
+                      </div>
+                      {pageFoundInactivePost >= maxPageFoundInactivePost ? (
+                        <ArrowForwardIosIcon
+                          style={{
+                            color: "#fff",
+                            width: "60px",
+                            height: "60px",
+                          }}
+                        />
+                      ) : (
+                        <ArrowForwardIosIcon
+                          style={{
+                            color: "#356053",
+                            width: "60px",
+                            height: "60px",
+                          }}
+                          onClick={() => nextInactivePage("found")}
+                          className="cursor-pointer"
+                        />
+                      )}
+                    </ListItem>
+                  </List>
+                </Collapse>
+                <ListItem
+                  button
+                  className={classes.nested}
+                  onClick={handleClickListSubMyInactivePost2}
+                >
+                  <ListItemText
+                    primary="My lost post"
+                    style={{ color: "black", margin: "14px" }}
+                  />
+                  {openListSubMyInactivePost2 ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={openListSubMyInactivePost2} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    <ListItem className={classes.nested}>
+                      <div className="">
+                        {pageLostInactivePost <= 1 ? (
+                          <ArrowBackIosIcon
+                            style={{
+                              color: "#fff",
+                              width: "60px",
+                              height: "60px",
+                            }}
+                          />
+                        ) : (
+                          <ArrowBackIosIcon
+                            style={{
+                              color: "#356053",
+                              width: "60px",
+                              height: "60px",
+                            }}
+                            onClick={() => backInactivePage("lost")}
+                            className="cursor-pointer"
+                          />
+                        )}
+                      </div>
+                      <div className="2xl:mx-auto 2xl:mt-5">
+                        <section className="2xl:flex 2xl:flex-wrap 2xl:gap-28 flex-start">
+                          {
+                            currentLostInactivePost.length < 1
+                              ?
+                              <h1 className="text-2xl font-bold">No Post</h1>
+                              :
+                              currentLostInactivePost[0] == null
+                                ?
+                                <h1 className="text-2xl font-bold">Error please retry later</h1>
+                                :
+                                currentLostInactivePost.map((item, i) => (
+                                  <section className="cursor-pointer" onClick={function () {
+                                    setEditInactivePostType('lost');
+                                    setEditInactivePostStatus(true);
+                                    setEditInactivePostTarget(i);
+                                  }} key={i}>
+                                    <Carousel indicators={false} navButtonsAlwaysVisible={false}>
+                                      <div className="w-72 h-72">
+                                        {
+                                          item.urls.length > 0
+                                            ?
+                                            item.urls.map((items, i) => (
+                                              <Image
+                                                key={i}
+                                                src={items.url}
+                                                alt={"previewImg-" + i}
+                                                width="300px"
+                                                height="300px"
+                                                layout="responsive"
+                                              />
+                                            ))
+                                            :
+                                            <Image
+                                              src={IMAGES.defaultImg}
+                                              alt={"previewImg-default-lost"}
+                                              width="300px"
+                                              height="300px"
+                                              layout="responsive"
+                                            />
+                                        }
+                                      </div>
+                                    </Carousel>
+                                    <ListItemText primary={"Date: " + convertDateFormat(item.date)} />
+                                    <ListItemText primary={item.sex == 'unknow' ? 'Sex : Unknow' : item.sex == 'true' ? 'Sex : Male' : 'Sex : Female'} />
+                                    <ListItemText
+                                      primary={item.collar == true ? 'Collar: Have' : 'Collar: Not Have'}
+                                    />
+                                    <ListItemText
+                                      primary={item.description ? item.description.length > 15 ? 'Description: ' + item.description.substring(0, 15) + '...' : 'Description: ' + item.description : 'Description: -'}
+                                    />
+                                  </section>
+                                ))}
+                        </section>
+                      </div>
+                      {pageLostInactivePost >= maxPageLostInactivePost ? (
+                        <ArrowForwardIosIcon
+                          style={{
+                            color: "#fff",
+                            width: "60px",
+                            height: "60px",
+                          }}
+                        />
+                      ) : (
+                        <ArrowForwardIosIcon
+                          style={{
+                            color: "#356053",
+                            width: "60px",
+                            height: "60px",
+                          }}
+                          onClick={() => nextInactivePage("lost")}
+                          className="cursor-pointer"
+                        />
+                      )}
+                    </ListItem>
+                  </List>
+                </Collapse>
+              </List>
+            </Collapse>
+          </List>
+        </section>
+
         <section
           className="2xl:w-9/12 2xl:mt-3"
           style={{ marginLeft: "238px" }}
@@ -1223,7 +1651,24 @@ export default function Account() {
               <a>
                 <ListItem button>
                   <ListItemText
-                    primary="Monitoring my post"
+                    primary="Monitoring My Lost Post"
+                    style={{ color: "black", margin: "14px" }}
+                  />
+                </ListItem>
+              </a>
+            </Link>
+          </List>
+        </section>
+        <section
+          className="2xl:w-9/12 2xl:mt-3"
+          style={{ marginLeft: "238px" }}
+        >
+          <List className={classes.list}>
+            <Link href="/history">
+              <a>
+                <ListItem button>
+                  <ListItemText
+                    primary="My following post"
                     style={{ color: "black", margin: "14px" }}
                   />
                 </ListItem>
@@ -1232,7 +1677,9 @@ export default function Account() {
           </List>
         </section>
         <ThemeProvider theme={theme}>
-          <BasePostEdit pageFoundPost={pageFoundPost} pageLostPost={pageLostPost} setPageFoundPost={setPageFoundPost} setPageLostPost={setPageLostPost} renderFoundPost={renderFoundPost} renderLostPost={renderLostPost} setDeleteDataInState={setDeleteDataInState} setEditDataInState={setEditDataInState} setCurrentFoundPost={setCurrentFoundPost} setCurrentLostPost={setCurrentLostPost} modalStatus={editPostStatus} closeModal={closePostEditModal} post={editPostType == 'lost' ? currentLostPost : currentFoundPost} target={editPostTarget} userAccount={userAccount} editPostType={editPostType} />
+          <BasePostEdit pageFoundPost={pageFoundPost} pageLostPost={pageLostPost} setPageFoundPost={setPageFoundPost} setPageLostPost={setPageLostPost} renderFoundPost={renderFoundPost} renderLostPost={renderLostPost} setDeleteDataInState={setDeleteDataInState} setEditDataInState={setEditDataInState} setCurrentFoundPost={setCurrentFoundPost} setCurrentLostPost={setCurrentLostPost} modalStatus={editPostStatus} closeModal={closePostEditModal} post={editPostType == 'lost' ? currentLostPost : currentFoundPost} target={editPostTarget} userAccount={userAccount} editPostType={editPostType} updateTrigger={updateTrigger} setUpdateTrigger={setUpdateTrigger} />
+          <BasePostEdit type='inactive' pageFoundPost={pageFoundInactivePost} pageLostPost={pageLostInactivePost} setPageFoundPost={setPageFoundInactivePost} setPageLostPost={setPageLostInactivePost} renderFoundPost={renderInactiveFoundPost} renderLostPost={renderInactiveLostPost} setDeleteDataInState={setDeleteInactiveDataInState} setEditDataInState={setEditInactiveDataInState} setCurrentFoundPost={setCurrentFoundInactivePost} setCurrentLostPost={setCurrentLostInactivePost} modalStatus={editInactivePostStatus} closeModal={closeInactivePostEditModal} post={editInactivePostType == 'lost' ? currentLostInactivePost : currentFoundInactivePost} target={editInactivePostTarget} userAccount={userAccount} editPostType={editInactivePostType} setActiveFoundPost={setPostFoundData} setActiveLostPost={setPostLostData} activeLostPost={postLostData} activeFoundPost={postFoundData} updateTrigger={updateTrigger} setUpdateTrigger={setUpdateTrigger} />
+          <div className='hidden'>{updateTrigger}</div>
         </ThemeProvider>
       </main>
       <footer className="2xl:mt-32">

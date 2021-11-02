@@ -198,6 +198,52 @@ const allPostUtil = {
         } catch (e) {
             return e.response;
         }
+    },
+    completePost: async (postId, credential, type) => {
+        try {
+            let endpoint = '';
+            if (type == 'lost') {
+                endpoint = 'postLostCat'
+            } else {
+                endpoint = 'postFoundCat'
+            }
+            let res = await axios.put(process.env.API_KEY + `/${endpoint}/completePost`, {
+                credential: credential,
+                postId: postId
+            });
+            return res;
+        } catch (e) {
+            return e.response;
+        }
+    },
+    extendPost: async (postId, credential, type) => {
+        try {
+            let endpoint = '';
+            if (type == 'lost') {
+                endpoint = 'postLostCat'
+            } else {
+                endpoint = 'postFoundCat'
+            }
+            let res = await axios.put(process.env.API_KEY + `/${endpoint}/extendPost`, {
+                credential: credential,
+                postId: postId
+            });
+            return res;
+        } catch (e) {
+            return e.response;
+        }
+    },
+    reportPost: async (postId, reason, type) => {
+        try {
+            let res = await axios.post(process.env.API_KEY + `/reportPost/report`, {
+                postId: postId,
+                reason: reason,
+                type: type
+            });
+            return res;
+        } catch (e) {
+            return e.response;
+        }
     }
 }
 

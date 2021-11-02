@@ -9,6 +9,8 @@ import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import utilStyles from '@styles/Util.module.css';
 import moment from 'moment';
+import { Button } from "@material-ui/core";
+import BaseReportPost from '@components/BaseReportPost';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -34,6 +36,7 @@ const mapStyles = makeStyles((theme) => ({
 
 export default function BasePostDisplay(prop) {
     const [imageSet, setImageSet] = useState([]);
+    const [reportStatus, setReportStatus] = useState(false);
     const initMapStatus = useRef(false);
     const classes = useStyles();
     const mapClasses = mapStyles();
@@ -120,6 +123,10 @@ export default function BasePostDisplay(prop) {
         setImageSet(newImages);
     }
 
+    const closeReportModal = () => {
+        setReportStatus(false);
+    }
+
     return (
         <div>
             <Modal
@@ -150,6 +157,20 @@ export default function BasePostDisplay(prop) {
                                         <path d="M15.382 13.0002L25.5059 2.8758C26.1647 2.21725 26.1647 1.15246 25.5059 0.493912C24.8473 -0.164637 23.7826 -0.164637 23.124 0.493912L12.9998 10.6183L2.87597 0.493912C2.21712 -0.164637 1.15267 -0.164637 0.494134 0.493912C-0.164711 1.15246 -0.164711 2.21725 0.494134 2.8758L10.618 13.0002L0.494134 23.1246C-0.164711 23.7831 -0.164711 24.8479 0.494134 25.5065C0.822322 25.835 1.25384 26 1.68505 26C2.11626 26 2.54747 25.835 2.87597 25.5065L12.9998 15.3821L23.124 25.5065C23.4525 25.835 23.8837 26 24.3149 26C24.7462 26 25.1774 25.835 25.5059 25.5065C26.1647 24.8479 26.1647 23.7831 25.5059 23.1246L15.382 13.0002Z" fill="black" />
                                     </svg>
                                 </div>
+                                <div className="2xl:absolute 2xl:bottom-7 2xl:left-8 cursor-pointer">
+                                    <Button
+                                        variant="contained"
+                                   
+                                        size="large"
+                                        style={{ width: "112px", height: "33px", backgroundColor: '#E3242B', color: 'white' }}
+                                        onClick={() => {
+                                            setReportStatus(true);
+                                        }}
+                                    >
+                                        Report
+                                    </Button>
+                                </div>
+                                <BaseReportPost reportStatus={reportStatus} closeReportModal={closeReportModal} post={checkProp ? prop.post.data.searchResult[prop.target]._id : null} type={checkProp ? prop.post.data.searchResult[prop.target].postType : null} />
                                 <div className="2xl:grid 2xl:grid-cols-10 gap-6 2xl:px-8 h-full">
                                     <div className="2xl:col-span-1 2xl:grid gap-2 2xl:grid-cols-1 2xl:grid-rows-4 h-5/6">
                                         {checkProp && imageSet.length > 1 ? imageSet.map((item, index) => {
@@ -178,7 +199,7 @@ export default function BasePostDisplay(prop) {
                                     <div className="2xl:col-span-3 2xl:grid 2xl:grid-cols-1">
                                         <div className="bg-gray-100 rounded-2xl py-8 px-10">
                                             <p className='text-base mb-2'><span className="text-base font-bold">Date: </span>{checkProp ? convertDateFormat(prop.post.data.searchResult[prop.target].date) + ' ' + moment(prop.post.data.searchResult[prop.target].createdAt).format("h:mm a") : null}</p>
-                                            <p className="text-base mb-2"><span className="text-base font-bold">Sex: </span>{checkProp ? prop.post.data.searchResult[prop.target].sex == true ? 'Male' : 'Female' : null}</p>
+                                            <p className="text-base mb-2"><span className="text-base font-bold">Sex: </span>{checkProp ? prop.post.data.searchResult[prop.target].sex == "unknow" ? 'Unknow' : prop.post.data.searchResult[prop.target].sex == "true" ? 'Male' : 'Female' : null}</p>
                                             <p className="text-base mb-2"><span className="text-base font-bold">Collar: </span>{checkProp ? prop.post.data.searchResult[prop.target].collar == true ? 'Have' : 'Not Have' : null}</p>
                                             <p className="text-base font-bold mb-2">Description: </p>
                                             <TextField

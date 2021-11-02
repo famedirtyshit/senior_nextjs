@@ -37,6 +37,8 @@ module.exports = {
         postTitle: '#626262',
         mainBgGreen: '#378566',
         mainYellow:'#F4C444',
+        historyBlue:'#416C94',
+        historyGrayBg:'#FAFAFA'
       },
       textColor: {
         mainGreen: '#356053'
