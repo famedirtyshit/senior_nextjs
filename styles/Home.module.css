@@ -113,15 +113,15 @@
   margin-left: 0.5rem;
 }
 .bgImg {
-  background-image: url('/images/Newbackground1.png');
+  background-image: url("/images/Newbackground1.png");
   background-size: contain;
   background-position: top;
   background-repeat: no-repeat;
   /* height: 8177px; */
 }
 
-.footerOrange{
-  background-image: url('/images/footerOrange.png');
+.footerOrange {
+  background-image: url("/images/footerOrange.png");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -129,12 +129,28 @@
   height: 259px;
 }
 .footerGreen {
-  background-image: url('/images/footerGreen.png');
+  background-image: url("/images/footerGreen.png");
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   width: 100%;
   height: 331px;
+}
+
+.catmodel1{
+  width: 559px;
+  
+  /* height: auto; */
+}
+.catmodel2{
+  width: 459px;
+  
+  /* height: auto; */
+}
+.catmodel3{
+  width: 359px;
+  
+  /* height: auto; */
 }
 
 @media (max-width: 600px) {
