@@ -3,7 +3,7 @@ import { makeStyles, createTheme, ThemeProvider } from '@material-ui/core/styles
 import Button from '@material-ui/core/Button';
 import BaseRecoverPassword from '@components/BaseRecoverPassword';
 import { useState } from 'react';
-
+ 
 const buttonStyles = makeStyles((theme) => ({
     style: {
         borderRadius: '50px',
@@ -23,7 +23,7 @@ const buttonStyles = makeStyles((theme) => ({
         boxShadow: 'none'
     }
 }));
-
+ 
 const theme = createTheme({
     palette: {
         primary: {
@@ -40,24 +40,24 @@ const theme = createTheme({
         },
     },
 });
-
-
+ 
+ 
 export default function BaseSignIn(prop) {
     const [recoverModalStatus,setRecoverModalStatus] = useState(false);
-
+ 
     const closeRecoverModal = () => {
         setRecoverModalStatus(false);
     }
-
+ 
     const openRecoverModal = () => {
         setRecoverModalStatus(true);
     }
-
+ 
     const buttonClasses = buttonStyles();
     return (
-        <div className="bg-white rounded-3xl rounded-3xl 2xl:grid 2xl:grid-cols-10">
+        <div className="bg-white rounded-3xl rounded-3xl lg:grid lg:grid-cols-10">
             <ThemeProvider theme={theme}>
-                <div className="2xl:col-span-6 py-28">
+                <div className="md:pb-8 lg:col-span-6 py-28 xl:col-span-6 py-28">
                     <h1 className="text-mainOrange text-4xl font-bold text-center pb-20">Sign in to Catus</h1>
                     <div className="grid grid-cols-1 gap-6 justify-items-center">
                         <TextField error={prop.validType == 'siemail' ? true : false} id="signin-email" label="Email" variant="outlined" className="w-3/6" />
@@ -73,9 +73,9 @@ export default function BaseSignIn(prop) {
                         </Button>
                     </div>
                 </div>
-                <div className="2xl:col-span-4 bg-mainOrange rounded-tr-3xl rounded-br-3xl">
-                    <h1 className="text-white text-4xl font-bold text-center mt-40">Welcome to Catus</h1>
-                    <p className="text-white mt-12 font-normal text-center text-lg px-20">Enter your personal details and start journey with us</p>
+                <div className="md:col-span-4 md:py-8 bg-mainOrange rounded-r-3xl rounded-l-3xl lg:rounded-r-sm lg:rounded-l-sm lg:rounded-tr-3xl lg:rounded-br-3xl py-8">
+                    <h1 className="text-white text-4xl font-bold text-center lg:mt-28 xl:mt-40">Welcome to Catus</h1>
+                    <p className="text-white mt-12 font-normal text-center text-lg px-20 hidden sm:block">Enter your personal details and start journey with us</p>
                     <div className="grid grid-cols-1 justify-items-center mt-12">
                         <Button onClick={prop.goSignUp} variant="contained" color="primary" className={buttonClasses.otherStyle}>
                             <span className="text-xl font-semibold">

@@ -10,10 +10,10 @@ import BaseAuthenResModal from '@components/BaseAuthenResModal';
 let passwordValidator = require('password-validator');
 import accountUtil from '@utils/accountUtil';
 import { useRouter } from 'next/router';
-
+ 
 const sectionStyles = makeStyles((theme) => ({
     style: {
-
+ 
     },
 }));
 export default function Authen() {
@@ -24,7 +24,7 @@ export default function Authen() {
     const [validType, setValidType] = useState('pass');
     const [resAlertType, setResAlertType] = useState(false);
     const [loadingStatus, setLoadingStatus] = useState(false);
-
+ 
     useEffect(() => {
         let res = initFirebase();
         if (res != false) {
@@ -42,22 +42,22 @@ export default function Authen() {
             console.log('init firebase error')
         }
     }, [])
-
+ 
     const sectionClasses = sectionStyles();
-
+ 
     const goSignUp = () => {
         setAuthenType('signup');
     }
-
+ 
     const goSignIn = () => {
         setAuthenType('signin');
     }
-
+ 
     const handleModalClose = () => {
         setValidStatus(false);
         // setValidMsg('');
     }
-
+ 
     const signIn = async () => {
         const auth = getAuth();
         let valid = validateSignIn(document.getElementById('signin-email').value, document.getElementById('signin-password').value);
@@ -96,7 +96,7 @@ export default function Authen() {
             // console.log(error)
         };
     }
-
+ 
     const validateSignIn = (email, password) => {
         if (!email) {
             return { status: false, msg: 'please input your email', type: 'siemail' };
@@ -110,7 +110,7 @@ export default function Authen() {
         }
         return { status: true, msg: 'pass', type: 'pass' };
     }
-
+ 
     const validateCredentialSignUp = (email, password, confirmPassword) => {
         if (!email) {
             return { status: false, msg: 'please input your email', type: 'email' };
@@ -136,7 +136,7 @@ export default function Authen() {
         }
         return { status: true, msg: 'pass', type: 'pass' };
     }
-
+ 
     const validateContactSignUp = (firstName, lastName, phone, facebook, instagram) => {
         if (!firstName) {
             return { status: false, msg: 'please input your firstname', type: 'firstname' };
@@ -165,7 +165,7 @@ export default function Authen() {
         }
         return { status: true, msg: 'pass', type: 'pass' };
     }
-
+ 
     const logOut = () => {
         const auth = getAuth();
         signOut(auth).then(() => {
@@ -174,29 +174,29 @@ export default function Authen() {
             console.log('signout fail')
             console.log(error)
         });
-
+ 
     }
-
+ 
     const signup = async (email, password, firstname, lastname, phone, facebook, instagram) => {
         let res = await accountUtil.signup(email, password, firstname, lastname, phone, facebook, instagram);
         return res;
     }
-
+ 
     return (
-        <div style={{fontFamily: 'Prompt'}} className={"2xl:container mx-auto"}>
+        <div style={{fontFamily: 'Prompt'}} className={"mx-auto"}>
             <Head>
                 <title>CatUs</title>
                 <meta name="description" content="CatUs Service" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <header className="2xl:py-8">
+            <header className="lg:py-8">
                 <Link href="/">
                     <a>
-                        <h1 className="text-mainOrange 2xl:text-7xl font-bold 2xl:ml-64 inline-block">Catus</h1>
+                        <h1 className="text-mainOrange text-3xl lg:text-5xl xl:text-7xl font-bold ml-24 md:ml-64 inline-block">Catus</h1>
                     </a>
                 </Link>
             </header>
-            <main className="bg-mainYellow mb-36 py-16 px-80">
+            <main className="bg-mainYellow mb-36 py-16 px-0 sm:px-20 md:px-60">
                 <section className={sectionClasses.style}>
                     {authenType == 'signin' ? <BaseSignIn validType={validType} goSignUp={goSignUp} signIn={signIn} /> : <BaseSignUp setLoadingStatus={setLoadingStatus} setResAlertType={setResAlertType} setAuthenType={setAuthenType} signup={signup} validateContactSignUp={validateContactSignUp} validateCredentialSignUp={validateCredentialSignUp} setValidStatus={setValidStatus} setValidMsg={setValidMsg} setValidType={setValidType} validType={validType} goSignIn={goSignIn} />}
                     <BaseAuthenResModal loadingStatus={loadingStatus} resAlertType={resAlertType} modalStatus={validStatus} handleModalClose={handleModalClose} msg={validMsg} />
