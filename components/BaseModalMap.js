@@ -150,14 +150,14 @@ export default function BaseModalMap(prop) {
                 <Fade in={prop.modalMap}>
                     <ThemeProvider theme={theme}>
                         <div id="map-container" className={modalClass.paper}>
-                            <div className="2xl:flex flex-wrap 2xl:justify-between">
-                                <div className={"2xl:flex-grow-0.5 " + inputClass.root} >
-                                    <TextField onInput={queryPlaceHandler} className="2xl:w-3/5" id="placeQuery" label="Search" variant="outlined" />
+                            <div className="flex flex-wrap justify-between">
+                                <div className={"flex-grow-0.5 " + inputClass.root} >
+                                    <TextField onInput={queryPlaceHandler} className="w-3/5" id="placeQuery" label="Search" variant="outlined" />
                                 </div>
-                                <div className="button-action 2xl:flex items-center">
-                                    {placeQuery.length > 0 ? <Button onClick={searchPlace} variant="contained" color="default" className="2xl:max-h-9" >Search</Button> : <Button variant="contained" color="default" className="2xl:max-h-9" disabled>Search</Button>}
-                                    {prop.location != null ? <Button onClick={confirm} variant="contained" color="primary" className={"2xl:max-h-9 " + buttonClass.style}>Confirm</Button> : <Button onClick={confirm} variant="contained" color="primary" className={"2xl:max-h-9 " + buttonClass.style} disabled>Confirm</Button>}
-                                    <Button onClick={prop.cancelLocation} variant="contained" color="secondary" className={"2xl:max-h-9 " + buttonClass.style}>Cancel</Button>
+                                <div className="button-action flex items-center">
+                                    {placeQuery.length > 0 ? <Button onClick={searchPlace} variant="contained" color="default" className="max-h-9" >Search</Button> : <Button variant="contained" color="default" className="max-h-9" disabled>Search</Button>}
+                                    {prop.location != null ? <Button onClick={confirm} variant="contained" color="primary" className={"max-h-9 " + buttonClass.style}>Confirm</Button> : <Button onClick={confirm} variant="contained" color="primary" className={"max-h-9 " + buttonClass.style} disabled>Confirm</Button>}
+                                    <Button onClick={prop.cancelLocation} variant="contained" color="secondary" className={"max-h-9 " + buttonClass.style}>Cancel</Button>
                                 </div>
                             </div>
                             {prop.radiusDefault ?

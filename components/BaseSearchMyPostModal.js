@@ -96,7 +96,7 @@ export default function BaseSearchMyPostModal(prop) {
                                                 <Carousel animation="slide" autoPlay={false} navButtonsAlwaysVisible={prop.myPostData.searchResult.length > 1 ? true : false} className="h-full">
                                                     {prop.myPostData.searchResult.map((item, i) => {
                                                         return (
-                                                            <div className={"grid 2xl:grid-cols-3 px-4 justify-items-center mt-4 " + postDataClasses.itemStyle} key={'dashboard-page-' + (i + 1)}>
+                                                            <div className={"grid grid-cols-3 px-4 justify-items-center mt-4 " + postDataClasses.itemStyle} key={'dashboard-page-' + (i + 1)}>
                                                                 {item.map((pageItem, pageItemIndex) => {
                                                                     return (
                                                                         <div className={`cursor-pointer `} onClick={() => { prop.setMyPostSelected({ page: i, post: pageItemIndex }); prop.closeSearchByMyPostModal() }} key={'dashboard-item-' + (i + 1) + '-' + (pageItemIndex + 1)}>
@@ -115,7 +115,7 @@ export default function BaseSearchMyPostModal(prop) {
                                                                                     :
                                                                                     <Image key={'image-preview-dashboard-default-' + (pageItemIndex + 1)} src={IMAGES.defaultImg} alt={'previewImg-dashboard-default' + (pageItemIndex + 1)} width="310" height="310" />
                                                                             }
-                                                                            <div className="px-3 pt-8">
+                                                                            <div className="px-3 sm:pt-16 md:pt-12 lg:pt-8">
                                                                                 <p className="text-lg font-medium"><span className="text-lg font-medium">Date: </span>{convertDateFormat(pageItem.date)}</p>
                                                                                 <p className="text-lg font-medium"><span className="text-lg font-medium">Sex: </span>{pageItem.sex != "unknow" ? pageItem.sex == "true" ? "Male" : "Female" : 'Unknow'}</p>
                                                                                 <p className="text-lg font-medium"><span className="text-lg font-medium">Collar: </span>{pageItem.collar ? 'Have' : 'Not Have'}</p>

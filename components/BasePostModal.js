@@ -364,25 +364,25 @@ export default function BasePostModal(prop) {
     }
 
     return (
-        <div style={{filter: 'drop-shadow(0px 4px 4px rgba(0,0,0,0.3))'}} className={"2xl:absolute bg-white rounded-lg border border-gray-300 border-solid " + BasePostModalStyles.modal}>
-            <div className="2xl:grid 2xl:grid-cols-3">
-                <div className="2xl:mt-8 2xl:mb-6 2xl:ml-12">
+        <div style={{filter: 'drop-shadow(0px 4px 4px rgba(0,0,0,0.3))'}} className={"md:absolute bg-white rounded-lg border border-gray-300 border-solid " + BasePostModalStyles.modal}>
+            <div className="md:grid md:grid-cols-3">
+                <div className="md:mt-8 md:mb-6 md:ml-12">
                     <p className={"text-2xl font-medium " + cn({ 'text-red-500': validateMsg.type === "location", 'text-postTitle': validateMsg.type !== "location" })}>Google Map *</p>
                     {
                         mapPreview === true ?
-                            <div id="map-preview-post" onClick={openMapModal} className="2xl:mt-7 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '100%', height: '400px' }}>
+                            <div id="map-preview-post" onClick={openMapModal} className="md:mt-7 md:h-60 lg:h-4/6 xl:h-5/6 md:relative shadow-lg border border-gray-300 border-solid " style={{ width: '100%' }}>
                             </div>
                             :
-                            <div id="map-preview-default" onClick={openMapModal} className="2xl:mt-3 h-60 2xl:relative shadow-lg border border-gray-300 border-solid " style={{ width: '100%', height: '400px' }}>
-                                <Image src={IMAGES.map} alt='default-map' layout="fill" className="2xl:absolute cursor-pointer 2xl:top-1/3 2xl:left-16 " />
-                                <p className={"2xl:absolute text-white 2xl:px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-80 " + UtilStyles.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
+                            <div id="map-preview-default" onClick={openMapModal} className="md:mt-3 md:h-60 lg:h-4/6 xl:h-5/6 md:relative shadow-lg border border-gray-300 border-solid " style={{ width: '100%' }}>
+                                <Image src={IMAGES.map} alt='default-map' layout="fill" className="md:absolute cursor-pointer md:top-1/3 md:left-16 " />
+                                <p className={"md:absolute text-white md:px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-80 " + UtilStyles.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
                             </div>
                     }
                     <BaseModalMap handleClose={closeMapModal} modalMap={modalMap} searchPlace={searchPlace} map={mapObj} location={location} confirmStatusLocation={confirmStatusLocation} cancelLocation={cancelLocation} type={'post'} />
                 </div>
-                <div className="2xl:mt-16 2xl:mb-6 2xl:mx-auto 2xl:w-4/6">
+                <div className="md:mt-16 md:mb-6 md:mx-auto md:w-4/6">
                     {/* <form className={formClasses.root} autoComplete="off"> */}
-                    {/* <TextField id="dateField" label="Date" variant="outlined" type="date" className="2xl:w-full" required /> */}
+                    {/* <TextField id="dateField" label="Date" variant="outlined" type="date" className="md:w-full" required /> */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                             margin="normal"
@@ -399,8 +399,8 @@ export default function BasePostModal(prop) {
                             error={validateMsg.type === "date" ? true : false}
                         />
                     </MuiPickersUtilsProvider>
-                    <div className="sex-section 2xl:flex flex-wrap items-center text-textGray font-medium 2xl:my-2">
-                        <p className="2xl:mr-4">Sex</p>
+                    <div className="sex-section md:flex flex-wrap items-center text-textGray font-medium md:my-2">
+                        <p className="md:mr-4 text-black">Sex</p>
                         <GreenRadio
                             checked={sexSelected === 'male'}
                             onChange={handleSexChange}
@@ -426,8 +426,8 @@ export default function BasePostModal(prop) {
                         />
                         <p>Unknow</p>
                     </div>
-                    <div className="collar-section 2xl:flex flex-wrap items-center text-textGray font-medium 2xl:mt-2 2xl:mb-4">
-                        <p className="2xl:mr-4">Pet collar</p>
+                    <div className="collar-section md:flex flex-wrap items-center text-textGray font-medium md:mt-2 md:mb-4">
+                        <p className="md:mr-4 text-black">Pet collar</p>
                         <GreenRadio
                             checked={collarSelected === 'have'}
                             onChange={handleCollarChange}
@@ -453,18 +453,18 @@ export default function BasePostModal(prop) {
                         variant="outlined"
                         className="w-full"
                     />
-                    <p className="text-xs font-medium 2xl:mt-2 text-textGray">Add more information such as a short tail, three legs.</p>
+                    <p className="text-xs font-medium md:mt-2 text-textGray">Add more information such as a short tail, three legs.</p>
                 </div>
                 {/* </form> */}
-                <div className="2xl:mt-8 2xl:mb-6 2xl:mr-12">
+                <div className="md:mt-8 md:mb-6 md:mr-12">
                     <p className={"text-2xl font-medium " + BasePostModalStyles.postTitleColor}>Cat photo</p>
                     <BaseImageUpload image={image} setImage={setImage} />
                 </div>
             </div>
-            <div className="2xl:flex flex-wrap 2xl:justify-end">
-                <p className={'2xl:my-auto 2xl:mr-16 text-red-500'}>{validateMsg.msg != "" ? validateMsg.msg : ''}</p>
-                <BaseButton onClickFunction={closePostModal} value={'Cancel'} customClass={'2xl:my-6 2xl:mr-8'}></BaseButton>
-                <BaseButton onClickFunction={submitPost} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Submit'} customClass={'2xl:my-6 2xl:mr-28 bg-opacity-80'}></BaseButton>
+            <div className="md:flex flex-wrap md:justify-end">
+                <p className={'md:my-auto md:mr-16 text-red-500'}>{validateMsg.msg != "" ? validateMsg.msg : ''}</p>
+                <BaseButton onClickFunction={closePostModal} value={'Cancel'} customClass={'md:my-6 md:mr-8'}></BaseButton>
+                <BaseButton onClickFunction={submitPost} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Submit'} customClass={'md:my-6 md:mr-14 lg:mr-28 bg-opacity-80'}></BaseButton>
             </div>
             <BasePostResModal closePostResModal={closePostResModal} postResStatus={postResStatus} postRes={postRes} />
         </div>

@@ -162,18 +162,18 @@ export default function BaseCropModal(prop) {
                 <Fade in={prop.cropModalStatus}>
                     <ThemeProvider theme={theme}>
                         <div className={modalClasses.paper}>
-                            <div className="block 2xl:h-5/6 ">
+                            <div className="block h-5/6 ">
                                 {/* <Image id="image-crop" alt="img-for-crop" height="100" width="100" layout="fixed" src="/images/map.png" style={{ display: 'block', maxWidth: '100%' }} /> */}
                                 <img id="image-crop" alt="img-for-crop" style={{ display: 'block', maxWidth: '100%' }} />
                             </div>
-                            <div className="2xl:flex flex-wrap 2xl:h-1/6 2xl:items-center 2xl:justify-between">
-                                <div className="2xl:flex-grow-0.9" >
-                                    <Button onClick={resetCropper} variant="contained" color="default" className={"2xl:max-h-14"}>Reset</Button>
+                            <div className="flex flex-wrap h-1/6 items-center justify-between">
+                                <div className="flex-grow-0.9" >
+                                    <Button onClick={resetCropper} variant="contained" color="default" className={"max-h-14"}>Reset</Button>
                                 </div>
                                 <p>{croppedImage.length + 1} of {prop.imageRawFile.length}</p>
-                                <Button onClick={backCrop} variant="contained" color="primary" className={"2xl:max-h-14"} disabled={croppedImage.length > 0 && prop.imageRawFile.length > 1 ? false : true} >Back</Button>
-                                <Button onClick={cropImage} variant="contained" color="primary" className={"2xl:max-h-14"}>{croppedImage.length + 1 === prop.imageRawFile.length ? 'Finish' : 'Crop'}</Button>
-                                <Button onClick={prop.closeCropModal} variant="contained" color="secondary" className={"2xl:max-h-14 2xl:ml-8"}>Cancel</Button>
+                                <Button onClick={backCrop} variant="contained" color="primary" className={"max-h-14"} disabled={croppedImage.length > 0 && prop.imageRawFile.length > 1 ? false : true} >Back</Button>
+                                <Button onClick={cropImage} variant="contained" color="primary" className={"max-h-14"}>{croppedImage.length + 1 === prop.imageRawFile.length ? 'Finish' : 'Crop'}</Button>
+                                <Button onClick={prop.closeCropModal} variant="contained" color="secondary" className={"max-h-14 ml-8"}>Cancel</Button>
                             </div>
                         </div>
                     </ThemeProvider>
