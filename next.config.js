@@ -14,7 +14,6 @@ const nextConfig = {
     FB_MESSAGINGSENDER: process.env.FB_MESSAGINGSENDER,
     FB_APPID: process.env.FB_APPID,
     FB_MEASUREMENTID: process.env.FB_MEASUREMENTID,
-    SOCKET_KEY: process.env.SOCKET_KEY
   },
   serverRuntimeConfig: {
     // Will only be available on the server side
