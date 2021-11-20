@@ -31,26 +31,40 @@ const modalStyles = makeStyles((theme) => ({
         justifyContent: 'center',
     },
     paper: {
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        width: '80%',
-        height: '80%',
+        "@media (min-width: 1024px)": {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2, 4, 3),
+            width: '80%',
+            height: '80%',
+        },
+        "@media (min-width: 1px)": {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(0.5, 2, 1),
+            width: '80%',
+            height: '80%',
+        },
     },
 }));
 
 const mapStyles = makeStyles((theme) => ({
     height: {
-        height: '85%'
+        height: '75%'
     },
     heightWithRadius: {
-        height: '100%'
+        height: '90%'
     }
 }));
 
 const buttonStyles = makeStyles((theme) => ({
     style: {
-        marginLeft: '20px'
+        "@media (min-width: 1024px)": {
+            marginLeft: '20px'
+        },
+        "@media (min-width: 1px) and (max-width: 768px)": {
+            marginLeft: '2px'
+        },
     }
 }));
 
@@ -162,8 +176,8 @@ export default function BaseModalMap(prop) {
                             </div>
                             {prop.radiusDefault ?
                                 <div className="grid grid-cols-12 h-5/6">
-                                    <div className="h-full my-auto">
-                                        <p className="text-xl font-medium mt-16">Radius</p>
+                                    <div className="h-full my-auto md:col-span-1 sm:col-span-2 col-span-3">
+                                        <p className="text-xl font-medium 2xl:mt-16">Radius</p>
                                         <div className="h-4/6 mt-6">
                                             <Slider
                                                 defaultValue={prop.radiusDefault}
@@ -179,7 +193,7 @@ export default function BaseModalMap(prop) {
                                             />
                                         </div>
                                     </div>
-                                    <div id={prop.type == 'post' ? "map-post" : "map"} className={"w-auto col-span-11 mt-2 border border-gray-300 border-solid " + mapClass.heightWithRadius}></div>
+                                    <div id={prop.type == 'post' ? "map-post" : "map"} className={"w-auto sm:col-span-10 md:col-span-11 col-span-9 mt-2 border border-gray-300 border-solid " + mapClass.heightWithRadius}></div>
                                 </div>
                                 :
                                 <div id={prop.type == 'post' ? "map-post" : "map"} className={"w-auto mt-2 border border-gray-300 border-solid " + mapClass.height}></div>

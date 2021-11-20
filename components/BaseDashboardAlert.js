@@ -22,21 +22,31 @@ const theme = createTheme({
 
 const alertStyles = makeStyles((theme) => ({
     style: {
-            position: 'fixed',
-            bottom: '0px',
-            right: '0px',
-            padding: '30px'
+        position: 'fixed',
+        bottom: '0px',
+        right: '0px',
+        padding: '30px'
     }
 }))
 
 const contentStyles = makeStyles((theme) => ({
     style: {
-        width: '387px',
-        height: '264px',
-        background: '#FFFFFF',
-        boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.35)',
-        borderRadius: '27px',
-        marginBottom: '12px'
+        "@media (min-width: 768px)": {
+            width: '387px',
+            height: '264px',
+            background: '#FFFFFF',
+            boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.35)',
+            borderRadius: '27px',
+            marginBottom: '12px'
+        },
+        "@media (min-width: 1px)": {
+            width: '310px',
+            height: '240px',
+            background: '#FFFFFF',
+            boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.35)',
+            borderRadius: '27px',
+            marginBottom: '12px'
+        }
     }
 }))
 
@@ -47,9 +57,16 @@ const postStyles = makeStyles((theme) => ({
         display: 'flex'
     },
     imageContainer: {
+        "@media (min-width: 768px)": {
         height: '55px',
         width: '55px',
         position: 'relative'
+        },
+        "@media (min-width: 1px)": {
+        height: '45px',
+        width: '55px',
+        position: 'relative'
+        }
     },
     postDetail: {
         width: '280px'
@@ -112,7 +129,7 @@ export default function BaseDashboardAlert(prop) {
                                                     `ขณะนี้ไม่มีคนพบแมวบริเวณใกล้เคียงแมวหายของคุณ`
                                             }
                                         </p>
-                                        <div className={"relative h-32 mx-5 mt-3 overflow-y-scroll "}>
+                                        <div className={"relative h-24 sm:h-32 mx-5 mt-3 overflow-y-scroll "}>
                                             {
                                                 prop.dashboardData && prop.dashboardData.searchResult.length > 0
                                                     ?

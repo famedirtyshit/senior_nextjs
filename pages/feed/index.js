@@ -32,6 +32,8 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import Footer from '@components/Footer';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import * as React from 'react';
 
 const theme = createTheme({
     palette: {
@@ -92,6 +94,8 @@ export default function Feed() {
     const currentAlertChecker = useRef(0);
 
     const [accountMenu, setAccountMenu] = useState(null);
+
+    const [drawerStatus, setDrawerStatus] = useState(false);
 
     useEffect(() => {
         let res = initFirebase();
@@ -173,6 +177,22 @@ export default function Feed() {
     }, [])
 
     useEffect(() => {
+        if (drawerStatus == true) {
+            $(function () {
+                $('input[name="daterange-m"]').daterangepicker({
+                    opens: 'left',
+                    drops: 'up',
+                    startDate: fromTo[0],
+                    endDate: fromTo[1],
+                    maxDate: new Date()
+                }, function (start, end, label) {
+                    setFromTo([new Date(start), new Date(end)])
+                });
+            });
+        }
+    }, [drawerStatus])
+
+    useEffect(() => {
         try {
             if (modalMap === true) {
                 let checkExist = setInterval(function () {
@@ -199,7 +219,7 @@ export default function Feed() {
         } else {
             setMapPreview(false);
         }
-    }, [locationConfirmStatus, locationConfirm, radius])
+    }, [locationConfirmStatus, locationConfirm, radius, drawerStatus])
 
 
 
@@ -288,6 +308,17 @@ export default function Feed() {
             setLocationConfirm({ lat: postFilter.location.coordinates[1], lng: postFilter.location.coordinates[0] });
         }
     }, [myPostSelected])
+
+    const toggleDrawer = (status) => (event) => {
+        if (
+            event &&
+            event.type === 'keydown' &&
+            (event.key === 'Tab' || event.key === 'Shift')
+        ) {
+            return;
+        }
+        setDrawerStatus(status);
+    };
 
     const closeDisplayModal = () => {
         setDisplayStatus(false);
@@ -400,7 +431,13 @@ export default function Feed() {
     }
 
     const initPreviewMap = () => {
-        map = new google.maps.Map(document.getElementById("map-preview"), {
+        let mapPreviewTargetId;
+        if (document.getElementById("map-preview-m") == null) {
+            mapPreviewTargetId = 'map-preview';
+        } else {
+            mapPreviewTargetId = 'map-preview-m';
+        }
+        map = new google.maps.Map(document.getElementById(mapPreviewTargetId), {
             center: locationConfirm,
             zoom: 15,
             disableDefaultUI: true,
@@ -596,43 +633,193 @@ export default function Feed() {
             <Script async defer src={`https://maps.googleapis.com/maps/api/js?v=3.44&key=${process.env.GMAPKEY}&libraries=places&region=TH&language=th`} onLoad={() => { googleStatus.current = true }} />
             <ThemeProvider theme={theme}>
                 <div className={"head-sec"}>
-                    <header className="flex flex-wrap justify-between lg:mx-64 md:mx-64 pt-3">
+                    <header className="flex flex-wrap justify-between mx-10 sm:mx-24 lg:mx-64 md:mx-32 pt-3">
                         <Link href='/'>
                             <a>
-                                <h1 className="text-5xl font-black text-white">Catus</h1>
+                                <h1 className="text-xl md:text-5xl font-black text-white">Catus</h1>
                             </a>
                         </Link>
                         {
                             userAccount != null
                                 ?
-                                <div className="account-action">
-                                    <div onClick={handleOpenAccountMenu} className='flex flex-wrap cursor-pointer'>
-                                        <p className="text-lg text-white">
-                                            {userAccount.firstname ? userAccount.firstname.length > 15 ? userAccount.firstname.substring(0, 15) + '... ' : userAccount.firstname + ' ' : null}
-                                            {userAccount.lastname ? userAccount.lastname.length > 15 ? userAccount.lastname.substring(0, 15) + '... ' : userAccount.lastname + ' ' : null}
-                                        </p>
-                                        <div className="pt-3 ml-3">
-                                            <svg width="12" height="6" viewBox="0 0 18 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M7.62878 7.74068C7.53883 7.67259 7.46291 7.59722 7.39688 7.51892L0.504162 2.26459C-0.167948 1.75178 -0.168267 0.920687 0.504481 0.407648C1.17691 -0.105147 2.26753 -0.105132 2.9406 0.407681L8.87667 4.93303L14.844 0.384986C15.5161 -0.128052 16.6071 -0.128037 17.2801 0.385019C17.616 0.641547 17.7841 0.97734 17.7841 1.31313C17.7841 1.64892 17.616 1.98544 17.2795 2.24123L10.3565 7.51896C10.2904 7.59725 10.2148 7.67239 10.1246 7.74071C9.78005 8.00331 9.32772 8.12925 8.87667 8.12341C8.4253 8.12948 7.97233 8.00328 7.62878 7.74068Z" fill="white" />
+                                <div>
+                                    <div className="account-action mt-4 mb-8 md:block hidden">
+                                        <div onClick={handleOpenAccountMenu} className='flex flex-wrap cursor-pointer'>
+                                            <p className="text-base text-white">
+                                                {userAccount.firstname ? userAccount.firstname.length > 15 ? userAccount.firstname.substring(0, 15) + '... ' : userAccount.firstname + ' ' : null}
+                                                {userAccount.lastname ? userAccount.lastname.length > 15 ? userAccount.lastname.substring(0, 15) + '... ' : userAccount.lastname + ' ' : null}
+                                            </p>
+                                            <div className="pt-3 ml-3">
+                                                <svg width="12" height="6" viewBox="0 0 18 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.62878 7.74068C7.53883 7.67259 7.46291 7.59722 7.39688 7.51892L0.504162 2.26459C-0.167948 1.75178 -0.168267 0.920687 0.504481 0.407648C1.17691 -0.105147 2.26753 -0.105132 2.9406 0.407681L8.87667 4.93303L14.844 0.384986C15.5161 -0.128052 16.6071 -0.128037 17.2801 0.385019C17.616 0.641547 17.7841 0.97734 17.7841 1.31313C17.7841 1.64892 17.616 1.98544 17.2795 2.24123L10.3565 7.51896C10.2904 7.59725 10.2148 7.67239 10.1246 7.74071C9.78005 8.00331 9.32772 8.12925 8.87667 8.12341C8.4253 8.12948 7.97233 8.00328 7.62878 7.74068Z" fill="white" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <Menu
+                                            id="account-menu"
+                                            anchorEl={accountMenu}
+                                            keepMounted
+                                            open={Boolean(accountMenu)}
+                                            onClose={handleCloseAccountMenu}
+                                        >
+                                            <MenuItem className='cursor-pointer' onClick={() => { window.location.href = '/account' }}>My Account</MenuItem>
+                                            <MenuItem className='cursor-pointer' onClick={logout}>Logout</MenuItem>
+                                        </Menu>
+                                    </div>
+                                    <div className='ml-2 md:ml-0 md:hidden'>
+                                        <div onClick={toggleDrawer(true)} className='mt-1'>
+                                            <svg width="37" height="15" viewBox="0 0 37 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <line x1="1.5" y1="1.5" x2="34.5139" y2="1.5" stroke="#E2881B" strokeWidth="3" strokeLinecap="square" />
+                                                <line x1="5.5" y1="7.5" x2="34.5" y2="7.5" stroke="#E2881B" strokeWidth="3" strokeLinecap="square" />
+                                                <line x1="12.5" y1="13.5" x2="34.5" y2="13.5" stroke="#E2881B" strokeWidth="3" strokeLinecap="square" />
                                             </svg>
                                         </div>
+                                        <SwipeableDrawer
+                                            anchor={'right'}
+                                            open={drawerStatus}
+                                            onClose={toggleDrawer(false)}
+                                            onOpen={toggleDrawer(true)}
+                                        >
+                                            <div className='px-2'>
+                                                <div className="account-action mt-4 mb-8">
+                                                    <div onClick={handleOpenAccountMenu} className='flex flex-wrap cursor-pointer'>
+                                                        <p className="text-xl text-black font-bold">
+                                                            {userAccount.firstname ? userAccount.firstname.length > 15 ? userAccount.firstname.substring(0, 15) + '... ' : userAccount.firstname + ' ' : null}
+                                                            {userAccount.lastname ? userAccount.lastname.length > 15 ? userAccount.lastname.substring(0, 15) + '... ' : userAccount.lastname + ' ' : null}
+                                                        </p>
+                                                        {/* <div className="pt-3 ml-3">
+                                                        <svg width="12" height="6" viewBox="0 0 18 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M7.62878 7.74068C7.53883 7.67259 7.46291 7.59722 7.39688 7.51892L0.504162 2.26459C-0.167948 1.75178 -0.168267 0.920687 0.504481 0.407648C1.17691 -0.105147 2.26753 -0.105132 2.9406 0.407681L8.87667 4.93303L14.844 0.384986C15.5161 -0.128052 16.6071 -0.128037 17.2801 0.385019C17.616 0.641547 17.7841 0.97734 17.7841 1.31313C17.7841 1.64892 17.616 1.98544 17.2795 2.24123L10.3565 7.51896C10.2904 7.59725 10.2148 7.67239 10.1246 7.74071C9.78005 8.00331 9.32772 8.12925 8.87667 8.12341C8.4253 8.12948 7.97233 8.00328 7.62878 7.74068Z" fill="black" />
+                                                        </svg>
+                                                    </div> */}
+                                                    </div>
+                                                    {/* <Menu
+                                                    id="account-menu"
+                                                    anchorEl={accountMenu}
+                                                    keepMounted
+                                                    open={Boolean(accountMenu)}
+                                                    onClose={handleCloseAccountMenu}
+                                                > */}
+                                                    <p className="my-5" onClick={() => { window.location.href = '/account' }}>My Account</p>
+                                                    <p className="my-5" onClick={logout}>Logout</p>
+                                                    {/* </Menu> */}
+                                                </div>
+                                                <p className="text-xl font-bold mt-4">ITEM ({searchData != null && searchData != undefined && searchData.data.result == true ? searchData.data.count : 0})</p>
+                                                {
+                                                    userAccount != null ?
+                                                        <div>
+                                                            <p onClick={() => { setSearchMyPostStatus(true) }} className="text-white py-2 bg-darkCream rounded-3xl shadow-lg cursor-pointer text-center mt-2">ค้นหาด้วยข้อมูล Post ของฉัน</p>
+                                                            <BaseSearchMyPostModal searchType={searchType} setMyPostSelected={setMyPostSelected} myPostData={myPostData} searchMyPostLoading={searchMyPostLoading} closeSearchByMyPostModal={closeSearchByMyPostModal} searchMyPostStatus={searchMyPostStatus} />
+                                                        </div>
+                                                        :
+                                                        null
+                                                }
+                                                <p className={"text-xl font-medium mt-4"}>Change Location</p>
+                                                {
+                                                    mapPreview === true ?
+                                                        <div id="map-preview-m" onClick={openMapModal} className="mt-2 h-44 relative shadow-lg border border-gray-300 border-solid w-100">
+                                                        </div>
+                                                        :
+                                                        <div id="map-preview-default" onClick={openMapModal} className="mt-2 h-44 relative shadow-lg border border-gray-300 border-solid w-100">
+                                                            <Image src={IMAGES.map} layout="fill" alt='default-map' className="absolute cursor-pointer top-1/3 left-16 " />
+                                                            <p className={"absolute text-white px-2 text-sm text-center text-base py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + UtilStyle.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
+                                                        </div>
+                                                }
+                                                {/* <BaseModalMap handleClose={closeMapModal} radiusDefault={radius} setRadius={setRadius} modalMap={modalMap} searchPlace={searchPlace} map={mapObj} location={location} confirmStatusLocation={confirmStatusLocation} cancelLocation={cancelLocation} /> */}
+                                                <p className="text-xl font-medium mt-3">Sex</p>
+                                                <div className="sex-checkbox ml-1">
+                                                    <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={male} setValue={handleMaleChange} label='male' />
+                                                    <p className="inline-block text-xl font-medium align-middle ml-1.5">Male</p>
+                                                    <br />
+                                                    <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={female} setValue={handleFemaleChange} label='female' />
+                                                    <p className="inline-block text-xl font-medium align-middle ml-1.5" >Female</p>
+                                                    <br />
+                                                    <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={unknow} setValue={handleUnknowChange} label='unknow' />
+                                                    <p className="inline-block text-xl font-medium align-middle ml-1.5" >Unknow</p>
+                                                </div>
+                                                <p className="text-xl font-medium mt-3">Pet collar</p>
+                                                <div className="collar-checkbox ml-1">
+                                                    <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={haveCollar} setValue={handleHaveCollarChange} label='have collar' />
+                                                    <p className="inline-block text-xl font-medium align-middle ml-1.5">Have</p>
+                                                    <br />
+                                                    <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={notHaveCollar} setValue={handleNotHaveCollarChange} label='not have collar' />
+                                                    <p className="inline-block text-xl font-medium align-middle ml-1.5" >Not have</p>
+                                                </div>
+                                                <p className="text-xl font-medium my-3">From-To</p>
+                                                <div className="dateRangeSelect mt-3 ml-2">
+                                                    <input readOnly type="text" name="daterange-m" className="border border-solid border-gray-700 p-1 text-center rounded-lg text-base font-medium cursor-pointer" />
+                                                </div>
+                                            </div>
+                                        </SwipeableDrawer>
                                     </div>
-                                    <Menu
-                                        id="account-menu"
-                                        anchorEl={accountMenu}
-                                        keepMounted
-                                        open={Boolean(accountMenu)}
-                                        onClose={handleCloseAccountMenu}
-                                    >
-                                        <MenuItem onClick={() => { window.location.href = '/account' }}>My Account</MenuItem>
-                                        <MenuItem onClick={logout}>Logout</MenuItem>
-                                    </Menu>
                                 </div>
                                 :
-                                null
+                                <div className='ml-2 md:ml-0 md:hidden'>
+                                    <div onClick={toggleDrawer(true)} className='mt-1'>
+                                        <svg width="37" height="15" viewBox="0 0 37 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <line x1="1.5" y1="1.5" x2="34.5139" y2="1.5" stroke="#E2881B" strokeWidth="3" strokeLinecap="square" />
+                                            <line x1="5.5" y1="7.5" x2="34.5" y2="7.5" stroke="#E2881B" strokeWidth="3" strokeLinecap="square" />
+                                            <line x1="12.5" y1="13.5" x2="34.5" y2="13.5" stroke="#E2881B" strokeWidth="3" strokeLinecap="square" />
+                                        </svg>
+                                    </div>
+                                    <SwipeableDrawer
+                                        anchor={'right'}
+                                        open={drawerStatus}
+                                        onClose={toggleDrawer(false)}
+                                        onOpen={toggleDrawer(true)}
+                                    >
+                                        <div className='px-2'>
+                                            <p className="text-xl font-bold mt-4">ITEM ({searchData != null && searchData != undefined && searchData.data.result == true ? searchData.data.count : 0})</p>
+                                            {
+                                                userAccount != null ?
+                                                    <div>
+                                                        <p onClick={() => { setSearchMyPostStatus(true) }} className="text-white py-2 bg-darkCream rounded-3xl shadow-lg cursor-pointer text-center mt-2">ค้นหาด้วยข้อมูล Post ของฉัน</p>
+                                                        <BaseSearchMyPostModal searchType={searchType} setMyPostSelected={setMyPostSelected} myPostData={myPostData} searchMyPostLoading={searchMyPostLoading} closeSearchByMyPostModal={closeSearchByMyPostModal} searchMyPostStatus={searchMyPostStatus} />
+                                                    </div>
+                                                    :
+                                                    null
+                                            }
+                                            <p className={"text-xl font-medium mt-4"}>Change Location</p>
+                                            {
+                                                mapPreview === true ?
+                                                    <div id="map-preview-m" onClick={openMapModal} className="mt-2 h-44 relative shadow-lg border border-gray-300 border-solid w-100">
+                                                    </div>
+                                                    :
+                                                    <div id="map-preview-default" onClick={openMapModal} className="mt-2 h-44 relative shadow-lg border border-gray-300 border-solid w-100">
+                                                        <Image src={IMAGES.map} layout="fill" alt='default-map' className="absolute cursor-pointer top-1/3 left-16 " />
+                                                        <p className={"absolute text-white px-2 text-sm text-center text-base py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + UtilStyle.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
+                                                    </div>
+                                            }
+                                            {/* <BaseModalMap handleClose={closeMapModal} radiusDefault={radius} setRadius={setRadius} modalMap={modalMap} searchPlace={searchPlace} map={mapObj} location={location} confirmStatusLocation={confirmStatusLocation} cancelLocation={cancelLocation} /> */}
+                                            <p className="text-xl font-medium mt-3">Sex</p>
+                                            <div className="sex-checkbox ml-1">
+                                                <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={male} setValue={handleMaleChange} label='male' />
+                                                <p className="inline-block text-xl font-medium align-middle ml-1.5">Male</p>
+                                                <br />
+                                                <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={female} setValue={handleFemaleChange} label='female' />
+                                                <p className="inline-block text-xl font-medium align-middle ml-1.5" >Female</p>
+                                                <br />
+                                                <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={unknow} setValue={handleUnknowChange} label='unknow' />
+                                                <p className="inline-block text-xl font-medium align-middle ml-1.5" >Unknow</p>
+                                            </div>
+                                            <p className="text-xl font-medium mt-3">Pet collar</p>
+                                            <div className="collar-checkbox ml-1">
+                                                <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={haveCollar} setValue={handleHaveCollarChange} label='have collar' />
+                                                <p className="inline-block text-xl font-medium align-middle ml-1.5">Have</p>
+                                                <br />
+                                                <BaseCheckbox disabled={searchStatus == true ? true : false} checkValue={notHaveCollar} setValue={handleNotHaveCollarChange} label='not have collar' />
+                                                <p className="inline-block text-xl font-medium align-middle ml-1.5" >Not have</p>
+                                            </div>
+                                            <p className="text-xl font-medium my-3">From-To</p>
+                                            <div className="dateRangeSelect mt-3 ml-2">
+                                                <input readOnly type="text" name="daterange-m" className="border border-solid border-gray-700 p-1 text-center rounded-lg text-base font-medium cursor-pointer" />
+                                            </div>
+                                        </div>
+                                    </SwipeableDrawer>
+                                </div>
                         }
                     </header>
-                    <section className="relative w-9/12 bg-mainCream mx-auto rounded-lg shadow-lg lg:mt-20 md:mt-20 xl:mt-16">
+                    <section className="relative w-9/12 bg-mainCream mx-auto rounded-lg shadow-lg mt-6 lg:mt-20 md:mt-20 xl:mt-16">
                         {
                             userAccount != null
                                 ?
@@ -641,8 +828,8 @@ export default function Feed() {
                                 </div>
                                 : null
                         }
-                        <div className="lg:flex lg:flex-wrap lg:py-16 md:flex md:flex-wrap md:py-16">
-                            <div className="md:ml-16">
+                        <div className="flex flex-wrap py-4 md:py-16">
+                            <div className="ml-8 md:ml-16">
                                 {
                                     userAccount
                                         ?
@@ -687,7 +874,7 @@ export default function Feed() {
                                         />
                                 }
                             </div>
-                            <div className="lg:ml-12 md:ml-12 text-xl font-normal">
+                            <div className="ml-6 lg:ml-12 md:ml-12 text-base md:text-xl font-normal">
                                 {userAccount == null
                                     ?
                                     <div>
@@ -707,22 +894,22 @@ export default function Feed() {
                             </div>
                             {
                                 userAccount == null ?
-                                    <div className="lg:ml-64 md:ml-64 text-center lg:pl-12 md:pl-12">
+                                    <div className="ml-16 sm:ml-52 lg:ml-64 md:ml-64 text-center lg:pl-12 md:pl-12">
                                         <p className="text-xl font-normal text-textGray">Please login</p>
-                                        <BaseButton onClickFunction={() => { window.location.href = '/authen' }} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Login'} customClass={'mt-4 px-32'}></BaseButton>
+                                        <BaseButton onClickFunction={() => { window.location.href = '/authen' }} fill={true} fillColor={'mainGreen'} textColor={'white'} round={true} roundSize={'lg'} value={'Login'} customClass={'mt-4 px-14 md:px-32 '}></BaseButton>
                                     </div>
                                     :
                                     null
                             }
                         </div>
                         {userAccount != null ?
-                            <div className="lg:grid md:grid lg:grid-cols-2 md:grid-cols-2 bg-white rounded-lg lg:relative md:relative">
-                                <p onClick={setPostFoundType} className={"text-center lg:py-4 md:py-4 xl:py-3 text-lg cursor-pointer border-r border-solid border-gray-400 " + cn({
+                            <div className="grid grid grid-cols-2 bg-white rounded-lg lg:relative md:relative">
+                                <p onClick={setPostFoundType} className={"text-center py-2 lg:py-4 md:py-4 xl:py-3 text-lg cursor-pointer border-r border-solid border-gray-400 " + cn({
                                     'bg-mainGreen text-white rounded-bl-lg bg-opacity-80 font-bold': postType === "found",
                                     'text-mainGreen font-medium': postType !== "found",
                                 })
                                 }>Post Found</p>
-                                <p onClick={setPostLostType} className={"text-center lg:py-4 md:py-4 xl:py-3 text-lg cursor-pointer border-l border-solid border-gray-400 " + cn({
+                                <p onClick={setPostLostType} className={"text-center py-2 lg:py-4 md:py-4 xl:py-3 text-lg cursor-pointer border-l border-solid border-gray-400 " + cn({
                                     'bg-mainGreen text-white rounded-br-lg bg-opacity-80 font-bold': postType === "lost",
                                     'text-mainGreen font-medium': postType !== "lost",
                                 })
@@ -732,7 +919,7 @@ export default function Feed() {
                             : null
                         }
                     </section>
-                    <section className="lg:mt-32 lg:grid lg:grid-cols-3 lg:mx-56 md:mt-24 md:grid md:grid-cols-3 md:mx-56 text-center">
+                    <section className="mt-12 md:mt-32 grid grid-cols-3 lg:mx-56 md:mt-24 md:grid md:grid-cols-3 md:mx-32 text-center">
                         <p className={"cursor-pointer text-lg font-medium lg:pb-2 md:pb-2 " + cn({
                             'text-mainGreen font-semibold border-b-4 border-mainGreen': searchType === 'all',
                             'text-textGray': searchType != 'all'
@@ -748,8 +935,8 @@ export default function Feed() {
                     </section>
                 </div >
                 <main>
-                    <section className="md:mt-24 lg:mt-32 lg:grid lg:grid-cols-4 lg:mx-56 md:grid md:grid-cols-4 md:mx-56">
-                        <div>
+                    <section className="mt-16 md:mt-24 lg:mt-32 grid grid-cols-1 lg:grid-cols-4 lg:mx-56 md:grid md:grid-cols-4 md:mx-32">
+                        <div className="hidden md:block">
                             <p className="text-xl font-bold">ITEM ({searchData != null && searchData != undefined && searchData.data.result == true ? searchData.data.count : 0})</p>
                             {
                                 userAccount != null ?
@@ -802,7 +989,7 @@ export default function Feed() {
                         </div>
                         <div className="lg:col-span-3 md:col-span-3">
                             <div className="md:flex md:flex-wrap">
-                                <div className="lg:py-1 md:py-1 lg:px-6 md:px-6 lg:ml-auto md:ml-auto">
+                                <div className="lg:py-1 md:py-1 px-6 lg:px-6 md:px-6 lg:ml-auto md:ml-auto">
                                     <Button color="primary" variant="contained" aria-controls="sort-menu" aria-haspopup="true" onClick={handleOpenSortMenu}>
                                         {sortType}
                                     </Button>
@@ -818,9 +1005,9 @@ export default function Feed() {
                                     </Menu>
                                 </div>
                             </div>
-                            <div className="lg:grid md:grid lg:grid-cols-3 md:grid-cols-3 lg:gap-4 md:gap-4 lg:ml-9 md:ml-9 lg:mt-8 md:mt-8">
+                            <div className="grid md:grid-cols-3 md:gap-4 md:ml-9 md:mt-8">
                                 {searchStatus == true ?
-                                    <div className="lg:col-span-3 md:col-span-3 lg:mx-auto md:mx-auto lg:mt-72 md:mt-72">
+                                    <div className="lg:col-span-3 col-span-3 mx-auto mx-auto lg:mt-72 md:mt-72">
                                         <CircularProgress />
                                     </div>
                                     :
@@ -837,9 +1024,9 @@ export default function Feed() {
                                 }
                             </div>
                         </div>
-                        <div className="lg:col-span-4 md:col-span-4 lg:mt-16 md:mt-16 lg:mb-8 md:mb-8">
-                            <div className="lg:flex md:flex flex-wrap">
-                                <div className="lg:ml-auto md:ml-auto">
+                        <div className="md:col-span-4 lg:mt-16 md:mt-16 lg:mb-8 md:mb-8 my-8">
+                            <div className="flex flex-wrap">
+                                <div className="ml-auto ml-auto">
                                     {searchData != null && searchData != undefined && searchData.data.result == true ? <Pagination onChange={(e, page) => { setPage(page) }} page={page} count={searchData.data.count == 0 ? 1 : Math.ceil(searchData.data.count / 12)} disabled={searchStatus == true ? true : false} /> : null}
                                 </div>
                             </div>

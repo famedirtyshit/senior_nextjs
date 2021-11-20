@@ -16,11 +16,20 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
     },
     paper: {
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        width: '1366px',
-        height: '597px'
+        "@media (min-width: 1024px)": {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2, 4, 3),
+            width: '1366px',
+            height: '597px'
+        },
+        "@media (min-width: 1px)": {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2, 4, 3),
+            width: '80%',
+            height: 'auto'
+        },
     },
 }));
 
@@ -96,7 +105,7 @@ export default function BaseSearchMyPostModal(prop) {
                                                 <Carousel animation="slide" autoPlay={false} navButtonsAlwaysVisible={prop.myPostData.searchResult.length > 1 ? true : false} className="h-full">
                                                     {prop.myPostData.searchResult.map((item, i) => {
                                                         return (
-                                                            <div className={"grid grid-cols-3 px-4 justify-items-center mt-4 " + postDataClasses.itemStyle} key={'dashboard-page-' + (i + 1)}>
+                                                            <div className={"grid md:grid-cols-3 grid-cols-1 px-4 justify-items-center mt-4 overflow-y-auto " + postDataClasses.itemStyle} key={'dashboard-page-' + (i + 1)}>
                                                                 {item.map((pageItem, pageItemIndex) => {
                                                                     return (
                                                                         <div className={`cursor-pointer `} onClick={() => { prop.setMyPostSelected({ page: i, post: pageItemIndex }); prop.closeSearchByMyPostModal() }} key={'dashboard-item-' + (i + 1) + '-' + (pageItemIndex + 1)}>

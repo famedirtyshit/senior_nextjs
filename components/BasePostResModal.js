@@ -14,11 +14,27 @@ const modalStyles = makeStyles((theme) => ({
         justifyContent: 'center',
     },
     paper: {
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        width: '20%',
-        height: '20%',
+        "@media (min-width: 1024px)": {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2, 4, 3),
+            width: '20%',
+            height: '20%',
+        },
+        "@media (min-width: 768px)": {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2, 4, 3),
+            width: '45%',
+            height: '30%',
+        },
+        "@media (min-width: 1px) and (max-width: 767px)": {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2, 4, 3),
+            width: '80%',
+            height: '23%',
+        }
     },
 }));
 

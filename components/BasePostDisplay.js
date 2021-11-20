@@ -19,11 +19,20 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
     },
     paper: {
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: '49px',
-        boxShadow: theme.shadows[5],
-        width: '1600px',
-        height: '700px'
+        "@media (min-width: 1024px)": {
+            backgroundColor: theme.palette.background.paper,
+            borderRadius: '49px',
+            boxShadow: theme.shadows[5],
+            width: '1600px',
+            height: '700px'
+        },
+        "@media (min-width: 1px)": {
+            backgroundColor: theme.palette.background.paper,
+            borderRadius: '49px',
+            boxShadow: theme.shadows[5],
+            width: '80%',
+            height: '80%'
+        },
     },
 }));
 
@@ -35,6 +44,14 @@ const mapStyles = makeStyles((theme) => ({
         },
         "@media (min-width: 1024px)": {
             width: '300px',
+            height: '210px'
+        },
+        "@media (min-width: 768px)": {
+            width: '100%',
+            height: '210px'
+        },
+        "@media (min-width: 1px)": {
+            width: '100%',
             height: '210px'
         },
     }
@@ -156,14 +173,14 @@ export default function BasePostDisplay(prop) {
                         </div>
                         :
                         <div className={classes.paper}>
-                            <div className="md:pb-20 md:pt-10 h-full md:relative">
-                                <h1 className="md:mb-4 md:ml-8 text-lg font-bold">{checkProp ? prop.post.data.searchResult.length > 0 ? prop.post.data.searchResult[prop.target].postType == 'lost' ? 'LOST CAT' : 'FOUND CAT' : null : null} POST</h1>
-                                <div className="md:absolute md:top-7 md:right-8 cursor-pointer" onClick={prop.closeModal}>
+                            <div className="pb-20 pb-10 pt-10 pt-4 h-full relative">
+                                <h1 className="mb-4 mb-2 ml-8 ml-4 text-lg font-bold">{checkProp ? prop.post.data.searchResult.length > 0 ? prop.post.data.searchResult[prop.target].postType == 'lost' ? 'LOST CAT' : 'FOUND CAT' : null : null} POST</h1>
+                                <div className="absolute top-7 right-8 cursor-pointer" onClick={prop.closeModal}>
                                     <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M15.382 13.0002L25.5059 2.8758C26.1647 2.21725 26.1647 1.15246 25.5059 0.493912C24.8473 -0.164637 23.7826 -0.164637 23.124 0.493912L12.9998 10.6183L2.87597 0.493912C2.21712 -0.164637 1.15267 -0.164637 0.494134 0.493912C-0.164711 1.15246 -0.164711 2.21725 0.494134 2.8758L10.618 13.0002L0.494134 23.1246C-0.164711 23.7831 -0.164711 24.8479 0.494134 25.5065C0.822322 25.835 1.25384 26 1.68505 26C2.11626 26 2.54747 25.835 2.87597 25.5065L12.9998 15.3821L23.124 25.5065C23.4525 25.835 23.8837 26 24.3149 26C24.7462 26 25.1774 25.835 25.5059 25.5065C26.1647 24.8479 26.1647 23.7831 25.5059 23.1246L15.382 13.0002Z" fill="black" />
                                     </svg>
                                 </div>
-                                <div className="md:absolute md:bottom-7 md:left-8 cursor-pointer">
+                                <div className="absolute bottom-7 left-8 cursor-pointer">
                                     <Button
                                         variant="contained"
 
@@ -177,14 +194,14 @@ export default function BasePostDisplay(prop) {
                                     </Button>
                                 </div>
                                 <BaseReportPost reportStatus={reportStatus} closeReportModal={closeReportModal} post={checkProp ? prop.post.data.searchResult[prop.target]._id : null} type={checkProp ? prop.post.data.searchResult[prop.target].postType : null} />
-                                <div className="md:grid md:grid-cols-10 gap-6 md:px-8 h-full">
-                                    <div className="md:col-span-1 md:grid lg:gap-2 sm:gap-1 md:grid-cols-1 md:grid-rows-4 sm:h-4/6 lg:h-5/6">
+                                <div className="grid md:grid-cols-10 grid-cols-5 md:gap-6 gap-2 px-8 px-2 h-full  overflow-y-scroll">
+                                    <div className="col-span-1 grid lg:gap-2 gap-1 grid-cols-1 h-44 ss:h-96 grid-rows-4 md:h-4/6 lg:h-5/6">
                                         {checkProp && imageSet.length > 1 ? imageSet.map((item, index) => {
                                             if (index == 0) {
                                                 return null;
                                             } else {
                                                 return (
-                                                    <div key={index} className="md:relative md:mx-auto md:w-full border border-solid border-gray-700" >
+                                                    <div key={index} className="relative mx-auto w-full border border-solid border-gray-700" >
                                                         <Image className="cursor-pointer" onClick={chooseImage} src={item.url} alt={index} layout='fill' />
                                                     </div>
                                                 )
@@ -193,8 +210,8 @@ export default function BasePostDisplay(prop) {
                                             :
                                             null}
                                     </div>
-                                    <div className="md:col-span-3">
-                                        <div className="md:relative md:w-full md:h-1/2 lg:h-4/6 xl:h-5/6 border border-solid border-gray-700" >
+                                    <div className="md:col-span-3 col-span-4">
+                                        <div className="relative w-full h-5/6 md:h-1/2 lg:h-4/6 xl:h-5/6 border border-solid border-gray-700" >
                                             {checkProp ?
                                                 <Image src={imageSet.length > 0 ? imageSet[0].url : IMAGES.defaultImg} alt={'picture-display'} layout='fill' />
                                                 :
@@ -202,7 +219,7 @@ export default function BasePostDisplay(prop) {
                                             }
                                         </div>
                                     </div>
-                                    <div className="md:col-span-3 md:grid md:grid-cols-1">
+                                    <div className="md:col-span-3 col-span-5 grid grid-cols-1">
                                         <div className="bg-gray-100 rounded-2xl py-8 px-10">
                                             <p className='text-base mb-2'><span className="text-base font-bold">Date: </span>{checkProp ? convertDateFormat(prop.post.data.searchResult[prop.target].date) + ' ' + moment(prop.post.data.searchResult[prop.target].createdAt).format("h:mm a") : null}</p>
                                             <p className="text-base mb-2"><span className="text-base font-bold">Sex: </span>{checkProp ? prop.post.data.searchResult[prop.target].sex == "unknow" ? 'Unknow' : prop.post.data.searchResult[prop.target].sex == "true" ? 'Male' : 'Female' : null}</p>
@@ -222,8 +239,8 @@ export default function BasePostDisplay(prop) {
                                         </div>
                                         <div id="map-preview-display" onClick={openDestination} className={"cursor-pointer mt-4 shadow-lg border border-gray-300 border-solid justify-self-center " + mapClasses.mapContainer} />
                                     </div>
-                                    <div className="md:col-span-3">
-                                        <div className="bg-gray-100 pt-6 px-4 rounded-2xl md:h-full">
+                                    <div className="md:col-span-3 col-span-5 md:mb-0 mb-8">
+                                        <div className="bg-gray-100 pt-6 px-4 rounded-2xl h-full">
                                             <div className="text-center mb-6">
                                                 <p className="text-lg font-normal">Post Owner</p>
                                                 <div className="mx-auto mt-6">
