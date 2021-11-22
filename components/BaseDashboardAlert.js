@@ -135,7 +135,7 @@ export default function BaseDashboardAlert(prop) {
                                                     ?
                                                     prop.dashboardData.searchResult.map((post, postIndex) => {
                                                         return (
-                                                            <div key={'post-' + postIndex} onClick={() => { window.location.href = 'dashboard' }} className={'cursor-pointer mb-8 ' + postClasses.style}>
+                                                            <div key={'post-' + postIndex} onClick={() => { window.location.href = 'dashboard' }} className={'cursor-pointer mb-2 ' + postClasses.style}>
                                                                 <div className={postClasses.imageContainer}>
                                                                     {post.urls.length > 0
                                                                         ?
