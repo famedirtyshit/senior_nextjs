@@ -721,7 +721,7 @@ export default function Feed() {
                                                         </div>
                                                         :
                                                         <div id="map-preview-default" onClick={openMapModal} className="mt-2 h-44 relative shadow-lg border border-gray-300 border-solid w-100">
-                                                            <Image src={IMAGES.map} layout="fill" alt='default-map' className="absolute cursor-pointer top-1/3 left-16 " />
+                                                            <Image priority={'eager'} src={IMAGES.map} layout="fill" alt='default-map' className="absolute cursor-pointer top-1/3 left-16 " />
                                                             <p className={"absolute text-white px-2 text-sm text-center text-base py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + UtilStyle.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
                                                         </div>
                                                 }
@@ -786,7 +786,7 @@ export default function Feed() {
                                                     </div>
                                                     :
                                                     <div id="map-preview-default" onClick={openMapModal} className="mt-2 h-44 relative shadow-lg border border-gray-300 border-solid w-100">
-                                                        <Image src={IMAGES.map} layout="fill" alt='default-map' className="absolute cursor-pointer top-1/3 left-16 " />
+                                                        <Image priority={'eager'} src={IMAGES.map} layout="fill" alt='default-map' className="absolute cursor-pointer top-1/3 left-16 " />
                                                         <p className={"absolute text-white px-2 text-sm text-center text-base py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + UtilStyle.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
                                                     </div>
                                             }
@@ -824,7 +824,7 @@ export default function Feed() {
                             userAccount != null
                                 ?
                                 <div onClick={() => { window.location.href = "/account" }} className={"absolute top-4 right-4 cursor-pointer"}>
-                                    <Image alt={'account-link-img'} src={IMAGES.accountLink} width="30" height="30"></Image>
+                                    <Image priority={'eager'} alt={'account-link-img'} src={IMAGES.accountLink} width="30" height="30"></Image>
                                 </div>
                                 : null
                         }
@@ -839,6 +839,7 @@ export default function Feed() {
                                                 userAccount.thumbnail.url == 'default'
                                                     ?
                                                     <Image
+                                                        priority={'eager'}
                                                         src={IMAGES.user}
                                                         alt="default-user"
                                                         width="119"
@@ -846,6 +847,7 @@ export default function Feed() {
                                                     />
                                                     :
                                                     <Image
+                                                        priority={'eager'}
                                                         src={userAccount.thumbnail.url}
                                                         alt="default-user"
                                                         width="119"
@@ -853,6 +855,7 @@ export default function Feed() {
                                                     />
                                                 :
                                                 <Image
+                                                    priority={'eager'}
                                                     src={IMAGES.user}
                                                     alt="default-user"
                                                     width="119"
@@ -860,6 +863,7 @@ export default function Feed() {
                                                 />
                                             :
                                             <Image
+                                            priority={'eager'}
                                                 src={IMAGES.user}
                                                 alt="default-user"
                                                 width="119"
@@ -867,6 +871,7 @@ export default function Feed() {
                                             />
                                         :
                                         <Image
+                                        priority={'eager'}
                                             src={IMAGES.user}
                                             alt="default-user"
                                             width="119"
@@ -954,7 +959,7 @@ export default function Feed() {
                                     </div>
                                     :
                                     <div id="map-preview-default" onClick={openMapModal} className="lg:mt-7 md:mt-7 lg:h-52 md:h-40 xl:h-60 lg:relative md:relative shadow-lg border border-gray-300 border-solid w-100">
-                                        <Image src={IMAGES.map} layout="fill" alt='default-map' className="lg:absolute md:absolute cursor-pointer lg:top-1/3 md:top-1/3 lg:left-16 md:left-16 " />
+                                        <Image priority={'eager'} src={IMAGES.map} layout="fill" alt='default-map' className="lg:absolute md:absolute cursor-pointer lg:top-1/3 md:top-1/3 lg:left-16 md:left-16 " />
                                         <p className={"md:absolute text-white lg:px-6 md:px-2 md:text-sm text-center lg:text-base py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-90 " + UtilStyle.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
                                     </div>
                             }

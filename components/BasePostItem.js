@@ -36,7 +36,7 @@ export default function BasePostItem(prop) {
         <div onClick={emitPostData} className="post-item cursor-pointer px-auto mt-6 md:mt-0">
             <p className="text-right text-textGray text-sm font-medium md:px-0 px-6">{prop.data.post != undefined ? moment(new Date(prop.data.post.createdAt)).fromNow() : moment(new Date(prop.data.createdAt)).fromNow()}</p>
             <div className="flex justify-center md:justify-start">
-                <Image src={prop.data.post != undefined ? prop.data.post.urls.length > 0 ? prop.data.post.urls[0].url : IMAGES.defaultImg : prop.data.urls.length > 0 ? prop.data.urls[0].url : IMAGES.defaultImg} alt='item-thumbnail' width="326" height="326" />
+                <Image priority={'eager'} src={prop.data.post != undefined ? prop.data.post.urls.length > 0 ? prop.data.post.urls[0].url : IMAGES.defaultImg : prop.data.urls.length > 0 ? prop.data.urls[0].url : IMAGES.defaultImg} alt='item-thumbnail' width="326" height="326" />
             </div>
                 <div className="post-item-desc lg:ml-4 text-center md:text-left">
                     <p className="lg:text-lg lg:font-medium">Date: {convertDateFormat(prop.data.post != undefined ? prop.data.post.date : prop.data.date)}</p>

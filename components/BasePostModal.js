@@ -374,7 +374,7 @@ export default function BasePostModal(prop) {
                             </div>
                             :
                             <div id="map-preview-default" onClick={openMapModal} className="md:mt-3 md:h-60 mt-2 h-40 sm:h-96 lg:h-4/6 xl:h-5/6 relative shadow-lg border border-gray-300 border-solid " style={{ width: '100%' }}>
-                                <Image src={IMAGES.map} alt='default-map' layout="fill" className="absolute cursor-pointer md:top-1/3 md:left-16 " />
+                                <Image priority={'eager'} src={IMAGES.map} alt='default-map' layout="fill" className="absolute cursor-pointer md:top-1/3 md:left-16 " />
                                 <p className={"absolute text-white px-6 py-2 bg-mainGreen rounded-3xl shadow-lg cursor-pointer bg-opacity-80 " + UtilStyles.centerAbsolute}>ระบุตำแหน่งด้วยตนเอง</p>
                             </div>
                     }
