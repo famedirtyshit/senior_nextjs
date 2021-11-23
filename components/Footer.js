@@ -14,7 +14,7 @@ export default function Footer(prop) {
         <div className="text-white">
           <p className="lg:text-2xl text-xl">ติดต่อเรา</p>
           <p className="mt-1">+66 6071 2203</p>
-          <p>catus_helpyou@sit.kmutt.ac.th</p>
+          <p>catusservice@gmail.com</p>
           <p className="lg:text-5xl text-4xl mt-2 font-black">Catus</p>
           <p className="text-gray-300 mb-10">© Copyright 2021 CatUs</p>
         </div>

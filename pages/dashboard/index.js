@@ -22,8 +22,22 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
 const mainStyles = makeStyles((theme) => ({
     style: {
+        '@media only screen and (min-width: 1440px)': {
         width: '1366px',
         height: '1450px',
+    },
+    '@media only screen and (max-width: 1440px)': {
+        width: '1200px',
+        height: '1450px',
+    },
+    '@media only screen and (max-width: 1280px)': {
+        width: '95%',
+        height: '1450px',
+    },
+    '@media only screen and (max-width: 768px)': {
+        width: '100%',
+        height: '1450px',
+    },
         background: '#FFFFFF',
         borderRadius: '20px 20px 0px 0px',
         filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))',
@@ -32,8 +46,22 @@ const mainStyles = makeStyles((theme) => ({
 
 const mapStyles = makeStyles((theme) => ({
     style: {
-        width: '1326px',
-        height: '625px',
+        '@media only screen and (min-width: 1440px)': {
+            width: '1326px',
+            height: '625px',
+        }, 
+        '@media only screen and (max-width: 1440px)': {
+            width: '90%',
+            height: '625px',
+        },
+        '@media only screen and (max-width: 1280px)': {
+            width: '90%',
+            height: '625px',
+        },
+        '@media only screen and (max-width: 768px)': {
+            width: '90%',
+            height: '625px',
+            },
     }
 }));
 
@@ -49,7 +77,7 @@ const postDataStyles = makeStyles((theme) => ({
 const bgStyles = makeStyles((theme) => ({
     style: {
         backgroundImage: `url(${IMAGES.greenBg})`,
-        backgroundSize: 'contain',
+        backgroundSize: 'auto',
         backgroundPosition: '100% 0%',
         backgroundRepeat: 'no-repeat',
     }
@@ -495,7 +523,7 @@ export default function Dashboard() {
     }
 
     return (
-        <div style={{ fontFamily: 'Prompt' }} className={"2xl:container mx-auto " + bgClasses.style}>
+        <div style={{ fontFamily: 'Prompt' }} className={"mx-auto " + bgClasses.style}>
             <Head>
                 <title>CatUs</title>
                 <meta name="description" content="CatUs Service" />
@@ -505,10 +533,10 @@ export default function Dashboard() {
             <Script src="https://unpkg.com/@googlemaps/markerclustererplus/dist/index.min.js" strategy="beforeInteractive"></Script>
             <Link href='/'>
                 <a>
-                    <h1 className="text-5xl font-bold text-white pt-10 ml-72 inline-block ">Catus</h1>
+                    <h1 className="text-5xl font-bold text-white pt-10 2xl:ml-72 xl:ml-48 lg:ml-24 md:ml-12 sm:ml-8 ml-3 inline-block ">Catus</h1>
                 </a>
             </Link>
-            <main className={"2xl:mt-28 2xl:mb-48 mx-auto border border-solid border-gray-300 " + mainClasses.style}>
+            <main className={"xl:mt-28 mt-12 mb-48 mx-auto border border-solid border-gray-300 " + mainClasses.style}>
                 <div className="relative">
                     <div className="absolute left-12 top-0">
                         <Link href="/account">
@@ -569,7 +597,7 @@ export default function Dashboard() {
                                         <Carousel animation="slide" autoPlay={false} navButtonsAlwaysVisible={dashboardData.searchResult.length > 1 ? true : false} className="h-full">
                                             {dashboardData.searchResult.map((item, i) => {
                                                 return (
-                                                    <div className={"grid 2xl:grid-cols-3 px-4 justify-items-center mt-4 " + postDataClasses.itemStyle} key={'dashboard-page-' + (i + 1)}>
+                                                    <div className={"grid grid-cols-3 px-4 justify-items-center mt-4" + postDataClasses.itemStyle} key={'dashboard-page-' + (i + 1)}>
                                                         {item.map((pageItem, pageItemIndex) => {
                                                             return (
                                                                 <div className={`cursor-pointer ` + cn({
