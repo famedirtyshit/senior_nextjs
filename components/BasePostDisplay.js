@@ -19,14 +19,14 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
     },
     paper: {
-        "@media (min-width: 1024px)": {
+        "@media (min-width: 1280px)": {
             backgroundColor: theme.palette.background.paper,
             borderRadius: '49px',
             boxShadow: theme.shadows[5],
             width: '1600px',
             height: '700px'
         },
-        "@media (min-width: 1px)": {
+        "@media (min-width: 1px) and (max-width: 1279px)": {
             backgroundColor: theme.palette.background.paper,
             borderRadius: '49px',
             boxShadow: theme.shadows[5],
@@ -211,7 +211,7 @@ export default function BasePostDisplay(prop) {
                                             null}
                                     </div>
                                     <div className="md:col-span-3 col-span-4">
-                                        <div className="relative w-full h-5/6 md:h-1/2 lg:h-4/6 xl:h-5/6 border border-solid border-gray-700" >
+                                        <div className="relative w-full h-5/6 md:h-2/5 lg:h-4/6 xl:h-5/6 border border-solid border-gray-700" >
                                             {checkProp ?
                                                 <Image src={imageSet.length > 0 ? imageSet[0].url : IMAGES.defaultImg} alt={'picture-display'} layout='fill' />
                                                 :

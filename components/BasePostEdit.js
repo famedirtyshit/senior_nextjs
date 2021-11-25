@@ -32,11 +32,20 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
     },
     paper: {
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: '49px',
-        boxShadow: theme.shadows[5],
-        width: '1600px',
-        height: '700px'
+        "@media (min-width: 1280px)": {
+            backgroundColor: theme.palette.background.paper,
+            borderRadius: '49px',
+            boxShadow: theme.shadows[5],
+            width: '1600px',
+            height: '700px'
+        },
+        "@media (min-width: 1px) and (max-width: 1279px)": {
+            backgroundColor: theme.palette.background.paper,
+            borderRadius: '49px',
+            boxShadow: theme.shadows[5],
+            width: '80%',
+            height: '80%'
+        },
     },
 }));
 
@@ -44,6 +53,14 @@ const mapStyles = makeStyles((theme) => ({
     mapContainer: {
         width: '100%',
         height: '420px'
+    }
+}))
+
+const buttonActionStyles = makeStyles((theme) => ({
+    buttonAction: {
+        "@media (min-width: 1px) and (max-width: 1439px)": {
+            display: 'hidden'
+        }
     }
 }))
 
@@ -488,21 +505,21 @@ export default function BasePostEdit(prop) {
                         :
                         <div className={classes.paper}>
                             <input style={{ display: 'none' }} type="file" name='file-image' multiple accept="image/png,image/jpeg" id='file-upload' onChange={inputImageHandle} />
-                            <div className="2xl:py-10 h-5/6 2xl:relative">
-                                <h1 className="2xl:mb-4 2xl:ml-8 text-lg font-bold">EDIT YOUR {checkProp ? prop.post[prop.target].postType == 'lost' ? 'LOST CAT' : 'FOUND CAT' : null} POST</h1>
-                                <div className="2xl:absolute 2xl:top-7 2xl:right-8 cursor-pointer" onClick={prop.closeModal}>
+                            <div className="py-10 h-5/6 relative">
+                                <h1 className="sm:mb-4 my-6 sm:ml-8 text-center sm:text-left text-lg font-bold">EDIT YOUR {checkProp ? prop.post[prop.target].postType == 'lost' ? 'LOST CAT' : 'FOUND CAT' : null} POST</h1>
+                                <div className="absolute top-7 right-8 cursor-pointer" onClick={prop.closeModal}>
                                     <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M15.382 13.0002L25.5059 2.8758C26.1647 2.21725 26.1647 1.15246 25.5059 0.493912C24.8473 -0.164637 23.7826 -0.164637 23.124 0.493912L12.9998 10.6183L2.87597 0.493912C2.21712 -0.164637 1.15267 -0.164637 0.494134 0.493912C-0.164711 1.15246 -0.164711 2.21725 0.494134 2.8758L10.618 13.0002L0.494134 23.1246C-0.164711 23.7831 -0.164711 24.8479 0.494134 25.5065C0.822322 25.835 1.25384 26 1.68505 26C2.11626 26 2.54747 25.835 2.87597 25.5065L12.9998 15.3821L23.124 25.5065C23.4525 25.835 23.8837 26 24.3149 26C24.7462 26 25.1774 25.835 25.5059 25.5065C26.1647 24.8479 26.1647 23.7831 25.5059 23.1246L15.382 13.0002Z" fill="black" />
                                     </svg>
                                 </div>
-                                <div className="2xl:grid 2xl:grid-cols-10 gap-6 2xl:px-8 h-full">
-                                    <div className="2xl:col-span-1 2xl:grid gap-2 2xl:grid-cols-1 2xl:grid-rows-4 h-5/6 w-5/6 mx-auto">
+                                <div className="grid grid-cols-12 lg:grid-cols-10 sm:gap-6 gap-2 sm:px-8 px-2 h-full overflow-y-scroll">
+                                    <div className="lg:col-span-1 col-span-3 grid gap-2 grid-cols-1 grid-rows-4 lg:h-5/6 sm:h-96 h-44 lg:w-5/6 md:w-4/6 sm:w-full w-5/6 mx-auto">
                                         {checkProp && imageSet.length > 1 ? imageSet.map((item, index) => {
                                             if (index == 0) {
                                                 return null;
                                             } else {
                                                 return (
-                                                    <div key={index} className="2xl:relative 2xl:mx-auto 2xl:w-full border border-solid border-gray-700" >
+                                                    <div key={index} className="relative mx-auto w-full border border-solid border-gray-700" >
                                                         <Image className="cursor-pointer" onClick={chooseImage} src={item.url} alt={index} layout='fill' />
                                                     </div>
                                                 )
@@ -511,16 +528,16 @@ export default function BasePostEdit(prop) {
                                             :
                                             null}
                                     </div>
-                                    <div className="2xl:col-span-3">
-                                        <div className="2xl:relative 2xl:w-full 2xl:h-5/6 border border-solid border-gray-700" >
+                                    <div className="lg:col-span-3 col-span-9">
+                                        <div className="relative lg:w-full md:w-5/6 lg:h-5/6 sm:h-96 h-44 border border-solid border-gray-700" >
                                             {checkProp ?
                                                 <div>
                                                     <Image src={imageSet[0].url} alt={'picture-display'} layout='fill' />
                                                     {
                                                         imageSet.length < 5
                                                             ?
-                                                            <div className="absolute top-36 left-16">
-                                                                <div className="relative w-24 h-24">
+                                                            <div className="absolute sm:top-36 top-16 sm:left-16 left-8">
+                                                                <div className="relative sm:w-24 w-12 sm:h-24 h-12">
                                                                     <Image onClick={selectUploadImage} alt='addImage' src={ICONS.addImage} layout="fill" className="cursor-pointer"></Image>
                                                                 </div>
                                                             </div>
@@ -530,8 +547,8 @@ export default function BasePostEdit(prop) {
                                                     {
                                                         prop.post[prop.target].urls.length > 0 && imageSet[0].default != true
                                                             ?
-                                                            <div className="absolute top-36 right-16">
-                                                                <div className="relative w-24 h-24">
+                                                            <div className="absolute sm:top-36 top-16 sm:right-16 right-8">
+                                                                <div className="relative sm:w-24 w-12 sm:h-24 h-12">
                                                                     <Image onClick={deleteImage} alt='deleteImage' src={ICONS.deleteImage} layout="fill" className="cursor-pointer"></Image>
                                                                 </div>
                                                             </div>
@@ -544,8 +561,8 @@ export default function BasePostEdit(prop) {
                                             }
                                         </div>
                                     </div>
-                                    <div className="relative 2xl:col-span-3 2xl:grid 2xl:grid-cols-1">
-                                        <div className="relative bg-gray-100 rounded-2xl pt-8 px-10">
+                                    <div className="relative col-span-12 lg:col-span-3 grid grid-cols-1">
+                                        <div className="relative bg-gray-100 rounded-2xl pt-8 sm:px-10 px-2 sm:pb-0 pb-2">
                                             {
                                                 editStatus == false
                                                     ?
@@ -571,8 +588,8 @@ export default function BasePostEdit(prop) {
                                                     disabled={editStatus == true ? false : true}
                                                 />
                                             </MuiPickersUtilsProvider>
-                                            <div className="sex-section 2xl:flex flex-wrap items-center text-textGray font-medium 2xl:my-2">
-                                                <p className="2xl:mr-4">Sex</p>
+                                            <div className="sex-section flex flex-wrap items-center text-textGray font-medium my-2">
+                                                <p className="sm:mr-4 mr-0 font-bold">Sex</p>
                                                 <GreenRadio
                                                     checked={newSex === 'true'}
                                                     onChange={handleSexChange}
@@ -601,8 +618,8 @@ export default function BasePostEdit(prop) {
                                                 />
                                                 <p>Unknow</p>
                                             </div>
-                                            <div className="collar-section 2xl:flex flex-wrap items-center text-textGray font-medium 2xl:mt-2 2xl:mb-4">
-                                                <p className="2xl:mr-4">Pet collar</p>
+                                            <div className="collar-section flex flex-wrap items-center text-textGray font-medium mt-2 mb-4">
+                                                <p className="sm:mr-4 mr-0 font-bold">Pet collar</p>
                                                 <GreenRadio
                                                     checked={newCollar == 'true'}
                                                     onChange={handleCollarChange}
@@ -654,41 +671,65 @@ export default function BasePostEdit(prop) {
                                         </div>
                                         <p className="absolute mt-4 text-sm text-red-500 -bottom-6">{validateMsg != null && validateMsg.type != 'pass' ? validateMsg.msg : null}</p>
                                     </div>
-                                    <div className="2xl:col-span-3">
+                                    <div className="col-span-12 lg:col-span-3">
                                         <div id="map-preview-edit" onClick={openDestination} className={"cursor-pointer shadow-lg border border-gray-300 border-solid justify-self-center " + mapClasses.mapContainer} />
                                         <p className="mt-4 text-sm text-textGray">ไม่สามารถแก้ไขสถานที่ได้</p>
                                     </div>
-                                </div>
-                            </div>
-                            <ThemeProvider theme={editTheme}>
-                                <div>
-                                    {checkProp ? prop.post[prop.target].idle == true || prop.post[prop.target].status == 'inactive'
-                                        ?
-                                        prop.post[prop.target].status == 'inactive'
-                                            ?
-                                            <div className="mt-8 flex flex-wrap justify-between px-8">
-                                                <Button onClick={() => { setExtendConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
-                                                    Republish
-                                                </Button>
-                                                <div className="w-3/12 flex flex-wrap justify-between">
-                                                    <ThemeProvider theme={completeTheme}>
-                                                        <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
-                                                            Complete Post
-                                                        </Button>
-                                                    </ThemeProvider>
-                                                    <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
-                                                        Delete Post
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                            :
-                                            prop.post[prop.target].idle == true
+                                    <div className="block lg:col-span-10 col-span-12">
+                                        <ThemeProvider theme={editTheme}>
+                                            {checkProp ? prop.post[prop.target].idle == true || prop.post[prop.target].status == 'inactive'
                                                 ?
-                                                <div className="mt-8 flex flex-wrap justify-between px-8">
-                                                    <Button onClick={() => { setExtendConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
-                                                        Extend 30 Day
-                                                    </Button>
-                                                    <div className="w-3/12 flex flex-wrap justify-between">
+                                                prop.post[prop.target].status == 'inactive'
+                                                    ?
+                                                    <div className="sm:mt-2 sm:justify-end sm:flex sm:flex-wrap sm:justify-between sm:px-8">
+                                                        <Button onClick={() => { setExtendConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
+                                                            Republish
+                                                        </Button>
+                                                        <div className="sm:w-3/12 sm:flex sm:flex-wrap sm:justify-between">
+                                                            <ThemeProvider theme={completeTheme}>
+                                                                <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
+                                                                    Complete Post
+                                                                </Button>
+                                                            </ThemeProvider>
+                                                            <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
+                                                                Delete Post
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                    :
+                                                    prop.post[prop.target].idle == true
+                                                        ?
+                                                        <div className="sm:mt-8 sm:flex sm:flex-wrap sm:justify-between sm:px-8">
+                                                            <Button onClick={() => { setExtendConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
+                                                                Extend 30 Day
+                                                            </Button>
+                                                            <div className="sm:w-3/12 sm:flex sm:flex-wrap sm:justify-between">
+                                                                <ThemeProvider theme={completeTheme}>
+                                                                    <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
+                                                                        Complete Post
+                                                                    </Button>
+                                                                </ThemeProvider>
+                                                                <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
+                                                                    Delete Post
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                        :
+                                                        <div className="sm:mt-8 sm:flex sm:flex-wrap sm:justify-between sm:px-8">
+                                                            <div className="sm:w-3/12 sm:flex sm:flex-wrap sm:justify-between">
+                                                                <ThemeProvider theme={completeTheme}>
+                                                                    <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
+                                                                        Complete Post
+                                                                    </Button>
+                                                                </ThemeProvider>
+                                                                <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
+                                                                    Delete Post
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                :
+                                                <div className="sm:mt-8 sm:flex sm:flex-wrap sm:justify-end sm:px-8">
+                                                    <div className="sm:w-3/12 sm:flex sm:flex-wrap sm:justify-between">
                                                         <ThemeProvider theme={completeTheme}>
                                                             <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
                                                                 Complete Post
@@ -700,36 +741,12 @@ export default function BasePostEdit(prop) {
                                                     </div>
                                                 </div>
                                                 :
-                                                <div className="mt-8 flex flex-wrap justify-between px-8">
-                                                    <div className="w-3/12 flex flex-wrap justify-between">
-                                                        <ThemeProvider theme={completeTheme}>
-                                                            <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
-                                                                Complete Post
-                                                            </Button>
-                                                        </ThemeProvider>
-                                                        <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
-                                                            Delete Post
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                        :
-                                        <div className="mt-8 flex flex-wrap justify-end px-8">
-                                            <div className="w-3/12 flex flex-wrap justify-between">
-                                                <ThemeProvider theme={completeTheme}>
-                                                    <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
-                                                        Complete Post
-                                                    </Button>
-                                                </ThemeProvider>
-                                                <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
-                                                    Delete Post
-                                                </Button>
-                                            </div>
-                                        </div>
-                                        :
-                                        null
-                                    }
+                                                null
+                                            }
+                                        </ThemeProvider>
+                                    </div>
                                 </div>
-                            </ThemeProvider>
+                            </div>
                             <p className="hidden">{alertChecker}</p>
                             <BaseCropModal setImage={addNewImage} cropModalStatus={cropModalStatus} closeCropModal={closeCropModal} imageRawFile={imageRawFile} />
                             <BasePostResModal closePostResModal={closeEditResModal} postResStatus={editResStatus} postRes={editRes} />
