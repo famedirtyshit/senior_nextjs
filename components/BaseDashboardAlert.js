@@ -23,19 +23,30 @@ const theme = createTheme({
 const alertStyles = makeStyles((theme) => ({
     style: {
         position: 'fixed',
-        top: '800px',
-        right: '80px'
+        bottom: '0px',
+        right: '0px',
+        padding: '30px'
     }
 }))
 
 const contentStyles = makeStyles((theme) => ({
     style: {
-        width: '387px',
-        height: '264px',
-        background: '#FFFFFF',
-        boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.35)',
-        borderRadius: '27px',
-        marginBottom: '12px'
+        "@media (min-width: 768px)": {
+            width: '387px',
+            height: '264px',
+            background: '#FFFFFF',
+            boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.35)',
+            borderRadius: '27px',
+            marginBottom: '12px'
+        },
+        "@media (min-width: 1px)": {
+            width: '310px',
+            height: '240px',
+            background: '#FFFFFF',
+            boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.35)',
+            borderRadius: '27px',
+            marginBottom: '12px'
+        }
     }
 }))
 
@@ -46,9 +57,16 @@ const postStyles = makeStyles((theme) => ({
         display: 'flex'
     },
     imageContainer: {
+        "@media (min-width: 768px)": {
         height: '55px',
         width: '55px',
         position: 'relative'
+        },
+        "@media (min-width: 1px)": {
+        height: '45px',
+        width: '55px',
+        position: 'relative'
+        }
     },
     postDetail: {
         width: '280px'
@@ -97,11 +115,11 @@ export default function BaseDashboardAlert(prop) {
                                         <rect x="3.61914" y="8.14258" width="11.7619" height="1.80952" rx="0.904762" fill="#505050" />
                                     </svg>
                                 </div>
-                                <p className="text-sm font-bold 2xl:pl-8 2xl:pt-5">Notifications</p>
+                                <p className="text-sm font-bold pl-8 pt-5">Notifications</p>
                                 {prop.dashboardData && prop.dashboardData.result == true
                                     ?
                                     <div>
-                                        <p className="text-textGray text-sm font-medium 2xl:px-5 2xl:pt-2">
+                                        <p className="text-textGray text-sm font-medium px-5 pt-2">
                                             {
                                                 prop.dashboardData && prop.dashboardData.searchResult.length > 0
                                                     ?
@@ -111,13 +129,13 @@ export default function BaseDashboardAlert(prop) {
                                                     `ขณะนี้ไม่มีคนพบแมวบริเวณใกล้เคียงแมวหายของคุณ`
                                             }
                                         </p>
-                                        <div className={"relative 2xl:h-32 2xl:mx-5 2xl:mt-3 overflow-y-scroll "}>
+                                        <div className={"relative h-24 sm:h-32 mx-5 mt-3 overflow-y-scroll "}>
                                             {
                                                 prop.dashboardData && prop.dashboardData.searchResult.length > 0
                                                     ?
                                                     prop.dashboardData.searchResult.map((post, postIndex) => {
                                                         return (
-                                                            <div key={'post-' + postIndex} onClick={() => { window.location.href = 'dashboard' }} className={'cursor-pointer mb-8 ' + postClasses.style}>
+                                                            <div key={'post-' + postIndex} onClick={() => { window.location.href = 'dashboard' }} className={'cursor-pointer mb-2 ' + postClasses.style}>
                                                                 <div className={postClasses.imageContainer}>
                                                                     {post.urls.length > 0
                                                                         ?
@@ -141,7 +159,7 @@ export default function BaseDashboardAlert(prop) {
                                         </div>
                                     </div>
                                     :
-                                    <div className="relative 2xl:h-5/6 2xl:mx-5">
+                                    <div className="relative h-5/6 mx-5">
                                         <h1 className={"text-2xl font-bold absolute " + utilStyles.centerAbsolute}>มีข้อผิดพลาดเกิดขึ้น กรุณาลองใหม่ภายหลัง</h1>
                                     </div>
                                 }

@@ -66,7 +66,7 @@ export default function BaseImageUpload(prop) {
 
     return (
         <div>
-            <div className="w-80 2xl:mx-auto 2xl:mt-3 rounded-lg h-80 bg-textGray relative">
+            <div className="md:w-56 w-48 sm:w-96 lg:w-80 mx-auto mt-3 rounded-lg h-44 sm:h-96 md:h-60 lg:h-80 bg-textGray relative">
                 {
                     imageCropFile.length > 0 ?
                         <Carousel navButtonsAlwaysVisible={true} className="block h-full">
@@ -82,7 +82,7 @@ export default function BaseImageUpload(prop) {
             </div>
             <input style={{ display: 'none' }} type="file" name='file-image' multiple accept="image/png,image/jpeg" id='file-upload' onChange={inputImageHandle} />
             <div className="flex justify-center">
-                <BaseButton onClickFunction={chooseImage} fill={true} fillColor={'mainOrange'} textColor={'white'} round={true} roundSize={'lg'} value={'Upload an Image'} customClass={'2xl:mt-6 2xl:w-80 bg-opacity-75'}></BaseButton>
+                <BaseButton onClickFunction={chooseImage} fill={true} fillColor={'mainOrange'} textColor={'white'} round={true} roundSize={'lg'} value={'Upload an Image'} customClass={'mt-6 md:w-80 bg-opacity-75'}></BaseButton>
             </div>
             <BaseCropModal setImage={prop.setImage} cropModalStatus={cropModalStatus} closeCropModal={closeCropModal} imageRawFile={imageRawFile} />
         </div>

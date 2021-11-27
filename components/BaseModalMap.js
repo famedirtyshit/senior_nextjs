@@ -31,26 +31,40 @@ const modalStyles = makeStyles((theme) => ({
         justifyContent: 'center',
     },
     paper: {
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        width: '80%',
-        height: '80%',
+        "@media (min-width: 1024px)": {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2, 4, 3),
+            width: '80%',
+            height: '80%',
+        },
+        "@media (min-width: 1px)": {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(0.5, 2, 1),
+            width: '80%',
+            height: '80%',
+        },
     },
 }));
 
 const mapStyles = makeStyles((theme) => ({
     height: {
-        height: '85%'
+        height: '75%'
     },
     heightWithRadius: {
-        height: '100%'
+        height: '90%'
     }
 }));
 
 const buttonStyles = makeStyles((theme) => ({
     style: {
-        marginLeft: '20px'
+        "@media (min-width: 1024px)": {
+            marginLeft: '20px'
+        },
+        "@media (min-width: 1px) and (max-width: 768px)": {
+            marginLeft: '2px'
+        },
     }
 }));
 
@@ -150,20 +164,20 @@ export default function BaseModalMap(prop) {
                 <Fade in={prop.modalMap}>
                     <ThemeProvider theme={theme}>
                         <div id="map-container" className={modalClass.paper}>
-                            <div className="2xl:flex flex-wrap 2xl:justify-between">
-                                <div className={"2xl:flex-grow-0.5 " + inputClass.root} >
-                                    <TextField onInput={queryPlaceHandler} className="2xl:w-3/5" id="placeQuery" label="Search" variant="outlined" />
+                            <div className="flex flex-wrap justify-between">
+                                <div className={"flex-grow-0.5 " + inputClass.root} >
+                                    <TextField onInput={queryPlaceHandler} className="w-3/5" id="placeQuery" label="Search" variant="outlined" />
                                 </div>
-                                <div className="button-action 2xl:flex items-center">
-                                    {placeQuery.length > 0 ? <Button onClick={searchPlace} variant="contained" color="default" className="2xl:max-h-9" >Search</Button> : <Button variant="contained" color="default" className="2xl:max-h-9" disabled>Search</Button>}
-                                    {prop.location != null ? <Button onClick={confirm} variant="contained" color="primary" className={"2xl:max-h-9 " + buttonClass.style}>Confirm</Button> : <Button onClick={confirm} variant="contained" color="primary" className={"2xl:max-h-9 " + buttonClass.style} disabled>Confirm</Button>}
-                                    <Button onClick={prop.cancelLocation} variant="contained" color="secondary" className={"2xl:max-h-9 " + buttonClass.style}>Cancel</Button>
+                                <div className="button-action flex items-center">
+                                    {placeQuery.length > 0 ? <Button onClick={searchPlace} variant="contained" color="default" className="max-h-9" >Search</Button> : <Button variant="contained" color="default" className="max-h-9" disabled>Search</Button>}
+                                    {prop.location != null ? <Button onClick={confirm} variant="contained" color="primary" className={"max-h-9 " + buttonClass.style}>Confirm</Button> : <Button onClick={confirm} variant="contained" color="primary" className={"max-h-9 " + buttonClass.style} disabled>Confirm</Button>}
+                                    <Button onClick={prop.cancelLocation} variant="contained" color="secondary" className={"max-h-9 " + buttonClass.style}>Cancel</Button>
                                 </div>
                             </div>
                             {prop.radiusDefault ?
                                 <div className="grid grid-cols-12 h-5/6">
-                                    <div className="h-full my-auto">
-                                        <p className="text-xl font-medium mt-16">Radius</p>
+                                    <div className="h-full my-auto md:col-span-1 sm:col-span-2 col-span-3">
+                                        <p className="text-xl font-medium 2xl:mt-16">Radius</p>
                                         <div className="h-4/6 mt-6">
                                             <Slider
                                                 defaultValue={prop.radiusDefault}
@@ -179,7 +193,7 @@ export default function BaseModalMap(prop) {
                                             />
                                         </div>
                                     </div>
-                                    <div id={prop.type == 'post' ? "map-post" : "map"} className={"w-auto col-span-11 mt-2 border border-gray-300 border-solid " + mapClass.heightWithRadius}></div>
+                                    <div id={prop.type == 'post' ? "map-post" : "map"} className={"w-auto sm:col-span-10 md:col-span-11 col-span-9 mt-2 border border-gray-300 border-solid " + mapClass.heightWithRadius}></div>
                                 </div>
                                 :
                                 <div id={prop.type == 'post' ? "map-post" : "map"} className={"w-auto mt-2 border border-gray-300 border-solid " + mapClass.height}></div>
