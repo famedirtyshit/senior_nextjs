@@ -50,6 +50,16 @@ const useStyles = makeStyles((theme) => ({
       width: "25ch",
     },
   },
+  buttonStyle:{
+    [theme.breakpoints.down("sm")]: {
+    width: "70px",
+     height: "33px",
+    },
+    [theme.breakpoints.up("sm")]: {
+      width: "119px",
+       height: "33px",
+      }
+  },
   carousel: {
     width: "326px",
     height: "350px",
@@ -695,20 +705,21 @@ export default function Account() {
         <meta name="description" content="CatUs Service" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="2xl:flex 2xl:flex-wrap 2xl:justify-between 2xl:mx-64 pt-3">
+      <header className="sm:flex sm:flex-wrap sm:justify-between lg:mx-64 sm:mx-28 mx-3 pt-3">
         <Link href="/">
           <a>
-            <h1 className="2xl:text-5xl 2xl:font-black text-white">Catus</h1>
+            <h1 className="text-3xl sm:text-5xl sm:font-black text-white">Catus</h1>
           </a>
         </Link>
       </header>
       <main>
         <section
-          className="w-9/12 bg-mainYellow mx-auto  rounded-t-2xl shadow-lg 2xl:mt-20"
-          style={{ height: "950px" }}
+
+          className="w-full sm:w-11/12 lg:w-9/12 bg-mainYellow mx-auto  sm:rounded-t-2xl shadow-lg sm:mt-20 h-auto"
+          // style={{ height: "1000px" }}
         >
           {/* {editSection3Active==true ? <BaseModalChangePassword open={editSection3Active}/> : null} */}
-          <div className="2xl:mt-11 2xl:absolute 2xl:ml-12">
+          <div className="sm:mt-11 absolute sm:ml-12 ml-2 mt-4">
             <Link href="/feed">
               <a>
                 <ArrowBackIosIcon
@@ -718,13 +729,13 @@ export default function Account() {
               </a>
             </Link>
           </div>
-          <div className="2xl:flex 2xl:flex-wrap 2xl:justify-center">
-            <p className="2xl:text-4xl font-black 2xl:mt-11 ">My Account</p>
+          <div className="flex flex-wrap justify-center">
+            <p className="text-3xl sm:text-4xl font-black sm:mt-11 mt-4">My Account</p>
           </div>
 
-          <section className="contact-detail-part1 2xl:flex 2xl:flex-wrap 2xl:justify-center ">
-            <div className="container 2xl:bg-white 2xl:w-3/5 2xl:h-84 2xl:rounded-2xl 2xl:shadow-lg 2xl:mt-7 ">
-              <section className="2xl:flex 2xl:flex-wrap 2xl:justify-center 2xl:pt-14">
+          <section className="contact-detail-part1 flex flex-wrap justify-center ">
+            <div className="container bg-white w-11/12 sm:w-4/5 lg:w-4/5 xl:w-3/5 sm:h-84  rounded-lg sm:rounded-2xl shadow-lg mt-7 ">
+              <section className="flex flex-wrap justify-center pt-5 sm:pt-14">
                 {loading == true ? (
                   <Skeleton variant="circle" width={119} height={119} />
                 ) : (
@@ -782,34 +793,34 @@ export default function Account() {
                       </div>
                     ) : (
                       <div>
-                        {
+                        { 
                           userAccount.thumbnail ?
                             userAccount.thumbnail.url
                               ?
                               userAccount.thumbnail.url == 'default'
                                 ?
-                                <Image
+                                <Image className="rounded-full"
                                   src={IMAGES.user}
                                   alt="default-user"
                                   width="119"
                                   height="119"
                                 />
                                 :
-                                <Image
+                                <Image className="rounded-full"
                                   src={userAccount.thumbnail.url}
                                   alt="default-user"
                                   width="119"
                                   height="119"
                                 />
                               :
-                              <Image
+                              <Image className="rounded-full"
                                 src={IMAGES.user}
                                 alt="default-user"
                                 width="119"
                                 height="119"
                               />
                             :
-                            <Image
+                            <Image className="rounded-full"
                               src={IMAGES.user}
                               alt="default-user"
                               width="119"
@@ -822,11 +833,11 @@ export default function Account() {
                 )}
 
                 <div>
-                  <div className="2xl:m-9">
+                  <div className="sm:m-9 m-9">
                     {loading == true ? (
                       <Skeleton variant="text" width={350} height={35} />
                     ) : (
-                      <p className="2xl:text-3xl 2xl:font-bold">
+                      <p className="text-xl sm:text-3xl font-bold">
                         {editSection1Active ? (
                           // <TextField
                           //   error={errorInputFirstName}
@@ -876,7 +887,7 @@ export default function Account() {
                     )}
                   </div>
                 </div>
-                <div className="2xl:mt-10">
+                <div className="sm:mt-10">
                   {loading == true ? (
                     <Skeleton animation="rect" height={30} width={112} />
                   ) : (
@@ -900,7 +911,7 @@ export default function Account() {
                   )}
                 </div>
               </section>
-              <section className="content-container 2xl:mx-8 2xl:my-8 2xl:text-xl ">
+              <section className="content-container mx-8 my-8 text-xl ">
                 {loading == true ? (
                   <div>
                     <Skeleton animation="wave" height={35} />
@@ -916,21 +927,21 @@ export default function Account() {
                       แก้ไขข้อมูลผู้ติดต่อ
                     </p>
 
-                    <p className="2xl:mt-2 " style={{ color: "#6E6E6E" }}>
+                    <p className="mt-2 " style={{ color: "#6E6E6E" }}>
                       Number
                     </p>
                     {/* {editActive == true ? (
 
                       <input
                         type="number"
-                        className="2xl:mt-2 2xl:ml-4 2xl:font-bold"
+                        className="sm:mt-2 sm:ml-4 sm:font-bold"
                         value={editValue}
                         onChange={handleChangeEdit}
                       />
                     )
                       : null} */}
                     {editSection1Active == true ? (
-                      <div className="2xl:mt-1 2xl:ml-3">
+                      <div className="mt-1 ml-3">
                         {/* <TextField
                           error={errorInputNumber}
                           id="newNumberID"
@@ -956,12 +967,12 @@ export default function Account() {
                     ) : (
                       userAccount.phone
                     )}
-                    <p className="2xl:mt-2" style={{ color: "#6E6E6E" }}>
+                    <p className="mt-2" style={{ color: "#6E6E6E" }}>
                       Contact
                     </p>
 
                     {editSection1Active ? (
-                      <div className="2xl:grid 2xl:grid-cols-2">
+                      <div className="grid grid-cols-2">
                         <div className="ml-3">
                           {/* <TextField
                             error={errorInputFacebook}
@@ -998,11 +1009,11 @@ export default function Account() {
                             type="text"
                             defaultValue={userAccount.instagram}
                           />
-                          <p className="2xl:mt-3" style={{ color: "#6E6E6E" }}>
+                          <p className="mt-3" style={{ color: "#6E6E6E" }}>
                             Mail Subscribe
                           </p>
                           <div className="flex flex-wrap ">
-                            <p className="2xl:mt-1 2xl:font-bold">
+                            <p className="mt-1 sm:font-bold">
                               off
                             </p>
                             <Switch
@@ -1010,14 +1021,14 @@ export default function Account() {
                               onChange={mailSubChange}
                               inputProps={{ 'aria-label': 'mailSubscribe-edit' }}
                             />
-                            <p className="2xl:mt-1 2xl:font-bold">
+                            <p className="mt-1 sm:font-bold">
                               on
                             </p>
                           </div>
                         </div>
                         <ThemeProvider theme={theme}>
                           <div>
-                            <div className="2xl:absolute 2xl:ml-24 2xl:mt-28">
+                            <div className="sm:absolute xl:ml-24 xl:mt-28 md:ml-12 md:mt-28 sm:ml-0 sm:mt-28 ml-3 mt-52">
                               <Button
                                 variant="contained"
                                 color="error"
@@ -1031,9 +1042,10 @@ export default function Account() {
                               </Button>
                             </div>
                             <div
-                              className="2xl:absolute 2xl:ml-56 2xl:mt-28"
+                              className="sm:absolute xl:ml-56 xl:mt-28 md:ml-44 md:mt-28 sm:ml-28 sm:mt-28 ml-3 mt-3"
                             // style={{ marginLeft: "220px" }}
                             >
+                              <div className="sm:ml-1">
                               <Button
                                 variant="contained"
                                 color="primary"
@@ -1045,23 +1057,24 @@ export default function Account() {
                               >
                                 OK
                               </Button>
+                              </div>
                             </div>
                           </div>
                         </ThemeProvider>
                       </div>
                     ) : (
                       <div>
-                        <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
+                        <p className="mt-2 ml-4 font-bold">
                           Facebook: {userAccount.facebook}
                         </p>
-                        <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
+                        <p className="mt-2 ml-4 font-bold">
                           Instagram: {userAccount.instagram}
                         </p>
-                        <p className="2xl:mt-3" style={{ color: "#6E6E6E" }}>
+                        <p className="mt-3" style={{ color: "#6E6E6E" }}>
                           Mail Subscribe
                         </p>
                         <div className="flex flex-wrap ">
-                          <p className="2xl:mt-1 2xl:font-bold">
+                          <p className="mt-1 font-bold">
                             off
                           </p>
                           <Switch
@@ -1069,7 +1082,7 @@ export default function Account() {
                             disabled
                             inputProps={{ 'aria-label': 'mailSubscribe-default' }}
                           />
-                          <p className="2xl:mt-1 2xl:font-bold">
+                          <p className="mt-1 font-bold">
                             on
                           </p>
                         </div>
@@ -1081,9 +1094,9 @@ export default function Account() {
             </div>
           </section>
 
-          <section className="contact-detail-part1 2xl:flex 2xl:flex-wrap 2xl:justify-center ">
-            <div className="container 2xl:bg-white 2xl:w-3/5 2xl:h-84 2xl:rounded-2xl 2xl:shadow-lg 2xl:mt-3 ">
-              <section className="content-container 2xl:mx-8 2xl:my-8 2xl:text-xl ">
+          <section className="contact-detail-part1 flex flex-wrap justify-center ">
+            <div className="container bg-white w-11/12 sm:w-4/5 lg:w-4/5 xl:w-3/5 sm:h-84 rounded-lg sm:rounded-2xl shadow-lg mt-3 mb-3">
+              <section className="content-container mx-6 my-8 sm:text-xl text-lg ">
                 {loading == true ? (
                   <div>
                     <Skeleton animation="wave" height={35} />
@@ -1092,27 +1105,29 @@ export default function Account() {
                     <Skeleton animation="wave" height={35} />
                   </div>
                 ) : (
-                  <div className="2xl:relative">
-                    <div className="2xl:absolute 2xl:top-16 2xl:inset-y-0 2xl:right-16 ">
+                  <div className="relative">
+                    <div className="absolute sm:top-16 top-12 inset-y-0 sm:right-2 md:right-16 right-0">
                       <ThemeProvider theme={theme}>
                         <Button
                           variant="contained"
                           color="primary"
                           size="large"
-                          style={{ width: "112px", height: "33px" }}
+                          // style={{ width: "112px", height: "33px" }}
+                          className={classes.buttonStyle}
                           onClick={() => handleOpenModalChangeEmail()}
                         >
                           Edit
                         </Button>
                       </ThemeProvider>
                     </div>
-                    <div className="2xl:absolute 2xl:top-32 2xl:inset-y-0 2xl:right-16 ">
+                    <div className="absolute sm:top-32 top-24 inset-y-0 sm:right-2 md:right-16 right-0">
                       <ThemeProvider theme={theme}>
                         <Button
                           variant="contained"
                           color="primary"
                           size="large"
-                          style={{ width: "112px", height: "33px" }}
+                          // style={{ width: "112px", height: "33px" }}
+                          className={classes.buttonStyle}
                           onClick={handleOpenModalChangePassword}
                         >
                           Edit
@@ -1122,11 +1137,11 @@ export default function Account() {
                     <p className="" style={{ color: "#6E6E6E" }}>
                       แก้ไขข้อมูลผู้ใช้งาน
                     </p>
-                    <p className="2xl:mt-2 " style={{ color: "#6E6E6E" }}>
+                    <p className="sm:mt-2 " style={{ color: "#6E6E6E" }}>
                       E-mail
                     </p>
                     {editSection2Active ? (
-                      <div className="2xl:mt-2 2xl:ml-4">
+                      <div className="sm:mt-2 sm:ml-4">
                         <input
                           className={
                             errorInputEmail
@@ -1139,15 +1154,15 @@ export default function Account() {
                         />
                       </div>
                     ) : (
-                      <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">
+                      <p className="sm:mt-2 sm:ml-4 sm:font-bold">
                         {userEmail}
                       </p>
                     )}
 
-                    <p className="2xl:mt-2" style={{ color: "#6E6E6E" }}>
+                    <p className="sm:mt-2" style={{ color: "#6E6E6E" }}>
                       รหัสผ่านและการยืนยันตัวตน
                     </p>
-                    <p className="2xl:mt-2 2xl:ml-4 2xl:font-bold">********</p>
+                    <p className="sm:mt-2 sm:ml-4 sm:font-bold">********</p>
                   </div>
                 )}
                 <div></div>
@@ -1156,7 +1171,7 @@ export default function Account() {
           </section>
         </section>
 
-        <section className="2xl:w-9/12" style={{ marginLeft: "238px" }}>
+        <section className="sm:w-11/12 lg:w-9/12 mx-auto" >
           <List className={classes.list}>
             <ListItem button onClick={handleClickListMyPost}>
               <ListItemText
@@ -1203,8 +1218,8 @@ export default function Account() {
                           />
                         )}
                       </div>
-                      <div className="2xl:mx-auto 2xl:mt-5">
-                        <section className="2xl:flex 2xl:flex-wrap 2xl:gap-20 flex-start">
+                      <div className="mx-auto mt-5">
+                        <section className="flex flex-wrap gap-20 flex-start">
                           {
                             currentFoundPost.length < 1
                               ?
@@ -1317,8 +1332,8 @@ export default function Account() {
                           />
                         )}
                       </div>
-                      <div className="2xl:mx-auto 2xl:mt-5">
-                        <section className="2xl:flex 2xl:flex-wrap 2xl:gap-28 flex-start">
+                      <div className="mx-auto mt-5">
+                        <section className="flex flex-wrap gap-28 flex-start">
                           {
                             currentLostPost.length < 1
                               ?
@@ -1399,7 +1414,7 @@ export default function Account() {
           </List>
         </section>
 
-        <section className="2xl:w-9/12" style={{ marginLeft: "238px" }}>
+        <section className="sm:w-11/12 lg:w-9/12 mx-auto" >
           <List className={classes.list}>
             <ListItem button onClick={handleClickListMyInactivePost}>
               <ListItemText
@@ -1446,8 +1461,8 @@ export default function Account() {
                           />
                         )}
                       </div>
-                      <div className="2xl:mx-auto 2xl:mt-5">
-                        <section className="2xl:flex 2xl:flex-wrap 2xl:gap-20 flex-start">
+                      <div className="sm:mx-auto sm:mt-5">
+                        <section className="sm:flex sm:flex-wrap sm:gap-20 flex-start">
                           {
                             currentFoundInactivePost.length < 1
                               ?
@@ -1560,8 +1575,8 @@ export default function Account() {
                           />
                         )}
                       </div>
-                      <div className="2xl:mx-auto 2xl:mt-5">
-                        <section className="2xl:flex 2xl:flex-wrap 2xl:gap-28 flex-start">
+                      <div className="sm:mx-auto sm:mt-5">
+                        <section className="sm:flex sm:flex-wrap sm:gap-28 flex-start">
                           {
                             currentLostInactivePost.length < 1
                               ?
@@ -1643,9 +1658,7 @@ export default function Account() {
         </section>
 
         <section
-          className="2xl:w-9/12 2xl:mt-3"
-          style={{ marginLeft: "238px" }}
-        >
+          className="sm:w-11/12 lg:w-9/12 sm:mt-3 mx-auto">
           <List className={classes.list}>
             <Link href="/dashboard">
               <a>
@@ -1660,15 +1673,13 @@ export default function Account() {
           </List>
         </section>
         <section
-          className="2xl:w-9/12 2xl:mt-3"
-          style={{ marginLeft: "238px" }}
-        >
+          className="sm:w-11/12 lg:w-9/12 sm:mt-3 mx-auto mb-10">
           <List className={classes.list}>
             <Link href="/history">
               <a>
                 <ListItem button>
                   <ListItemText
-                    primary="My following post"
+                    primary="My History Post"
                     style={{ color: "black", margin: "14px" }}
                   />
                 </ListItem>
@@ -1682,7 +1693,7 @@ export default function Account() {
           <div className='hidden'>{updateTrigger}</div>
         </ThemeProvider>
       </main>
-      <footer className="2xl:mt-32">
+      <footer className="sm:mt-32">
         <Footer />
       </footer>
     </div >

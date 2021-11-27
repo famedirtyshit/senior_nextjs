@@ -20,6 +20,7 @@ const theme = createTheme({
             main: '#356053',
             dark: '#356053',
             contrastText: '#fff',
+            
         },
         secondary: {
             light: '#ff7961',
@@ -34,12 +35,31 @@ const mainStyles = makeStyles((theme) => ({
     paper: {
         width: '1433px',
         height: '1149px',
+        '@media only screen and (min-width: 1440px)': {
+            width: '1366px',
+            height: '1450px',
+        },
+        '@media only screen and (max-width: 1440px)': {
+            width: '1200px',
+            height: '1450px',
+        },
+        '@media only screen and (max-width: 1280px)': {
+            width: '95%',
+            height: '1450px',
+        },
+        '@media only screen and (max-width: 768px)': {
+            width: '100%',
+            height: '1450px',
+        },
         background: '#F6F7F9',
         borderRadius: '20px 20px 20px 20px',
         filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))',
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: '122px',
+        '@media only screen and (max-width: 1024px)': {
+            marginTop: '80px',
+        },
         marginBottom: '155px'
     },
 }));
@@ -48,6 +68,14 @@ const historyContainerStyles = makeStyles((theme) => ({
     paper: {
         width: '1112px',
         height: '729px',
+        '@media only screen and (max-width: 1280px)': {
+            width: '95%',
+            height: '729px',
+        },
+        '@media only screen and (max-width: 768px)': {
+            width: '100%',
+            height: '729px',
+        },
         background: '#FFFFFF',
         borderRadius: '20px 20px 20px 20px',
         filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))',
@@ -232,7 +260,7 @@ export default function History() {
     }
 
     return (
-        <div style={{ fontFamily: 'Prompt' }} className={"2xl:container mx-auto " + HistoryStyle.bgImg}>
+        <div style={{ fontFamily: 'Prompt' }} className={"mx-auto " + HistoryStyle.bgImg}>
             <Head>
                 <title>CatUs</title>
                 <meta name="description" content="CatUs Service" />
@@ -241,17 +269,17 @@ export default function History() {
             </Head>
             <ThemeProvider theme={theme}>
                 <div className="head-sec">
-                    <header className="2xl:flex 2xl:flex-wrap 2xl:justify-between 2xl:mx-64 pt-3">
+                    <header className="flex flex-wrap justify-between lg:mx-64 sm:mx-20 pt-3 mx-8">
                         <Link href='/'>
                             <a>
-                                <h1 className="2xl:text-5xl 2xl:font-black text-white">Catus</h1>
+                                <h1 className="lg:text-5xl text-4xl font-black text-white">Catus</h1>
                             </a>
                         </Link>
                     </header>
                 </div>
                 <main className={mainClasses.paper}>
                     <div className="main-header">
-                        <div className="2xl:top-10 2xl:absolute 2xl:left-5">
+                        <div className="top-10 absolute left-5">
                             <Link href="/account">
                                 <a>
                                     <ArrowBackIosIcon
@@ -261,39 +289,39 @@ export default function History() {
                                 </a>
                             </Link>
                         </div>
-                        <div className="2xl:top-9 2xl:absolute 2xl:left-16 text-4xl font-semibold">
+                        <div className="lg:top-9 absolute left-16 lg:text-4xl sm:text-2xl sm:top-11 text-xl top-11 font-semibold">
                             <p>History</p>
                         </div>
-                        <div className="2xl:flex 2xl:flex-wrap border-b border-gray-300 pt-28">
+                        <div className="flex flex-wrap border-b border-gray-300 pt-28">
                             <p className={cn({
-                                'text-lg font-semibold cursor-pointer 2xl:px-16 border-b-4 border-gray-500': historyType == 'all',
-                                'text-lg font-semibold cursor-pointer 2xl:px-16': historyType != 'all',
+                                'lg:text-xl font-semibold cursor-pointer mx-auto px-2 md:px-16 sm:px-10 border-b-4 border-gray-500': historyType == 'all',
+                                'lg:text-xl font-semibold cursor-pointer mx-auto px-2 md:px-16 sm:px-10': historyType != 'all',
                             })} onClick={setAllType}>All</p>
                             <p className={cn({
-                                'text-lg font-semibold cursor-pointer 2xl:px-16 border-b-4 border-gray-500': historyType == 'complete',
-                                'text-lg font-semibold cursor-pointer 2xl:px-16': historyType != 'complete',
+                                'lg:text-xl font-semibold cursor-pointer mx-auto px-2 md:px-16 sm:px-10 border-b-4 border-gray-500': historyType == 'complete',
+                                'lg:text-xl font-semibold cursor-pointer mx-auto px-2 md:px-16 sm:px-10': historyType != 'complete',
                             })} onClick={setCompleteType}>Complete</p>
                             <p className={cn({
-                                'text-lg font-semibold cursor-pointer 2xl:px-16 border-b-4 border-gray-500': historyType == 'delete',
-                                'text-lg font-semibold cursor-pointer 2xl:px-16': historyType != 'delete',
+                                'lg:text-xl font-semibold cursor-pointer mx-auto px-2 md:px-16 sm:px-10 border-b-4 border-gray-500': historyType == 'delete',
+                                'lg:text-xl font-semibold cursor-pointer mx-auto px-2 md:px-16 sm:px-10': historyType != 'delete',
                             })} onClick={setDeleteType}>Delete</p>
                             <p className={cn({
-                                'text-lg font-semibold cursor-pointer 2xl:px-16 border-b-4 border-gray-500': historyType == 'expire',
-                                'text-lg font-semibold cursor-pointer 2xl:px-16': historyType != 'expire',
+                                'lg:text-xl font-semibold cursor-pointer mx-auto px-2 md:px-16 sm:px-10 border-b-4 border-gray-500': historyType == 'expire',
+                                'lg:text-xl font-semibold cursor-pointer mx-auto px-2 md:px-16 sm:px-10': historyType != 'expire',
                             })} onClick={setExpireType}>Expire</p>
                             <p className={cn({
-                                'text-lg font-semibold cursor-pointer 2xl:px-16 border-b-4 border-gray-500': historyType == 'deleteByAdmin',
-                                'text-lg font-semibold cursor-pointer 2xl:px-16': historyType != 'deleteByAdmin',
+                                'lg:text-xl font-semibold cursor-pointer mx-auto px-2 md:px-16 sm:px-10 border-b-4 border-gray-500': historyType == 'deleteByAdmin',
+                                'lg:text-xl font-semibold cursor-pointer mx-auto px-2 md:px-16 sm:px-10': historyType != 'deleteByAdmin',
                             })} onClick={setDeleteByAdminType}>Delete by admin</p>
                         </div>
                         <div className={historyContainer.paper}>
                             <div className="grid grid-cols-11 relative">
                                 <div className={"col-span-4 pt-14 pb-2 border-b border-gray-300 bg-historyGrayBg " + borderRadiusLeftClasses.paper}>
-                                    <p className="text-base font-semibold text-start 2xl:pl-14">Post</p>
+                                    <p className="md:text-base font-semibold text-start pl-14">Post</p>
                                 </div>
                                 <div onClick={setSortByCreatedAt} className="flex items-center justify-center col-span-2 pt-14 pb-2 border-b border-gray-300 bg-historyGrayBg">
-                                    <p className="text-base font-semibold text-center cursor-pointer ">Posted on</p>
-                                    <div className="cursor-pointer">
+                                    <p className="md:text-base font-semibold text-center cursor-pointer hidden sm:block">Posted on</p>
+                                    <div className="cursor-pointer hidden sm:block">
                                         {
                                             sortType == 'createdAt'
                                                 ?
@@ -309,8 +337,8 @@ export default function History() {
                                     </div>
                                 </div>
                                 <div onClick={setSortByExpireAt} className="flex items-center justify-center col-span-2 pt-14 pb-2 border-b border-gray-300 bg-historyGrayBg">
-                                    <p className="text-base font-semibold text-center cursor-pointer ">History expire at</p>
-                                    <div className="cursor-pointer">
+                                    <p className="md:text-base font-semibold text-center cursor-pointer hidden sm:block">History expire at</p>
+                                    <div className="cursor-pointer hidden sm:block">
                                         {
                                             sortType == 'expireAt'
                                                 ?
@@ -326,40 +354,40 @@ export default function History() {
                                     </div>
                                 </div>
                                 <div className={"col-span-3 pt-14 pb-2 border-b border-gray-300 bg-historyGrayBg " + borderRadiusRightClasses.paper}>
-                                    <p className="text-base font-semibold text-center ">Note</p>
+                                    <p className="md:text-base font-semibold text-center ">Note</p>
                                 </div>
                                 {
                                     loadingStatus == true ?
-                                        <div className="col-span-11 mx-auto 2xl:mt-72 2xl:mb-44">
+                                        <div className="col-span-11 mx-auto mt-72 mb-44">
                                             <CircularProgress />
                                         </div>
                                         :
                                         errorStatus == true ?
-                                            <div className="col-span-11 mx-auto 2xl:mt-72 2xl:mb-44 text-lg font-semibold ">
+                                            <div className="col-span-11 mx-auto mt-72 mb-44 text-lg font-semibold ">
                                                 <p>error please retry later</p>
                                             </div>
                                             :
                                             historyPost < 1 ?
-                                                <div className="col-span-11 mx-auto 2xl:mt-72 2xl:mb-44 text-lg font-semibold ">
+                                                <div className="col-span-11 mx-auto mt-72 mb-44 text-lg font-semibold ">
                                                     <p>no history</p>
                                                 </div>
                                                 :
                                                 historyPost[page - 1].map((item, index) => {
                                                     return (
                                                         <div className="col-span-11 grid grid-cols-11 grid-rows-1 border-b border-gray-300" key={index}>
-                                                            <div className="col-span-2 2xl:h-32 flex items-center justify-center">
+                                                            <div className="sm:col-span-2 col-span-3 sm:h-32 flex items-center justify-center">
                                                                 <p className="text-base font-semibold text-center">post {item.postType}</p>
                                                             </div>
-                                                            <div className="col-span-2 2xl:h-32 flex items-center justify-center">
+                                                            <div className="sm:col-span-2 col-span-4 text-center sm:h-32 flex items-center justify-center ">
                                                                 <p className="text-sm font-semibold text-center">Date: {convertDateFormat(item.date)} Sex: {item.sex == 'unknow' ? 'Unknow' : item.sex == 'true' ? 'Male' : 'Female'} Collar: {item.collar == true ? 'Have' : 'Not Have'} Description: {item.description ? item.description.length > 15 ? item.description.substring(0, 15) + '...' : item.description : '-'}</p>
                                                             </div>
-                                                            <div className="col-span-2 2xl:h-32 flex items-center justify-center">
-                                                                <p className="text-base font-semibold text-center">{convertDateFormat(item.createdAt)}</p>
+                                                            <div className="sm:col-span-2 sm:h-32 flex items-center justify-center">
+                                                                <p className="text-base font-semibold text-center hidden sm:block">{convertDateFormat(item.createdAt)}</p>
                                                             </div>
-                                                            <div className="col-span-2 2xl:h-32 flex items-center justify-center">
-                                                                <p className="text-base font-semibold text-center">{convertDateFormat(item.expires)}</p>
+                                                            <div className="sm:col-span-2 sm:h-32 flex items-center justify-center">
+                                                                <p className="text-base font-semibold text-center hidden sm:block">{convertDateFormat(item.expires)}</p>
                                                             </div>
-                                                            <div className="col-span-3 2xl:h-32 flex items-center justify-center">
+                                                            <div className="sm:col-span-3 sm:h-32 flex items-center justify-center">
                                                                 {item.status == 'complete'
                                                                     ?
                                                                     <p className="text-base font-semibold text-center text-green-500">{'Complete'}</p>
@@ -389,7 +417,7 @@ export default function History() {
                                                     )
                                                 })
                                 }
-                                <div className={"col-span-11 2xl:h-20 flex justify-end items-center"}>
+                                <div className={"col-span-11 h-20 flex justify-end items-center"}>
                                     <Pagination onChange={(e, page) => { setPageHistory(page) }} page={page} count={historyPost == null ? 1 : historyPost.length} disabled={loadingStatus == true || errorStatus == true ? true : false} />
                                 </div>
                             </div>

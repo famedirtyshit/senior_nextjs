@@ -3,15 +3,25 @@ import { makeStyles, createTheme, ThemeProvider } from '@material-ui/core/styles
 import Button from '@material-ui/core/Button';
 import { useState, useEffect } from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
-
+ 
 const buttonStyles = makeStyles((theme) => ({
     style: {
+        [theme.breakpoints.down("sm")]: {
         borderRadius: '50px',
-        paddingLeft: '65px',
-        paddingRight: '65px',
+        paddingLeft: '45px',
+        paddingRight: '45px',
         paddingTop: '15px',
         paddingBottom: '15px',
         boxShadow: '0px 4px 4px rgba(0,0,0,0.25)'
+    },
+    [theme.breakpoints.up("sm")]: {
+            borderRadius: '50px',
+            paddingLeft: '65px',
+            paddingRight: '65px',
+            paddingTop: '15px',
+            paddingBottom: '15px',
+            boxShadow: '0px 4px 4px rgba(0,0,0,0.25)'
+    },
     },
     otherStyle: {
         borderRadius: '50px',
@@ -26,7 +36,7 @@ const buttonStyles = makeStyles((theme) => ({
         border: 'solid 2px #F0930D'
     }
 }));
-
+ 
 const inputPhoneStyles = makeStyles((theme) => ({
     style: {
         'input::-webkit-outer-spin-button input::-webkit-inner-spin-button': {
@@ -38,7 +48,7 @@ const inputPhoneStyles = makeStyles((theme) => ({
         }
     }
 }))
-
+ 
 const theme = createTheme({
     palette: {
         primary: {
@@ -55,15 +65,15 @@ const theme = createTheme({
         },
     },
 });
-
-
+ 
+ 
 export default function BaseSignIn(prop) {
     const [signUpStatus, setSignUpStatus] = useState('email');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
+ 
     const buttonClasses = buttonStyles();
-
+ 
     const nextSignUp = () => {
         let valid = prop.validateCredentialSignUp(document.getElementById('signup-email').value, document.getElementById('signup-password').value, document.getElementById('signup-confirm-password').value);
         if (!valid.status) {
@@ -78,11 +88,11 @@ export default function BaseSignIn(prop) {
         setEmail(document.getElementById('signup-email').value);
         setPassword(document.getElementById('signup-password').value);
     }
-
+ 
     const backSignUp = () => {
         setSignUpStatus('email');
     }
-
+ 
     const signUpUser = async () => {
         let valid = prop.validateContactSignUp(document.getElementById('signup-firstname').value, document.getElementById('signup-lastname').value, document.getElementById('signup-phone').value, document.getElementById('signup-facebook').value, document.getElementById('signup-instagram').value)
         if (!valid.status) {
@@ -112,13 +122,13 @@ export default function BaseSignIn(prop) {
             prop.setResAlertType(false)
         }
     }
-
+ 
     return (
-        <div className="bg-white rounded-3xl rounded-3xl 2xl:grid 2xl:grid-cols-10">
+        <div className="bg-white rounded-t-3xl rounded-3xl lg:grid lg:grid-cols-10">
             <ThemeProvider theme={theme}>
-                <div className="2xl:col-span-4 bg-mainOrange rounded-tl-3xl rounded-bl-3xl">
-                    <h1 className="text-white text-4xl font-bold text-center mt-40">Welcome Back!</h1>
-                    <p className="text-white mt-12 font-normal text-center text-lg px-20">To keep connected with us please sign in with your personal info</p>
+                <div className="lg:col-span-4 bg-mainOrange lg:rounded-tl-3xl lg:rounded-bl-3xl rounded-t-3xl lg:rounded-t-sm py-6">
+                    <h1 className="text-white text-4xl font-bold text-center lg:mt-40">Welcome Back!</h1>
+                    <p className="text-white mt-12 font-normal text-center text-lg px-20 hidden sm:block">To keep connected with us please sign in with your personal info</p>
                     <div className="grid grid-cols-1 justify-items-center mt-12">
                         <Button onClick={prop.goSignIn} variant="contained" color="primary" className={buttonClasses.otherStyle}>
                             <span className="text-xl font-semibold">
@@ -128,9 +138,10 @@ export default function BaseSignIn(prop) {
                     </div>
                 </div>
                 {signUpStatus === 'email' ?
-                    <div className="2xl:col-span-6 pt-28 pb-20 px-32">
+                    <div className="lg:col-span-6 lg:pt-28 pt-12 pb-20 mx-auto">
                         <h1 className="text-mainOrange text-4xl font-bold text-center pb-10">Sign up to Catus</h1>
-                        <div className="grid grid-cols-1 gap-7 justify-items-center">
+                        {/* <div className="grid grid-cols-1 gap-7 justify-items-center w-3/5"> */}
+                        <div className="grid grid-cols-1 gap-7 justify-center w-3/5 lg:w-full mx-auto">
                             <TextField required defaultValue={email} error={prop.validType == 'email' ? true : false} id="signup-email" label="Email" variant="outlined" className="w-full" />
                         <Tooltip title="At least 6 characters" arrow>
                             <TextField required defaultValue={password} error={prop.validType == 'password' ? true : false} id="signup-password" label="Password" variant="outlined" type="password" className="w-full" />
@@ -149,9 +160,9 @@ export default function BaseSignIn(prop) {
                 }
                 {signUpStatus === 'contact'
                     ?
-                    <div className="2xl:col-span-6 pt-28 pb-c3.4 px-32">
+                    <div className="lg:col-span-6 pt-28 pb-c3.4 px-auto">
                         <h1 className="text-mainOrange text-4xl font-bold text-center pb-10">Sign up to Catus</h1>
-                        <div className="grid grid-cols-2 gap-3 justify-items-center">
+                        <div className="grid grid-cols-2 gap-3 justify-items-center w-3/5 lg:w-5/6 mx-auto">
                             <TextField error={prop.validType == 'firstname' ? true : false} required id='signup-firstname' label="First Name" variant="outlined" className="w-full" />
                             <TextField error={prop.validType == 'lastname' ? true : false} required id='signup-lastname' label="Last Name" variant="outlined" className="w-full" />
                             <TextField error={prop.validType == 'phone' ? true : false} required id='signup-phone' label="Phone Number" variant="outlined" type="tel" className="w-full col-span-2" />

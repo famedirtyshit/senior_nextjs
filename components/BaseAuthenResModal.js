@@ -6,7 +6,7 @@ import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import utilStyles from '@styles/Util.module.css';
-
+ 
 const useStyles = makeStyles((theme) => ({
     modal: {
         display: 'flex',
@@ -14,15 +14,25 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
     },
     paper: {
+        [theme.breakpoints.down("sm")]: {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2, 4, 3),
+            width:  '80%',
+            height: '55%',
+            borderRadius: '0.75rem'
+        },
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
+        [theme.breakpoints.up("sm")]: {
         padding: theme.spacing(2, 4, 3),
-        width: '25%',
-        height: '30%',
+        width:  '60%',
+        height: '35%',
         borderRadius: '0.75rem'
     },
+},
 }));
-
+ 
 const buttonStyles = makeStyles((theme) => ({
     style: {
         borderRadius: '50px',
@@ -33,7 +43,7 @@ const buttonStyles = makeStyles((theme) => ({
         boxShadow: '0px 4px 4px rgba(0,0,0,0.25)'
     }
 }));
-
+ 
 const theme = createTheme({
     palette: {
         primary: {
@@ -50,7 +60,7 @@ const theme = createTheme({
         },
     },
 });
-
+ 
 export default function BaseAuthenResModal(prop) {
     const classes = useStyles();
     const buttonClasses = buttonStyles();
@@ -77,8 +87,8 @@ export default function BaseAuthenResModal(prop) {
                                 </div>
                                 :
                                 <div>
-                                    <h2 className="text-center text-2xl font-bold 2xl:mt-2" id="modal-title">{prop.resAlertType === true ? 'Alert' : 'Error'}</h2>
-                                    <p className="text-center text-lg font-normal 2xl:mt-6 2xl:mb-8" id="modal-description">{prop.msg}</p>
+                                    <h2 className="text-center text-2xl font-bold mt-2 lg:mt-2" id="modal-title">{prop.resAlertType === true ? 'Alert' : 'Error'}</h2>
+                                    <p className="text-center text-lg font-normal lg:mt-6 lg:mb-8" id="modal-description">{prop.msg}</p>
                                     <div className={"absolute " + utilStyles.bottomCenterAbsolute} >
                                         <Button onClick={prop.handleModalClose} variant="contained" color="primary" className={buttonClasses.otherStyle}>
                                             <span className="text-xl font-semibold">

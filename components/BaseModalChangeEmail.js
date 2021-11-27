@@ -37,8 +37,14 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "15px ",
     boxShadow: theme.shadows[20],
     padding: theme.spacing(2, 4, 3),
-    width: "513px",
-    height: "350px",
+    '@media only screen and (min-width: 768px)': {
+      width: "513px",
+      height: "360px",
+    }, 
+    '@media only screen and (max-width: 767px)': {
+        width: "350px",
+        height: "380px",
+        },
   },
   subModal: {
     display: "flex",
@@ -155,18 +161,19 @@ export default function BaseModalChangeEmail(props) {
       >
         <Fade in={props.openModalChangeEmail}>
           <div className={classes.paper}>
+            <div className="relative">
             {alert ? (
               <Alert severity="error">{errorMessage}</Alert>
             ) : (
-              <div className="2xl:h-12"></div>
+              <div className="sm:h-12 h-12"></div>
             )}
 
-            <div className="2xl:absolute" style={{ right: "710px" }}></div>
-            <p className="2xl:text-center 2xl:text-2xl 2xl:mt-2">
+            <div className="sm:absolute" style={{ right: "710px" }}></div>
+            <p className="text-center sm:text-2xl text-xl mt-2">
               เปลี่ยน Email address ของคุณ
             </p>
-            <div className="2xl:flex 2xl:flex-wrap 2xl:justify-center">
-              <div className="2xl:mt-6 ">
+            <div className="sm:flex sm:flex-wrap sm:justify-center">
+              <div className="mt-6">
                 <input
                   className={
                     errorInputNewEmail
@@ -177,14 +184,14 @@ export default function BaseModalChangeEmail(props) {
                   type="text"
                   placeholder="อีเมลใหม่"
                   style={{
-                    width: "419px",
+                    width: "300px",
                     height: "55px",
                     fontSize: "20px",
                     padding: "20px",
                   }}
                 />
               </div>
-              <div className="2xl:mt-4">
+              <div className="mt-4">
                 <input
                   className={
                     errorInputCurrentPassword
@@ -195,7 +202,7 @@ export default function BaseModalChangeEmail(props) {
                   type="password"
                   placeholder="รหัสผ่าน"
                   style={{
-                    width: "419px",
+                    width: "300px",
                     height: "55px",
                     fontSize: "20px",
                     padding: "20px",
@@ -203,7 +210,7 @@ export default function BaseModalChangeEmail(props) {
                 />
               </div>
 
-              <div className="2xl:absolute 2xl:ml-28 2xl:mt-48">
+              <div className="absolute sm:ml-28 sm:mt-48 mt-12 ml-12">
                 <Button
                   // variant="contained"
                   color="error"
@@ -215,7 +222,8 @@ export default function BaseModalChangeEmail(props) {
                 </Button>
               </div>
               <div
-                className="2xl:absolute 2xl:ml-80 2xl:mt-48"
+                className="absolute sm:ml-80 sm:mt-48 ml-40 mt-12"
+                // className="absolute sm:ml-80 sm:mt-48 ml-40 mt-12"
                 // style={{ marginLeft: "220px" }}
               >
                 <Button
@@ -230,6 +238,7 @@ export default function BaseModalChangeEmail(props) {
                   SAVE
                 </Button>
               </div>
+            </div>
             </div>
           </div>
         </Fade>
