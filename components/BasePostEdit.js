@@ -512,7 +512,7 @@ export default function BasePostEdit(prop) {
                                         <path d="M15.382 13.0002L25.5059 2.8758C26.1647 2.21725 26.1647 1.15246 25.5059 0.493912C24.8473 -0.164637 23.7826 -0.164637 23.124 0.493912L12.9998 10.6183L2.87597 0.493912C2.21712 -0.164637 1.15267 -0.164637 0.494134 0.493912C-0.164711 1.15246 -0.164711 2.21725 0.494134 2.8758L10.618 13.0002L0.494134 23.1246C-0.164711 23.7831 -0.164711 24.8479 0.494134 25.5065C0.822322 25.835 1.25384 26 1.68505 26C2.11626 26 2.54747 25.835 2.87597 25.5065L12.9998 15.3821L23.124 25.5065C23.4525 25.835 23.8837 26 24.3149 26C24.7462 26 25.1774 25.835 25.5059 25.5065C26.1647 24.8479 26.1647 23.7831 25.5059 23.1246L15.382 13.0002Z" fill="black" />
                                     </svg>
                                 </div>
-                                <div className="grid grid-cols-12 lg:grid-cols-10 sm:gap-6 gap-2 sm:px-8 px-2 h-full overflow-y-scroll">
+                                <div className="grid grid-cols-12 lg:grid-cols-10 sm:gap-6 gap-2 sm:px-8 px-2 h-full overflow-y-scroll lg:overflow-visible">
                                     <div className="lg:col-span-1 col-span-3 grid gap-2 grid-cols-1 grid-rows-4 lg:h-5/6 sm:h-96 h-44 lg:w-5/6 md:w-4/6 sm:w-full w-5/6 mx-auto">
                                         {checkProp && imageSet.length > 1 ? imageSet.map((item, index) => {
                                             if (index == 0) {
@@ -697,36 +697,18 @@ export default function BasePostEdit(prop) {
                                                         </div>
                                                     </div>
                                                     :
-                                                    prop.post[prop.target].idle == true
-                                                        ?
-                                                        <div className="sm:mt-8 sm:flex sm:flex-wrap sm:justify-between sm:px-8">
-                                                            <Button onClick={() => { setExtendConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
-                                                                Extend 30 Day
+                                                    <div className="sm:mt-8 sm:flex sm:flex-wrap sm:justify-end sm:px-8">
+                                                        <div className="sm:w-3/12 sm:flex sm:flex-wrap sm:justify-between">
+                                                            <ThemeProvider theme={completeTheme}>
+                                                                <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
+                                                                    Complete Post
+                                                                </Button>
+                                                            </ThemeProvider>
+                                                            <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
+                                                                Delete Post
                                                             </Button>
-                                                            <div className="sm:w-3/12 sm:flex sm:flex-wrap sm:justify-between">
-                                                                <ThemeProvider theme={completeTheme}>
-                                                                    <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
-                                                                        Complete Post
-                                                                    </Button>
-                                                                </ThemeProvider>
-                                                                <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
-                                                                    Delete Post
-                                                                </Button>
-                                                            </div>
                                                         </div>
-                                                        :
-                                                        <div className="sm:mt-8 sm:flex sm:flex-wrap sm:justify-between sm:px-8">
-                                                            <div className="sm:w-3/12 sm:flex sm:flex-wrap sm:justify-between">
-                                                                <ThemeProvider theme={completeTheme}>
-                                                                    <Button onClick={() => { setCompleteConfirmationStatus(true); }} className="w-40" variant="contained" color="primary">
-                                                                        Complete Post
-                                                                    </Button>
-                                                                </ThemeProvider>
-                                                                <Button onClick={() => { setConfirmationStatus(true); }} className="w-40" variant="contained" color="secondary">
-                                                                    Delete Post
-                                                                </Button>
-                                                            </div>
-                                                        </div>
+                                                    </div>
                                                 :
                                                 <div className="sm:mt-8 sm:flex sm:flex-wrap sm:justify-end sm:px-8">
                                                     <div className="sm:w-3/12 sm:flex sm:flex-wrap sm:justify-between">
