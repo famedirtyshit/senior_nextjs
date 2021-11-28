@@ -214,7 +214,7 @@ export default function Home() {
           </div>
         </section>
         <section
-          className="about-catUs-conatainer md:w-3/5 sm:w-4/5 lxl:mt-24 2xl:mt-24 xl:-mt-12 md:-mt-4 sm:-mt-12 mx-auto"
+          className="about-catUs-conatainer md:w-3/5 sm:w-4/5 lxl:mt-24 2xl:mt-44 xl:-mt-12 md:mt-4 sm:-mt-4 mx-auto"
           title="section1"
           id="section1"
         >
@@ -249,7 +249,7 @@ export default function Home() {
           </div>
           <div className="bg-mainYellow opacity-60 h-10 sm:hidden"></div>
         </section>
-        <section className="why-catUs-container 2xl:mt-60 xl:mt-48 lg:mt-28 md:mt-24 sm:mt-20 mt-8 xl:mr-60 xl:ml-52 lg:mx-28 md:mx-16">
+        <section className="why-catUs-container 2xl:mt-60 xl:mt-48 lxl:mt-48 lg:mt-28 md:mt-24 sm:mt-20 mt-8 xl:mr-60 xl:ml-52 lg:mx-28 md:mx-16">
           <p
             className="text-black lg:text-4xl text-2xl font-black text-center 2xl:mt-32 xl:mt-16" /**style={{textShadow:"-2px 4px #6B7280"}}**/
             style={{ textShadow: '0px 4px 4px rgba(0,0,0,0.25)' }}
@@ -286,7 +286,7 @@ export default function Home() {
               </p>
             </div>
           </section>
-          <section className="flex flex-wrap 2xl:mt-48 xl:mt-72 lg:mt-28 md:mt-3 mt-12 justify-center bg-mainGreen sm:bg-transparent sm:py-0 py-4">
+          <section className="flex flex-wrap 2xl:mt-72 xl:mt-72 lg:mt-28 md:mt-24 mt-12 justify-center bg-mainGreen sm:bg-transparent sm:py-0 py-4">
             <div className="lg:mr-16 md:mt-12 mt-2 xl:w-5/12 lg:w-4/12" >
               <p
                 className="text-white 2xl:text-4xl xl:text-2xl md:text-xl text-xl font-black text-center mx-auto"

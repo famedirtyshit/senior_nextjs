@@ -113,13 +113,23 @@
   margin-left: 0.5rem;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 1919px) {
   .bgImg {
     background-image: url('/images/Newbackground1.png');
     background-size: contain;
     background-position: top;
     background-repeat: no-repeat;
     /* height: 8177px; */
+  }
+}
+
+@media (min-width: 1920px) {
+  .bgImg {
+    background-image: url('/images/Newbackground1.png');
+    background-size: contain;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: 1920px;
   }
 }
 
